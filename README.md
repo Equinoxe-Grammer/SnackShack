@@ -1,31 +1,94 @@
+
 # SnackShop
 
-Proyecto web PHP ligero para la gestión de una tienda de snacks (productos, ventas, usuarios, variantes e inventario). Este README explica cómo instalar, configurar, ejecutar y contribuir al proyecto.
+Proyecto web PHP modular para la gestión de una tienda de snacks (productos, ventas, usuarios, variantes e inventario). Este README resume la instalación, configuración y estructura, y enlaza a la documentación técnica completa.
 
-## Tabla de contenidos
+## 📚 Documentación Modular
 
-- [Resumen](#resumen)
-- [Requisitos](#requisitos)
-- [Instalación rápida](#instalaci%C3%B3n-r%C3%A1pida)
-- [Configuración](#configuraci%C3%B3n)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Arrancar la aplicación](#arrancar-la-aplicaci%C3%B3n)
-- [Arquitectura y responsabilidades](#arquitectura-y-responsabilidades)
-- [Modelos, Repositorios y Servicios](#modelos-repositorios-y-servicios)
-- [Middlewares y seguridad](#middlewares-y-seguridad)
-- [Vistas y assets](#vistas-y-assets)
-- [Pruebas y calidad](#pruebas-y-calidad)
-- [Despliegue](#despliegue)
-- [Solución de problemas comunes](#soluci%C3%B3n-de-problemas-comunes)
-- [Contratos y casos límite](#contratos-y-casos-l%C3%ADmite)
-- [Contribuir](#contribuir)
-- [Licencia](#licencia)
+- [Índice Maestro](docs/INDEX.md)
+- [Arquitectura](docs/ARCHITECTURE.md)
+- [API](docs/API.md)
+- [Base de Datos](docs/DATABASE.md)
+- [Despliegue](docs/DEPLOYMENT.md)
+- [Configuración](docs/CONFIGURATION.md)
+- [Desarrollo](docs/DEVELOPMENT.md)
+- [Testing](docs/TESTING.md)
+- [Contribución](docs/CONTRIBUTING.md)
+- [Servicios](docs/SERVICES.md)
+- [Ejemplos y Tutoriales](docs/EXAMPLES.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
 
 ## Resumen
 
-SnackShop es una aplicación backend + vistas PHP que implementa: autenticación básica, gestión de productos y variantes, gestión de ventas y ventas por cajero, control de stock a través de servicios y repositorios, y una estructura organizada por controllers, services, repositories y views.
+SnackShop es una aplicación PHP backend + vistas, con autenticación, gestión de productos, ventas, variantes, control de stock y estructura limpia (MVC, servicios, repositorios, middlewares y vistas). Pensado para despliegue rápido en LAMP/LEMP o desarrollo local.
 
-El proyecto está pensado para ser pequeño y fácilmente desplegable en servidores LAMP/LEMP o ejecutado con el servidor embebido de PHP para desarrollo.
+## Requisitos
+
+- PHP 7.4+ (recomendado 8.0+)
+- Composer ([getcomposer.org](https://getcomposer.org))
+- Extensiones: PDO, mbstring, openssl, fileinfo
+- MySQL/MariaDB/Postgres (ver `src/Database/Connection.php` y `src/Config/AppConfig.php`)
+
+## Instalación Rápida
+
+```powershell
+cd c:\Users\david\Downloads\SnackShop\SnackShop\www\Snackshop
+composer install
+```
+
+Si composer falla, revisa `composer.json` y tu versión de PHP.
+
+## Configuración
+
+Edita `src/Config/AppConfig.php` o usa `.env` si está soportado. Define:
+
+- DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
+- APP_ENV (development|production)
+- APP_DEBUG (true|false)
+
+## Estructura del Proyecto
+
+Ver detalles y convenciones en los README de cada subcarpeta:
+
+- [`src/`](src/README.md): Código fuente principal
+- [`src/Controllers/`](src/Controllers/README.md): Controladores HTTP
+- [`src/Services/`](src/Services/README.md): Lógica de negocio
+- [`src/Repositories/`](src/Repositories/README.md): Acceso a datos
+- [`src/Models/`](src/Models/README.md): Entidades del dominio
+- [`src/Database/`](src/Database/README.md): Conexión y utilidades DB
+- [`src/Middleware/`](src/Middleware/README.md): Middlewares
+- [`src/Routes/`](src/Routes/README.md): Enrutamiento
+- [`src/Views/`](src/Views/README.md): Plantillas y vistas
+- [`public/`](public/README.md): DocumentRoot y assets
+- [`data/`](data/README.md): Archivos generados/locales
+
+## Arrancar la Aplicación
+
+```powershell
+php -S localhost:8000 -t public
+```
+
+## Buenas Prácticas y Optimización
+
+- Sigue PSR-12/PSR-4 y mantén controllers delgados.
+- Usa servicios y repositorios para separar lógica y persistencia.
+- Configura OPcache y caché en producción.
+- Usa prepared statements y valida toda entrada de usuario.
+- Consulta [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) para resolución de problemas y optimización avanzada.
+
+## Testing y Calidad
+
+- Usa PHPUnit para tests unitarios/integración.
+- Mockea repositorios en tests de servicios.
+- Usa PHPStan y PHP CS Fixer para análisis estático y estilo.
+
+## Contribuir
+
+Consulta [CONTRIBUTING.md](docs/CONTRIBUTING.md) para el flujo de trabajo, estándares y código de conducta.
+
+## Licencia
+
+MIT
 
 ## Requisitos
 
@@ -126,140 +189,64 @@ Controladores observables en `src/Controllers/` (ejemplos): `ProductController`,
 ## Modelos, Repositorios y Servicios
 
 - `src/Models/` contiene modelos como `Product.php`, `User.php`, `Sale.php`, `Variant.php`.
-- `src/Repositories/` implementa repositorios para cada agregado (ProductRepository, SaleRepository, UserRepository, VariantRepository, etc.).
-- `src/Services/` contiene servicios transversales: `ImageProcessingService` (procesamiento de imágenes), `ImpuestosService` (cálculo de impuestos), `CostoService` (costeo de productos) y otros.
-
-Si necesitas crear nuevas entidades siguen el patrón:
-- Crear Model
-- Añadir Repository/Interface
-- Crear Service si la lógica es compleja
-- Añadir Controller y rutas
-- Crear vistas si es UI
-
-## Middlewares y seguridad
-
-Middlewares principales:
-- `AuthMiddleware.php` — protege rutas que requieren autenticación.
-- `CsrfMiddleware.php` — protege formularios contra CSRF (asegúrate de que los tokens se incluyan y verifiquen).
-- `RoleMiddleware.php` — control de permisos por rol.
-
-Recomendaciones de seguridad:
-- No exponer credenciales en el repo; usa variables de entorno o un archivo de configuración fuera del control de versiones.
-- Validar y sanitizar todas las entradas; usar prepared statements en la capa de repositorios (PDO con bound parameters).
-- Limitar tamaños y tipos de archivos en subidas (ImageProcessingService puede ayudar).
-
-## Vistas y assets
-
-- Plantillas en `src/Views/` separadas por área (`auth`, `products`, `sales`, etc.).
-- CSS y JS en `public/assets/` o `public/css`, `public/js`.
-- Incluye partials reutilizables en `src/Views/partials/` (por ejemplo `sidebar.php`).
-
-## Pruebas y calidad
-
-Actualmente el repositorio no incluye tests automáticos. Recomendación mínima para empezar con PHPUnit:
-
-1. Añadir PHPUnit como dependencia de desarrollo:
-
-```powershell
-composer require --dev phpunit/phpunit ^9
-```
-
-2. Crear un `phpunit.xml` básico en la raíz y tests en `tests/`.
-3. Ejecutar tests:
-
-```powershell
-# En Windows PowerShell
-vendor\bin\phpunit.bat --colors=always
-# O si vendor\bin\phpunit existe como ejecutable
-vendor\bin\phpunit --colors=always
-```
-
-Pruebas sugeridas:
-- Repositorios: pruebas de integración con una BD SQLite en memoria.
-- Services: pruebas unitarias de cálculo de impuestos y costos.
-- Controllers: pruebas de integración simulando requests (o tests funcionales).
-
 # SnackShop
 
-![PHP](https://img.shields.io/badge/PHP-7.4%2B-8892BF) ![Composer](https://img.shields.io/badge/Composer-OK-0F62FE)
+Documentación general y guía rápida del proyecto SnackShop — aplicación PHP ligera para gestionar una tienda de snacks (productos, variantes, ventas y usuarios).
 
-Aplicación web ligera en PHP para gestionar una tienda de snacks: productos, variantes, ventas, usuarios y control básico de inventario. Este README está escrito como guía técnica completa para desarrolladores y operadores.
+Este README ha sido reorganizado y condensado para facilitar la lectura por desarrolladores y operadores.
 
-## Tabla de contenidos
-
-- [Resumen rápido](#resumen-r%C3%A1pido)
-- [Estado y objetivos](#estado-y-objetivos)
-- [Requisitos](#requisitos)
-- [Instalación y arranque rápido](#instalaci%C3%B3n-y-arranque-r%C3%A1pido)
-- [Configuración (variables y archivos)](#configuraci%C3%B3n-variables-y-archivos)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Flujo de petici%C3%B3n: controllers-›-services-›-repositories](#flujo-de-petici%C3%B3n-controllers--services--repositories)
-- [Vistas, activos y rutas públicas](#vistas-activos-y-rutas-p%C3%BAblicas)
-- [Comandos útiles (PowerShell)](#comandos-%C3%BAtiles-powershell)
-- [Pruebas y calidad de código](#pruebas-y-calidad-de-codigo)
-- [Despliegue y contenedores (opcional)](#despliegue-y-contenedores-opcional)
-- [Seguridad y buenas prácticas](#seguridad-y-buenas-pr%C3%A1cticas)
-- [Solución de problemas frecuentes](#soluci%C3%B3n-de-problemas-frecuentes)
-- [Contrato API mínimo y casos de borde](#contrato-api-m%C3%ADnimo-y-casos-de-borde)
-- [Contribuir](#contribuir)
-- [Siguientes pasos recomendados](#siguientes-pasos-recomendados)
-- [Licencia](#licencia)
+## Contenido rápido
+- Resumen
+- Requisitos mínimos
+- Instalación y arranque rápido
+- Configuración (dónde poner credenciales)
+- Estructura del proyecto
+- Comandos frecuentes
+- Siguientes pasos y recomendaciones
 
 ---
 
-## Resumen rápido
+## Resumen
 
-SnackShop combina un backend PHP con vistas server-rendered para gestionar productos, ventas y usuarios. El código está organizado siguiendo capas claras: Controllers, Services, Repositories y Views.
+SnackShop es una aplicación backend con vistas server-rendered en PHP. Sigue un patrón en capas: Controllers → Services → Repositories → Models → Views. Es una base mínima pensada para ser fácil de entender, extender y desplegar en plataformas LAMP/LEMP o contenedores.
 
-## Estado y objetivos
+## Requisitos mínimos
 
-- Estado actual: prototipo funcional con vistas y rutas principales en `src/Controllers` y `public/` como punto de entrada.
-- Objetivo: servir como base ligera para tiendas de tamaño pequeño/mediano; fácil de extender, testear y desplegar.
-
-## Requisitos
-
-- PHP 7.4+ (recomendado PHP 8.0+)
+- PHP 7.4+ (se recomienda PHP 8.0+)
 - Composer
-- Extensiones PHP: pdo, pdo_mysql (o pdo_pgsql), mbstring, fileinfo
-- Base de datos: MySQL/MariaDB (u otra compatible; ajustar `src/Database/Connection.php`)
+- Extensiones: pdo, pdo_mysql (o pdo_pgsql), mbstring, fileinfo
+- Base de datos: MySQL/MariaDB (o adaptarla a Postgres/SQLite según sea necesario)
 
-Si quieres soporte para `.env`, se recomienda `vlucas/phpdotenv` (puedo añadirlo si quieres).
+Si prefieres variables de entorno, recomiendo añadir `vlucas/phpdotenv`; puedo añadir la integración si lo deseas.
 
-## Instalación y arranque rápido
+## Instalación y arranque (rápido)
 
-1. Instalar dependencias con Composer:
+En PowerShell:
 
 ```powershell
 cd C:\Users\david\Downloads\SnackShop\SnackShop\www\Snackshop
 composer install
-```
-
-2. Iniciar servidor de desarrollo (DocumentRoot = `public/`):
-
-```powershell
-# Desde la carpeta del proyecto
 php -S localhost:8000 -t public
-# Abrir http://localhost:8000
 ```
 
-3. Si usas Apache/Nginx: apunta el DocumentRoot a `.../public/` y habilita reescritura si usas URLs amigables.
+Abrir http://localhost:8000
 
-## Configuración (variables y archivos)
+Para producción, apunta tu DocumentRoot a la carpeta `public/` y configura el servidor web (Nginx/Apache) correctamente.
 
-Actualmente la configuración principal está en `src/Config/AppConfig.php`. Variables comunes:
+## Configuración
 
-- DB_HOST
-- DB_PORT
-- DB_NAME
-- DB_USER
-- DB_PASS
-- APP_ENV
-- APP_DEBUG
+La configuración principal se carga desde `src/Config/AppConfig.php`. Valores habituales:
+
+- DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
+- APP_ENV (development|production)
+- APP_DEBUG (true|false)
 - BASE_URL
 
-Ejemplo de `.env.example` (opcional, puedo generarlo):
+No guardes credenciales en el repo. Preferible: `.env` fuera del control de versiones o variables de entorno del servidor.
 
-```text
+Ejemplo mínimo (`.env.example`):
+
+```
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_NAME=snackshop
@@ -270,183 +257,47 @@ APP_DEBUG=true
 BASE_URL=http://localhost:8000
 ```
 
-Si prefieres, puedo añadir cargado de variables con `vlucas/phpdotenv`.
-
 ## Estructura del proyecto (resumen)
 
-Raíz del proyecto (rutas relevantes):
+- `public/` — Punto de entrada (DocumentRoot). Contiene `index.php`, assets y rutas públicas.
+- `src/Config/` — Configuración de la app.
+- `src/Controllers/` — Controladores que reciben requests.
+- `src/Services/` — Lógica de negocio (impuestos, costos, procesos compuestos).
+- `src/Repositories/` — Acceso a datos (PDO / SQL).
+- `src/Models/` — Entidades/DTOs.
+- `src/Views/` — Plantillas y partials.
+- `src/Routes/` — Router y registro de rutas.
+- `src/Database/` — Conexión a la BD.
+- `src/Middleware/` — Autenticación, CSRF, roles.
+- `data/` — Almacenamiento local si aplica (subidas, cache simple).
 
-```
-public/
-  index.php
-  pretty-urls.php
-  assets/
-src/
-  Config/
-    AppConfig.php
-  Controllers/
-  Database/
-    Connection.php
-  Middleware/
-  Models/
-  Repositories/
-  Routes/
-  Services/
-  Views/
-vendor/
-data/
-```
+Consulta los README específicos en `src/` y `public/` para detalles por capa.
 
-- `public/` -> punto de entrada web.
-- `src/Controllers` -> lógica HTTP.
-- `src/Services` -> reglas de negocio (impuestos, costos, procesamiento de imagenes).
-- `src/Repositories` -> acceso a datos.
+## Comandos útiles
 
-## Flujo de petición: controllers » services » repositories
+- Instalar dependencias: `composer install`
+- Regenerar autoload: `composer dump-autoload`
+- Servidor embebido: `php -S localhost:8000 -t public`
+- Instalar PHPUnit (dev): `composer require --dev phpunit/phpunit ^9`
 
-- Controller: valida request, maneja permisos, orquesta la llamada.
-- Service: aplica lógica de negocio y reglas (p. ej. cálculo de impuestos, manejo de stock, procesamiento de imágenes).
-- Repository: realiza queries/operaciones con la base de datos (usar prepared statements / PDO siempre que sea posible).
+## Pruebas y calidad
 
-Este patrón facilita pruebas unitarias y separación de responsabilidades.
+No hay tests en el repo actualmente. Recomendación mínima:
 
-## Vistas, activos y rutas públicas
+1. Añadir PHPUnit y crear carpeta `tests/`.
+2. Usar SQLite en memoria para pruebas de repositorios.
+3. Añadir PHPStan (nivel inicial) y ajustar reglas PSR-12.
 
-- Vistas PHP en `src/Views/`.
-- Partials: `src/Views/partials/` (ej. `sidebar.php`).
-- CSS/JS en `public/css` y `public/js`.
-
-Rutas principales y controllers (ejemplos):
-- `ProductController` -> CRUD productos
-- `SalesController` -> operaciones de venta
-- `AuthController` -> login/logout
-
-Revisa `src/Routes/routes.php` o `src/Routes/Router.php` para ver definición exacta de rutas.
-
-## Comandos útiles (PowerShell)
-
-- Instalar dependencias:
-
-```powershell
-composer install
-```
-
-- Regenerar autoload:
-
-```powershell
-composer dump-autoload
-```
-
-- Ejecutar servidor de desarrollo:
-
-```powershell
-php -S localhost:8000 -t public
-```
-
-- Instalar PHPUnit (dev):
-
-```powershell
-composer require --dev phpunit/phpunit ^9
-```
-
-## Pruebas y calidad de código
-
-Recomendaciones:
-
-- Añadir PHPUnit y tests en `tests/`.
-- Usar SQLite en memoria para pruebas de repositorios.
-- Integrar PHPStan (análisis estático) y PHPCS/PSR12 para estilo.
-
-Ejemplo rápido para correr tests (tras instalar PHPUnit):
-
-```powershell
-# En Windows PowerShell
-vendor\bin\phpunit.bat --colors=always
-```
-
-Si quieres, puedo crear un `phpunit.xml` mínimo y un test de ejemplo para `CostoService`.
-
-## Despliegue y contenedores (opcional)
-
-Ejemplo minimal de `docker-compose.yml` (idea, puedo añadir archivos reales si quieres):
-
-```yaml
-version: '3.8'
-services:
-  web:
-    image: php:8.1-apache
-    volumes:
-      - ./:/var/www/html
-    ports:
-      - 8000:80
-    depends_on:
-      - db
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: snackshop
-    volumes:
-      - db-data:/var/lib/mysql
-volumes:
-  db-data:
-```
-
-Para producción: `composer install --no-dev --optimize-autoloader` y configurar correctamente variables de entorno.
-
-## Seguridad y buenas prácticas
-
-- No subir credenciales al repositorio. Usa `.env` fuera del control de versiones.
-- Escapar/sanitizar entradas y usar prepared statements.
-- Limitar tipos y tamaño de archivos en uploads.
-- Implementar CSRF tokens en formularios (ya hay `CsrfMiddleware.php`).
-- Revisa `RoleMiddleware.php` para control de permisos por rutas.
-
-## Solución de problemas frecuentes
-
-- Clase no encontrada: `composer dump-autoload`.
-- Error DB: revisar `src/Config/AppConfig.php` y `src/Database/Connection.php`.
-- Rutas: revisar `public/pretty-urls.php` y la configuración del servidor web.
-
-## Contrato API mínimo y casos de borde
-
-Contrato (inputs/outputs):
-
-- Input: peticiones HTTP (form-data o JSON).
-- Output: HTML (vistas) o JSON (endpoints API).
-- Errores: páginas en `src/Views/errors/` con códigos HTTP apropiados.
-
-Casos de borde:
-1. Formularios con campos vacíos — validar en servidor.
-2. Subidas grandes — imponer límites en `php.ini` y en la lógica de subida.
-3. Concurrencia en stock — proteger con transacciones o bloqueo optimista si corresponde.
-4. Intentos de acceso sin permisos — asegurar middleware de roles.
-
-## Contribuir
-
-- Fork + branch con nombre claro (`feature/mi-cambio`).
-- Añadir tests para funcionalidades nuevas.
-- Crear PR con descripción y casos de prueba.
-
-Si quieres, puedo crear una plantilla `CONTRIBUTING.md`.
+Puedo generar un `phpunit.xml` y un test ejemplo si lo deseas.
 
 ## Siguientes pasos recomendados
 
-Opcionales que puedo implementar ahora si me lo pides:
-
-1. `.env.example` y soporte via `vlucas/phpdotenv`.
-2. `phpunit.xml` + test de ejemplo.
-3. Script SQL inicial para crear tablas basadas en los modelos.
-4. Dockerfile y `docker-compose.yml` funcional.
-
-Indica qué prefieres y lo hago.
-
-## Licencia
-
-Revisa `LICENSE.txt` en la raíz del repositorio.
+- Añadir `.env` y `vlucas/phpdotenv` para manejar configuraciones.
+- Crear migraciones (Phinx o scripts SQL) y un seed inicial.
+- Añadir tests básicos para `CostoService` y `ProductRepository`.
+- Añadir README en carpetas faltantes (he añadido varios en este commit).
 
 ---
 
-Contacto / soporte
-
-Si quieres que haga alguna de las tareas sugeridas (`.env.example`, tests, docker), dime cuál y la implemento.
+Si quieres que escriba un `CONTRIBUTING.md`, un `phpunit.xml` y un ejemplo de `docker-compose.yml`, dime y lo añado.
+# Desde la carpeta del proyecto

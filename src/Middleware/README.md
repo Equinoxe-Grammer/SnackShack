@@ -1,32 +1,35 @@
+
 # src/Middleware/
 
-Propósito
+Middlewares que interceptan peticiones HTTP antes o después de los controllers. Controlan autenticación, autorización, CSRF y otras políticas transversales.
 
-Contiene middlewares que interceptan peticiones HTTP antes o después de que lleguen a los controllers. Su función principal es controlar autenticación, autorización, protección CSRF y otras políticas transversales.
+## Middlewares presentes
 
-Middlewares presentes
+- `AuthMiddleware.php`: fuerza autenticación en rutas protegidas
+- `CsrfMiddleware.php`: valida tokens CSRF en formularios
+- `RoleMiddleware.php`: valida roles/permisos para rutas
 
-- `AuthMiddleware.php` — fuerza autenticación en rutas protegidas.
-- `CsrfMiddleware.php` — valida tokens CSRF en formularios (POST/PUT/DELETE) para prevenir ataques CSRF.
-- `RoleMiddleware.php` — valida que el usuario tenga el rol/permiso requerido para acceder a una ruta.
+## Funcionamiento
 
-Cómo funcionan (convención)
+- Cada middleware recibe la request, procesa/valida y llama al siguiente handler (o aborta con respuesta HTTP)
+- Mantén los middlewares puros; delega lógica compleja en Services
 
-- Cada middleware debe recibir la request, procesar/validar y llamar al siguiente handler (o abortar devolviendo una respuesta con el código HTTP adecuado).
-- Mantén los middlewares puros: no deben contener lógica de negocio compleja; delega en Services si hace falta.
+## Registro y orden
 
-Registro y orden
+- El orden importa (autenticación antes de autorización, CSRF solo en rutas mutativas)
+- Revisa `src/Routes/Router.php` o `public/index.php` para ver el registro
 
-- El orden de los middlewares importa (p. ej. autenticación antes de autorización y CSRF solo en rutas mutativas).
-- Revisa `src/Routes/Router.php` o el bootstrap en `public/index.php` para ver cómo se registran y aplican.
+## Buenas prácticas
 
-Buenas prácticas
+- Reusa middlewares para rutas similares
+- Prueba middlewares con tests unitarios simulando request/handler
+- En desarrollo, loguea causas de fallos para debugging
 
-- Reusar middlewares para rutas similares en vez de duplicar código.
-- Probar middlewares con tests unitarios donde se simule una request y el siguiente handler.
-- En desarrollo, loguear (con precaución) causas de fallos (p. ej. token CSRF ausente) para facilitar debugging.
+## Seguridad
 
-Seguridad
+- `CsrfMiddleware` debe consultar cookie/session y campo oculto
+- Mantén sesiones seguras (cookie params, SameSite, secure flag en HTTPS)
 
-- Asegúrate de que `CsrfMiddleware` consulte la cookie/session y el campo oculto del formulario.
-- Mantén las sesiones seguras (configura cookie params, SameSite, secure flag cuando uses HTTPS).
+## Referencias
+
+- [Manual técnico modular](../../docs/INDEX.md)

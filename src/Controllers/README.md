@@ -1,19 +1,23 @@
+
 # src/Controllers/
 
-Propósito
+Controladores HTTP: reciben requests, validan/autorizan, delegan en Services y devuelven vistas o JSON.
 
-Contiene los controllers HTTP que reciben requests, validan/autorizar, delegan en Services y devuelven vistas o JSON.
+## Convenciones
 
-Convenciones
+- Agrupa acciones relacionadas (index, create, store, edit, update, delete, show)
+- Mantén la mínima lógica posible en controllers: validar, mapear datos y orquestar llamadas a Services
+- Lanza excepciones o retorna respuestas adecuadas que el router traduzca a códigos HTTP
 
-- Cada controller agrupa acciones relacionadas (index, create, store, edit, update, delete, show).
-- Mantén la mínima lógica posible en controllers: validar, mapear datos y orquestar llamadas a Services.
-- Los controllers deben lanzar excepciones o retornar respuestas adecuadas que el router/handler traduzca a códigos HTTP.
+## Ejemplo
 
-Ejemplo
+- `ProductController.php`: listar, crear/editar productos y manejar variantes
 
-- `ProductController.php` — acciones para listar, crear/editar productos y manejar variantes.
+## Testing
 
-Testing
+- Testea controllers mediante pruebas funcionales o tests que simulen request/response
+- Preferible: testear Services y Repositories por separado y mantener controllers delgados
 
-- Testear controllers mediante pruebas funcionales o tests que simulen request/response. Preferible: testear Services y Repositories por separado y mantener controllers delgados.
+## Referencias
+
+- [Manual técnico modular](../../docs/INDEX.md)

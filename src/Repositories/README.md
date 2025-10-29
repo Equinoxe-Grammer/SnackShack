@@ -1,31 +1,30 @@
-# src/Repositories/
 
-Propósito
+# src/Repositories/
 
 Implementan la capa de acceso a datos. Los Repositories encapsulan consultas SQL/ORM y proporcionan una API estable para el resto de la aplicación.
 
-Patrón y convenciones
+## Patrón y convenciones
 
-- Cada entidad importante debe tener un Repository (p. ej. `ProductRepository`, `UserRepository`, `SaleRepository`).
-- Preferir interfaces (`XRepositoryInterface.php`) para facilitar mocking en tests.
-- Los métodos comunes: `find($id)`, `findAll()`, `create($data)`, `update($id, $data)`, `delete($id)` y consultas específicas `findByCategory($categoryId)`.
+- Cada entidad importante debe tener un Repository (ej. `ProductRepository`, `UserRepository`, `SaleRepository`)
+- Preferir interfaces (`XRepositoryInterface.php`) para facilitar mocking en tests
+- Métodos comunes: `find($id)`, `findAll()`, `create($data)`, `update($id, $data)`, `delete($id)`, consultas específicas
 
-Transacciones y operaciones compuestas
+## Transacciones y operaciones compuestas
 
-- Si una operación requiere varias consultas (e.g. crear venta y crear items de venta + decrementar stock), el Service que orquesta debe abrir una transacción usando la conexión del `src/Database/Connection.php`.
+- Si una operación requiere varias consultas, el Service debe abrir una transacción usando la conexión de `src/Database/Connection.php`
 
-Testing
+## Testing
 
-- Mockear las interfaces de repositorio en tests de Services para aislar la lógica de negocio.
-- Para pruebas de integración, usar una BD en memoria (SQLite) y ejecutar los mismos queries para validar el comportamiento.
+- Mockea interfaces de repositorio en tests de Services
+- Para integración, usa una BD en memoria (SQLite) y ejecuta los mismos queries
 
-Buenas prácticas
+## Buenas prácticas
 
-- Evitar lógica de negocio compleja en Repositories: limitarse a persistencia y transformaciones sencillas.
-- Manejar errores de BD y mapearlos a excepciones de dominio cuando corresponda.
-- Documentar queries que sean críticas en rendimiento y considerar índices en la BD.
+- Evita lógica de negocio compleja en Repositories
+- Maneja errores de BD y mapea a excepciones de dominio
+- Documenta queries críticas y considera índices en la BD
 
-Ejemplo (pseudocódigo)
+## Ejemplo (pseudocódigo)
 
 ```php
 interface ProductRepositoryInterface {
@@ -43,6 +42,6 @@ class ProductRepository implements ProductRepositoryInterface {
 }
 ```
 
-Notas
+## Referencias
 
-- Revisa las interfaces existentes en `src/Repositories/` (por ejemplo `ComprasRepositoryInterface.php`) y mantén la coherencia.
+- [Manual técnico modular](../../docs/INDEX.md)

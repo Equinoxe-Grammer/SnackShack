@@ -1,28 +1,33 @@
+
 # src/
 
-Propósito
+Carpeta raíz del código fuente. Aquí se encuentran todas las capas principales del backend.
 
-Contiene el código fuente de la aplicación: controllers, modelos, repositorios, servicios, rutas, middlewares y configuración.
+## Estructura y responsabilidades
 
-Estructura destacada
+- [`Config/`](Config/README.md): Configuración global (DB, entorno, flags)
+- [`Controllers/`](Controllers/README.md): Orquestación HTTP
+- [`Services/`](Services/README.md): Lógica de negocio reutilizable
+- [`Repositories/`](Repositories/README.md): Acceso y persistencia de datos
+- [`Models/`](Models/README.md): Entidades del dominio
+- [`Views/`](Views/README.md): Plantillas y partials
+- [`Routes/`](Routes/README.md): Enrutamiento y middlewares
+- [`Database/`](Database/README.md): Conexión y helpers DB
+- [`Middleware/`](Middleware/README.md): Interceptores (auth, csrf, roles)
 
-- `Config/` — Configuración de la aplicación (valores de DB, APP env, claves).
-- `Controllers/` — Lógica que maneja peticiones HTTP y prepara respuestas (vistas o JSON).
-- `Database/` — Conexión a la base de datos y utilidades relacionadas.
-- `Middleware/` — Middlewares (auth, csrf, role).
-- `Models/` — Representación de entidades/objetos de dominio.
-- `Repositories/` — Abstracción de acceso a datos (CRUD y queries).
-- `Routes/` — Router y definiciones de rutas.
-- `Services/` — Lógica de negocio reusable (impuestos, cálculos, procesamiento de imágenes).
-- `Views/` — Plantillas/partials para renderizado server-side.
+## Buenas prácticas
 
-Convenciones y buenas prácticas
+- Sigue PSR-12/PSR-4 y autoload por Composer
+- Mantén controllers delgados; lógica en Services
+- Define interfaces para Repositories para facilitar tests
+- Usa prepared statements y maneja errores de BD en repositorios
 
-- Las clases deben seguir PSR-4 (ya configurado por Composer/autoload).
-- Separar lógica de negocio (Services) de la manipulación directa de la BD (Repositories).
-- Documentar públicamente las interfaces en `Repositories/` y `Services/`.
+## Testing y mantenimiento
 
-Sugerencias de mantenimiento
+- Añade tests unitarios para Services y de integración para Repositories (SQLite en memoria para CI)
+- Mantén un README por carpeta con convenciones y ejemplos
+- Documenta migraciones y seeds; considera Phinx o scripts SQL
 
-- Añadir tests unitarios para Services y pruebas de integración para Repositories.
-- Mantener `Config` fuera del control de versiones si contiene secretos; usar `.env` en su lugar.
+## Referencias
+
+- [Manual técnico modular](../docs/INDEX.md)

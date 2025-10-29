@@ -1,26 +1,28 @@
+
 # public/
 
-Propósito
+Carpeta pública (DocumentRoot). Contiene el punto de entrada de la aplicación y todos los activos estáticos servidos al navegador.
 
-Directorio público (DocumentRoot). Contiene el punto de entrada de la aplicación y activos estáticos que sirven al navegador.
+## Contenido principal
 
-Contenido importante
+- `index.php`: punto de entrada principal para solicitudes HTTP
+- `pretty-urls.php`: soporte para URLs amigables
+- `assets/`, `css/`, `js/`: archivos estáticos (CSS, JS, imágenes, fuentes)
 
-- `index.php` — Punto de entrada principal para solicitudes HTTP.
-- `pretty-urls.php` — Manejador/compatibilidad para URLs amigables (si se usa).
-- `assets/`, `css/`, `js/` — Archivos estáticos (CSS, JS, imágenes).
+## Recomendaciones
 
-Convenciones y recomendaciones
+- En producción, configura el servidor (Nginx/Apache) para que el DocumentRoot apunte aquí
+- No guardes archivos sensibles o credenciales en `public/`
+- Habilita compresión y caching estático (gzip/brotli, headers de cache)
 
-- El servidor web (Apache/Nginx) debe apuntar el DocumentRoot a `public/`.
-- No colocar archivos con credenciales en este directorio.
-- Versiona sólo los orígenes; los activos compilados pueden incluirse si son producidos por el proyecto.
+## Desarrollo rápido
 
-Despliegue
+```powershell
+php -S localhost:8000 -t public
+```
 
-- En producción: copiar el contenido de `public/` como DocumentRoot.
-- Asegurar mecanismos de caché y compresión en el servidor (gzip, headers de cache).
+Si usas un pipeline de assets (build de CSS/JS), documenta aquí el paso para compilar/actualizar los assets.
 
-Notas para desarrolladores
+## Referencias
 
-- Para desarrollo rápido con el servidor embebido de PHP: `php -S localhost:8000 -t public`.
+- [Manual técnico modular](../docs/INDEX.md)

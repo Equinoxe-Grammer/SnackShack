@@ -1,18 +1,22 @@
+
 # src/Config/
 
-Propósito
+Configuración global de la aplicación: parámetros de conexión a la base de datos, opciones de entorno y valores globales.
 
-Almacena la configuración de la aplicación: parámetros de conexión a la base de datos, opciones de entorno y otros valores globales.
+## Archivos principales
 
-Archivos principales
+- `AppConfig.php`: mapa de configuración principal (DB, APP, DEBUG, BASE_URL)
 
-- `AppConfig.php` — Mapa de configuración principal (DB, APP, DEBUG, BASE_URL).
+## Buenas prácticas
 
-Buenas prácticas
+- No versiones credenciales en texto plano
+- Si usas `.env`, mantén `AppConfig.php` como lector de variables
+- Documenta cualquier clave nueva y su significado
 
-- No versionar credenciales en texto plano. Si se añade soporte a `.env`, mantén `AppConfig.php` como lector de esas variables.
-- Documentar cualquier clave nueva y su significado.
+## Ejemplo de uso
 
-Ejemplo de uso
+- Para cambiar la conexión DB, edita `AppConfig.php` o configura las variables de entorno y actualiza el loader
 
-- Para cambiar la conexión DB, edita `AppConfig.php` o configura las variables de entorno y actualiza el loader.
+## Referencias
+
+- [Manual técnico modular](../../docs/INDEX.md)
