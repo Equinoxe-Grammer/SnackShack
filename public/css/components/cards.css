@@ -1,0 +1,144 @@
+/* ===========================================
+   COMPONENTE: TARJETAS (CARDS)
+   ===========================================
+   Estilos reutilizables para tarjetas en toda la aplicación.
+   Usa variables CSS de theme.css para soporte de temas.
+   =========================================== */
+
+/* --- TARJETA BASE --- */
+.card {
+    background: var(--surface);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+}
+
+.card:hover {
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+/* --- TARJETAS DE RESUMEN --- */
+.summary-card {
+    background: var(--surface);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+}
+
+.summary-card:hover {
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+/* --- TARJETAS DE VENTAS RECIENTES --- */
+.recent-sales {
+    background: var(--surface);
+    padding: 1.8rem 2rem 1.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.3s ease;
+    border: 1px solid var(--border);
+}
+
+.recent-sales:hover {
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* --- CONTENIDO DE TARJETAS --- */
+.card-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-header h2,
+.card-header h3 {
+    margin: 0;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.card-body {
+    color: var(--text);
+}
+
+.card-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- ICONOS EN TARJETAS --- */
+.card-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    margin-right: 1.2rem;
+}
+
+.card-icon-wrapper.green {
+    background: linear-gradient(135deg, var(--success) 60%, var(--success-2) 100%);
+}
+
+.card-icon-wrapper.blue {
+    background: linear-gradient(135deg, var(--primary) 60%, var(--primary-2) 100%);
+}
+
+.card-icon-wrapper.orange {
+    background: linear-gradient(135deg, var(--warning) 60%, var(--brand) 100%);
+}
+
+.card-icon {
+    font-size: 2rem;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- INFORMACIÓN EN TARJETAS --- */
+.card-info h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.card-info p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0 0;
+}
+
+/* --- TARJETAS VARIACIONES --- */
+.card-sm {
+    padding: 1rem;
+}
+
+.card-lg {
+    padding: 3rem;
+}
+
+.card-no-shadow {
+    box-shadow: none;
+    border: 1px solid var(--border);
+}
+
+.card-no-hover:hover {
+    transform: none;
+    box-shadow: var(--shadow);
+}

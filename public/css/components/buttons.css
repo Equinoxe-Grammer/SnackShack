@@ -1,0 +1,177 @@
+/* ===========================================
+   COMPONENTE: BOTONES
+   ===========================================
+   Estilos reutilizables para botones en toda la aplicación.
+   Usa variables CSS de theme.css para soporte de temas.
+   =========================================== */
+
+/* --- ESTILOS BASE DE BOTONES --- */
+.btn {
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(86, 104, 244, 0.13);
+}
+
+.btn:focus {
+    outline: 2px solid #3897fe;
+    outline-offset: 2px;
+}
+
+/* --- ESTADOS GLOBALES --- */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(56, 151, 254, 0.18);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* --- VARIANTE PRIMARY --- */
+.btn-primary {
+    background: linear-gradient(135deg, #5668f4, #3897fe);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(86, 104, 244, 0.13);
+}
+
+/* --- VARIANTE SECONDARY --- */
+.btn-secondary {
+    background: linear-gradient(135deg, #ff9a44, #ffb751);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(255, 154, 68, 0.13);
+}
+
+/* --- VARIANTE WARNING --- */
+.btn-warning {
+    background: linear-gradient(135deg, #F29E38, #fd7e14);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(242, 158, 56, 0.13);
+}
+
+/* --- VARIANTE SUCCESS --- */
+.btn-success {
+    background: linear-gradient(135deg, #20c997, #8ED1B2);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(32, 201, 151, 0.13);
+}
+
+/* --- VARIANTE OUTLINE --- */
+.btn-outline {
+    background: transparent;
+    color: #3897fe;
+    border: 2px solid #3897fe;
+    box-shadow: none;
+}
+
+.btn-outline:hover {
+    background: #3897fe;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(56, 151, 254, 0.18);
+}
+
+.btn-outline:active {
+    transform: scale(0.98);
+}
+
+/* --- VARIANTE GHOST --- */
+.btn-ghost {
+    background: transparent;
+    color: #343a40;
+    box-shadow: none;
+}
+
+.btn-ghost:hover {
+    background: #f8f9fe;
+    transform: translateY(-1px);
+}
+
+/* --- TAMAÑOS DE BOTONES --- */
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    border-radius: 12px;
+}
+
+/* --- BOTONES ESPECIALES --- */
+.btn-logout {
+    background: linear-gradient(135deg, #ff5b79, #ff8a80);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(255, 91, 121, 0.13);
+}
+
+.btn-logout:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(255, 91, 121, 0.4);
+}
+
+.btn-process {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #20c997, #8ED1B2);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(32, 201, 151, 0.13);
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-process:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(32, 201, 151, 0.2);
+}
+
+.btn-clear {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #F29E38, #fd7e14);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(242, 158, 56, 0.13);
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-clear:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(242, 158, 56, 0.2);
+}
+
+.btn-view {
+    background: linear-gradient(135deg, #3897fe, #00d2fe);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(56, 151, 254, 0.13);
+}
+
+/* --- ESTADOS DESHABILITADOS --- */
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn:disabled:hover,
+.btn[disabled]:hover {
+    transform: none;
+    box-shadow: none;
+}

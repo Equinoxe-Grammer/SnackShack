@@ -1,0 +1,27 @@
+/* ===========================================
+   COMPONENTES PRINCIPALES
+   ===========================================
+   Archivo principal que importa todos los componentes
+   reutilizables de la aplicación.
+   =========================================== */
+
+/* --- IMPORTAR VARIABLES DE TEMA --- */
+@import url('../theme.css');
+
+/* --- IMPORTAR COMPONENTES --- */
+@import url('buttons.css');
+@import url('cards.css');
+@import url('forms.css');
+
+/* ===========================================
+   COMPONENTES ADICIONALES (PENDIENTES)
+   ===========================================
+   Los siguientes componentes necesitan ser migrados
+   desde los archivos legacy:
+
+   - Modales (modal.css)
+   - Tablas (tables.css)
+   - Navegación (navigation.css)
+   - Sidebar (sidebar.css)
+   - Utilidades (utilities.css)
+   =========================================== */

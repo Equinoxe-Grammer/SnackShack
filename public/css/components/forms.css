@@ -1,0 +1,213 @@
+/* ===========================================
+   COMPONENTE: FORMULARIOS
+   ===========================================
+   Estilos reutilizables para formularios en toda la aplicación.
+   Usa variables CSS de theme.css para soporte de temas.
+   =========================================== */
+
+/* --- CONTENEDORES DE FORMULARIOS --- */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.product-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --- GRIDS DE FORMULARIOS --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.form-row {
+    display: grid;
+    gap: 0.9rem;
+}
+
+/* --- GRUPOS DE FORMULARIOS --- */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-group label i {
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+/* --- CONTROLES DE FORMULARIOS --- */
+.form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1rem;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(56, 151, 254, 0.12);
+}
+
+.form-control::placeholder {
+    color: var(--muted);
+}
+
+.form-control textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+/* --- HINTS DE FORMULARIOS --- */
+.form-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+}
+
+.form-hint i {
+    font-size: 0.75rem;
+}
+
+/* --- CHECKBOXES --- */
+.checkbox-wrapper,
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.checkbox-wrapper input[type="checkbox"],
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    accent-color: var(--primary);
+}
+
+/* --- ACCIONES DE FORMULARIOS --- */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.cart-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+/* --- ESTADOS DE VALIDACIÓN --- */
+.form-control.is-valid {
+    border-color: var(--success);
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.1);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(255, 91, 121, 0.1);
+}
+
+.form-feedback {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.form-feedback.valid-feedback {
+    color: var(--success);
+}
+
+.form-feedback.invalid-feedback {
+    color: var(--danger);
+}
+
+/* --- INPUTS ESPECIALES --- */
+.input-group {
+    display: flex;
+    align-items: stretch;
+}
+
+.input-group .form-control {
+    border-radius: 0;
+    border-right: none;
+}
+
+.input-group .form-control:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.input-group .form-control:last-child {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    border-right: 2px solid var(--border);
+}
+
+.input-group-addon {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+    border-left: none;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.input-group-addon:first-child {
+    border-left: 2px solid var(--border);
+    border-right: none;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid .full-width {
+        grid-column: 1;
+    }
+
+    .form-actions,
+    .cart-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn,
+    .cart-actions .btn {
+        width: 100%;
+    }
+}
