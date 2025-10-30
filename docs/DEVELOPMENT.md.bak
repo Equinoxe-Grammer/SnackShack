@@ -154,8 +154,13 @@ curl http://localhost:8000
 <a id="-configuracion-env-para-desarrollo"></a>
 ### Configuración .env para Desarrollo
 
-> Nota: sección consolidada — ver [COMMON_SNIPPETS.md#env-example](COMMON_SNIPPETS.md#env-example)
-
+```bash
+<a id="envdevelopment"></a>
+<a id="-envdevelopment"></a>
+# .env.development
+APP_ENV=development
+APP_DEBUG=true
+APP_URL=http://localhost:8000
 
 <a id="database-sqlite-para-desarrollo-local"></a>
 <a id="-database-sqlite-para-desarrollo-local"></a>

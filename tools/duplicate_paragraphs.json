@@ -1,0 +1,28 @@
+{
+  "- [Manual técnico modular](../docs/INDEX.md)": [
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\data\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\public\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\README.md"
+  ],
+  "> Nota: sección consolidada — ver [COMMON_SNIPPETS.md#index-links](COMMON_SNIPPETS.md#index-links)": [
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\docs\\API.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\docs\\DEPLOYMENT.md"
+  ],
+  "> Nota: sección consolidada — ver [COMMON_SNIPPETS.md#env-example](COMMON_SNIPPETS.md#env-example)": [
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\docs\\CONFIGURATION.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\docs\\DEVELOPMENT.md"
+  ],
+  "require_once __DIR__ . '/../vendor/autoload.php';": [
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\docs\\DEVELOPMENT.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\docs\\TESTING.md"
+  ],
+  "- [Manual técnico modular](../../docs/INDEX.md)": [
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\Config\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\Controllers\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\Database\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\Middleware\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\Models\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\Repositories\\README.md",
+    "c:\\Users\\david\\Downloads\\SnackShop\\SnackShop\\www\\SnackShop\\src\\Routes\\README.md"
+  ]
+}

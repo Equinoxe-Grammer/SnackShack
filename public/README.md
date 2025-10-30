@@ -17,9 +17,7 @@ Carpeta pública (DocumentRoot). Contiene el punto de entrada de la aplicación 
 
 ## Desarrollo rápido
 
-```powershell
-php -S localhost:8000 -t public
-```
+Para instrucciones de arranque local y comandos de desarrollo, consulte el `README.md` en la raíz del proyecto: [../README.md](../README.md).
 
 Si usas un pipeline de assets (build de CSS/JS), documenta aquí el paso para compilar/actualizar los assets.
 

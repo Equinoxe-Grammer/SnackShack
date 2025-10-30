@@ -56,7 +56,7 @@ php -S localhost:8000 -t public
 Abre http://localhost:8000
 
 Resumen rápido:
-Proyecto modular (Controllers → Services → Repositories → Models) con ejemplos y tests listos para desarrolladores.
+Proyecto modular (Controllers → Services → Repositories → Models) con ejemplos y guías de testing para desarrolladores. Actualmente el repositorio incluye documentación y ejemplos de tests (ver `docs/TESTING.md` y `docs/examples/`), pero no contiene una suite de tests automatizados por defecto.
 
 <a id="documentacion-modular"></a>
 <a id="-documentacion-modular"></a>
@@ -165,7 +165,10 @@ Consulta [CONTRIBUTING.md](docs/CONTRIBUTING.md) para el flujo de trabajo, está
 <a id="-licencia"></a>
 ## Licencia
 
-MIT
+Este proyecto se distribuye bajo la licencia GNU Affero General Public License v3 (AGPL-3.0).
+Consulte el fichero `LICENSE` en la raíz del repositorio para el texto completo.
+
+SPDX: AGPL-3.0
 
 <a id="requisitos"></a>
 <a id="-requisitos"></a>
