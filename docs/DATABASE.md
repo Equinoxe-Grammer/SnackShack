@@ -14,16 +14,16 @@
 
 ## 📋 Índice
 
-- [Resumen del Sistema de Datos](#-resumen-del-sistema-de-datos)
-- [Configuración de Base de Datos](#-configuración-de-base-de-datos)
-- [Esquema de Tablas](#-esquema-de-tablas)
-- [Diagrama de Relaciones](#-diagrama-de-relaciones)
-- [Queries Importantes](#-queries-importantes)
-- [Migraciones y Versionado](#-migraciones-y-versionado)
-- [Seeds y Datos de Prueba](#-seeds-y-datos-de-prueba)
-- [Índices y Performance](#-índices-y-performance)
-- [Backup y Restauración](#-backup-y-restauración)
-- [Troubleshooting](#-troubleshooting)
+- [Resumen del Sistema de Datos](#resumen-del-sistema-de-datos)
+- [Configuración de Base de Datos](#configuración-de-base-de-datos)
+- [Esquema de Tablas](#esquema-de-tablas)
+- [Diagrama de Relaciones](#diagrama-de-relaciones)
+- [Queries Importantes](#queries-importantes)
+- [Migraciones y Versionado](#migraciones-y-versionado)
+- [Seeds y Datos de Prueba](#seeds-y-datos-de-prueba)
+- [Índices y Performance](#índices-y-performance)
+- [Backup y Restauración](#backup-y-restauración)
+- [Troubleshooting](#troubleshooting)
 
 ---
 

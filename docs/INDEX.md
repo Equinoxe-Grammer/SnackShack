@@ -10,14 +10,14 @@
 
 | Documento | Estado | Descripción | Ir a |
 |-----------|--------|-------------|------|
-| **Inicio** | ✅ | Guía de instalación y conceptos básicos | [README.md](../README.md) |
-| **Arquitectura** | ✅ | Patrones, capas y flujo de datos | [ARCHITECTURE.md](../ARCHITECTURE.md) |
-| **API** | 🚧 | Endpoints, rutas y ejemplos de uso | [API.md](../API.md) |
-| **Base de Datos** | 🚧 | Esquema, migraciones y queries | [DATABASE.md](../DATABASE.md) |
-| **Despliegue** | 🚧 | Docker, servidores y producción | [DEPLOYMENT.md](../DEPLOYMENT.md) |
-| **Desarrollo** | 🚧 | Setup avanzado y debugging | [DEVELOPMENT.md](../DEVELOPMENT.md) |
-| **Testing** | 🚧 | Pruebas y calidad de código | [TESTING.md](../TESTING.md) |
-| **Seguridad** | 🚧 | Vulnerabilidades y protecciones | [SECURITY.md](../SECURITY.md) |
+| **Inicio** | ✅ | Guía de instalación y conceptos básicos | [README.md](README.md) |
+| **Arquitectura** | ✅ | Patrones, capas y flujo de datos | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| **API** | ✅ | Endpoints, rutas y ejemplos de uso | [API.md](API.md) |
+| **Base de Datos** | ✅ | Esquema, migraciones y queries | [DATABASE.md](DATABASE.md) |
+| **Despliegue** | ✅ | Docker, servidores y producción | [DEPLOYMENT.md](DEPLOYMENT.md) |
+| **Desarrollo** | ✅ | Setup avanzado y debugging | [DEVELOPMENT.md](DEVELOPMENT.md) |
+| **Testing** | ✅ | Pruebas y calidad de código | [TESTING.md](TESTING.md) |
+| **Seguridad** | ✅ | Vulnerabilidades y protecciones | [SECURITY.md](SECURITY.md) |
 
 ---
 
@@ -83,36 +83,36 @@
 ### 👨‍💻 Para Desarrolladores Nuevos
 **Ruta recomendada para empezar:**
 
-1. **[README.md](../README.md)** — Instalación y primer arranque
-2. **[ARCHITECTURE.md](../ARCHITECTURE.md)** — Entender la estructura
-3. **[DEVELOPMENT.md](../DEVELOPMENT.md)** — Setup de desarrollo
-4. **[API.md](../API.md)** — Endpoints disponibles
+1. **[README.md](README.md)** — Instalación y primer arranque
+2. **[ARCHITECTURE.md](ARCHITECTURE.md)** — Entender la estructura
+3. **[DEVELOPMENT.md](DEVELOPMENT.md)** — Setup de desarrollo
+4. **[API.md](API.md)** — Endpoints disponibles
 5. **[docs/examples/](examples/)** — Ejemplos prácticos
 
 ### 🔧 Para Administradores de Sistema
 **Ruta recomendada para despliegue:**
 
-1. **[README.md](../README.md)** — Requisitos básicos
-2. **[DEPLOYMENT.md](../DEPLOYMENT.md)** — Despliegue en producción
-3. **[DATABASE.md](../DATABASE.md)** — Configuración de BD
-4. **[SECURITY.md](../SECURITY.md)** — Medidas de seguridad
-5. **[TROUBLESHOOTING.md](../TROUBLESHOOTING.md)** — Solución de problemas
+1. **[README.md](README.md)** — Requisitos básicos
+2. **[DEPLOYMENT.md](DEPLOYMENT.md)** — Despliegue en producción
+3. **[DATABASE.md](DATABASE.md)** — Configuración de BD
+4. **[SECURITY.md](SECURITY.md)** — Medidas de seguridad
+5. **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** — Solución de problemas
 
 ### 🚀 Para Integración API
 **Ruta recomendada para integraciones:**
 
-1. **[API.md](../API.md)** — Documentación completa de endpoints
-2. **[ARCHITECTURE.md](../ARCHITECTURE.md)** — Flujo de autenticación
+1. **[API.md](API.md)** — Documentación completa de endpoints
+2. **[ARCHITECTURE.md](ARCHITECTURE.md)** — Flujo de autenticación
 3. **[docs/examples/api-integration-example.php](examples/api-integration-example.php)** — Ejemplos de integración
-4. **[SECURITY.md](../SECURITY.md)** — Tokens y autenticación
+4. **[SECURITY.md](SECURITY.md)** — Tokens y autenticación
 
 ### 🧪 Para Testing y QA
 **Ruta recomendada para pruebas:**
 
-1. **[TESTING.md](../TESTING.md)** — Estrategias de testing
-2. **[DEVELOPMENT.md](../DEVELOPMENT.md)** — Setup de entorno de pruebas
+1. **[TESTING.md](TESTING.md)** — Estrategias de testing
+2. **[DEVELOPMENT.md](DEVELOPMENT.md)** — Setup de entorno de pruebas
 3. **[docs/examples/testing-example.php](examples/testing-example.php)** — Ejemplos de tests
-4. **[DATABASE.md](../DATABASE.md)** — Datos de prueba y seeds
+4. **[DATABASE.md](DATABASE.md)** — Datos de prueba y seeds
 
 ---
 
@@ -136,6 +136,14 @@ Todos los documentos del manual siguen esta estructura estándar:
 ## 📋 Índice Interno
 - [Sección 1](#sección-1)
 - [Sección 2](#sección-2)
+
+## Sección 1
+
+Contenido de ejemplo para la Sección 1 (plantilla). Puedes editar o eliminar esta sección según el manual real.
+
+## Sección 2
+
+Contenido de ejemplo para la Sección 2 (plantilla). Sirve como ejemplo de índice interno.
 
 ---
 
@@ -195,7 +203,7 @@ Todos los documentos del manual siguen esta estructura estándar:
 - **Documentación incorrecta:** Crear issue con etiqueta `documentation`
 
 ### Contribuir al Manual
-1. Lee **[CONTRIBUTING.md](../CONTRIBUTING.md)** para las guías de contribución
+1. Lee **[CONTRIBUTING.md](CONTRIBUTING.md)** para las guías de contribución
 2. Sigue las convenciones de documentación de esta página
 3. Actualiza este índice si añades nuevos documentos
 
@@ -206,4 +214,4 @@ Todos los documentos del manual siguen esta estructura estándar:
 
 ---
 
-**🏠 [Volver al inicio](../README.md)** | **🏗️ [Ver Arquitectura](../ARCHITECTURE.md)** | **🔌 [Ver API](../API.md)**
+**🏠 [Volver al inicio](README.md)** | **🏗️ [Ver Arquitectura](ARCHITECTURE.md)** | **🔌 [Ver API](API.md)**

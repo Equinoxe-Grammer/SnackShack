@@ -14,20 +14,36 @@
 
 ## 📋 Índice
 
-- [Setup de Testing](#-setup-de-testing)
-- [Unit Testing](#-unit-testing)
-- [Integration Testing](#-integration-testing)
-- [Database Testing](#-database-testing)
-- [API Testing](#-api-testing)
-- [Frontend Testing](#-frontend-testing)
-- [Testing Workflows](#-testing-workflows)
-- [Code Coverage](#-code-coverage)
-- [Performance Testing](#-performance-testing)
-- [Security Testing](#-security-testing)
-- [Mocking y Fixtures](#-mocking-y-fixtures)
-- [CI/CD Integration](#-cicd-integration)
+- [Setup de Testing](#setup-de-testing)
+- [Unit Testing](#unit-testing)
+- [Integration Testing](#integration-testing)
+- [Database Testing](#database-integration-tests)
+- [API Testing](#api-integration-tests)
+- [Frontend Testing](#frontend-testing)
+- [Testing Workflows](#testing-workflows)
+- [Code Coverage](#code-coverage)
+- [Performance Testing](#performance-testing)
+- [Security Testing](#security-testing)
+- [Mocking y Fixtures](#mocking-y-fixtures)
+- [CI/CD Integration](#cicd-integration)
 
 ---
+
+## Testing Workflows
+
+Descripción de los flujos de testing recomendados (local -> CI -> staging):
+
+- Ejecutar unit tests en desarrollo.
+- Ejecutar integration tests con base de datos de testing (containers o sqlite).
+- Pipeline CI: ejecutar linters, unit tests, integration tests y publicar reportes de coverage.
+
+## Mocking y Fixtures
+
+Breve guía sobre cómo usar mocks y fixtures en los tests:
+
+- Usa fixtures ligeros para poblar datos en integration tests.
+- Prefiere mocks para llamadas externas (servicios, APIs) en unit tests.
+- Ejemplo con PHPUnit + Prophecy/Mockery en `tests/`.
 
 ## 🚀 Setup de Testing
 

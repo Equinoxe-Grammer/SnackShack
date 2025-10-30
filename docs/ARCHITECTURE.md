@@ -14,17 +14,17 @@
 
 ## 📋 Índice
 
-- [Visión General](#-visión-general)
-- [Patrón de Arquitectura](#-patrón-de-arquitectura)
-- [Capas del Sistema](#-capas-del-sistema)
-- [Flujo de Peticiones](#-flujo-de-peticiones)
-- [Componentes Principales](#-componentes-principales)
-- [Patrones de Diseño](#-patrones-de-diseño)
-- [Manejo de Dependencias](#-manejo-de-dependencias)
-- [Seguridad y Middleware](#-seguridad-y-middleware)
-- [Diagramas de Arquitectura](#-diagramas-de-arquitectura)
-- [Decisiones de Diseño](#-decisiones-de-diseño)
-- [Puntos de Extensión](#-puntos-de-extensión)
+- [Visión General](#visión-general)
+- [Patrón de Arquitectura](#patrón-de-arquitectura)
+- [Capas del Sistema](#capas-del-sistema)
+- [Flujo de Peticiones](#flujo-de-peticiones)
+- [Componentes Principales](#componentes-principales)
+- [Patrones de Diseño](#patrones-de-diseño)
+- [Manejo de Dependencias](#manejo-de-dependencias)
+- [Seguridad y Middleware](#seguridad-y-middleware)
+- [Diagramas de Arquitectura](#diagramas-de-arquitectura)
+- [Decisiones de Diseño](#decisiones-de-diseño)
+- [Puntos de Extensión](#puntos-de-extensión)
 
 ---
 

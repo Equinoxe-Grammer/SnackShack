@@ -14,18 +14,18 @@
 
 ## 📋 Índice
 
-- [Setup Inicial](#-setup-inicial)
-- [Entorno de Desarrollo](#-entorno-de-desarrollo)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Estándares de Código](#-estándares-de-código)
-- [Workflows de Desarrollo](#-workflows-de-desarrollo)
-- [Debugging y Profiling](#-debugging-y-profiling)
-- [Herramientas de Desarrollo](#-herramientas-de-desarrollo)
-- [Comandos Útiles](#-comandos-útiles)
-- [Git Workflow](#-git-workflow)
-- [Performance Guidelines](#-performance-guidelines)
-- [Security Guidelines](#-security-guidelines)
-- [API Development](#-api-development)
+- [Setup Inicial](#setup-inicial)
+- [Entorno de Desarrollo](#entorno-de-desarrollo)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Estándares de Código](#estándares-de-código)
+- [Workflows de Desarrollo](#workflows-de-desarrollo)
+- [Debugging y Profiling](#debugging-y-profiling)
+- [Herramientas de Desarrollo](#herramientas-de-desarrollo)
+    - [Comandos Útiles](#comandos-útiles)
+    - [Git Workflows](#git-workflows)
+- [Performance Guidelines](#performance-guidelines)
+- [Security Guidelines](#security-guidelines)
+- [API Development](#api-development)
 
 ---
 
@@ -100,6 +100,41 @@ CACHE_DRIVER=none
 # Email (log driver para testing)
 MAIL_DRIVER=log
 MAIL_LOG_FILE=/tmp/snackshop-emails.log
+```
+
+---
+
+## Comandos Útiles
+
+Pequeña guía de comandos y scripts útiles para desarrollo local y tareas diarias:
+
+```powershell
+# Instalar dependencias
+composer install
+
+# Ejecutar migraciones
+php scripts/migrate.php
+
+# Ejecutar tests unitarios
+./vendor/bin/phpunit --testsuite unit
+
+# Correr servidor de desarrollo
+php -S localhost:8000 -t public
+
+# Limpiar cache (ejemplos)
+php scripts/clear-cache.php
+```
+
+## API Development
+
+Consejos rápidos para desarrollar y probar endpoints API:
+
+- Mantén rutas RESTful y versionadas (/api/v1/...).
+- Valida la entrada en el servidor; centraliza validadores en Services/Validators.
+- Ejemplo de prueba rápida con curl:
+
+```bash
+curl -X GET http://localhost:8000/api/v1/products
 ```
 
 ---

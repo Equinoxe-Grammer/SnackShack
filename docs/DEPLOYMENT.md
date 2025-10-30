@@ -14,18 +14,18 @@
 
 ## 📋 Índice
 
-- [Resumen de Opciones de Despliegue](#-resumen-de-opciones-de-despliegue)
-- [Desarrollo Local](#-desarrollo-local)
-- [Despliegue con Docker](#-despliegue-con-docker)
-- [Servidor Compartido](#-servidor-compartido)
-- [VPS / Servidor Dedicado](#-vps--servidor-dedicado)
-- [Cloud Platforms](#-cloud-platforms)
-- [Variables de Entorno](#-variables-de-entorno)
-- [SSL y Seguridad](#-ssl-y-seguridad)
-- [Monitoreo y Logs](#-monitoreo-y-logs)
-- [Backup Automatizado](#-backup-automatizado)
-- [Troubleshooting](#-troubleshooting)
-- [Checklist de Producción](#-checklist-de-producción)
+- [Resumen de Opciones de Despliegue](#resumen-de-opciones-de-despliegue)
+- [Desarrollo Local](#desarrollo-local)
+- [Despliegue con Docker](#despliegue-con-docker)
+- [Servidor Compartido](#servidor-compartido)
+-- [VPS / Servidor Dedicado](#vps-servidor-dedicado)
+- [Cloud Platforms](#cloud-platforms)
+- [Variables de Entorno](#variables-de-entorno)
+- [SSL y Seguridad](#ssl-y-seguridad)
+- [Monitoreo y Logs](#monitoreo-y-logs)
+- [Backup Automatizado](#backup-automatizado)
+- [Troubleshooting](#troubleshooting)
+- [Checklist de Producción](#checklist-de-producción)
 
 ---
 

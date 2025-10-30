@@ -14,18 +14,18 @@
 
 ## 📋 Índice
 
-- [Variables de Entorno Detalladas](#-variables-de-entorno-detalladas)
-- [Configuración PHP](#-configuración-php)
-- [Configuración Nginx](#-configuración-nginx)
-- [Configuración MySQL](#-configuración-mysql)
-- [Optimización de Performance](#-optimización-de-performance)
-- [Configuración de Seguridad](#-configuración-de-seguridad)
-- [Logging Avanzado](#-logging-avanzado)
-- [Cache y Redis](#-cache-y-redis)
-- [Configuración por Entorno](#-configuración-por-entorno)
-- [Configuración de SSL](#-configuración-de-ssl)
-- [Monitoring y Alertas](#-monitoring-y-alertas)
-- [Configuración de Backup](#-configuración-de-backup)
+- [Variables de Entorno Detalladas](#variables-de-entorno-detalladas)
+- [Configuración PHP](#configuración-php)
+- [Configuración Nginx](#configuración-nginx)
+- [Configuración MySQL](#configuración-mysql)
+- [Optimización de Performance](#optimización-de-performance)
+- [Configuración de Seguridad](#configuración-de-seguridad)
+- [Logging Avanzado](#logging-avanzado)
+- [Cache y Redis](#cache-y-redis)
+- [Configuración por Entorno](#configuración-por-entorno)
+- [Configuración de SSL](#configuración-de-ssl)
+- [Monitoring y Alertas](#monitoring-y-alertas)
+- [Configuración de Backup](#configuración-de-backup)
 
 ---
 
@@ -172,6 +172,42 @@ PERFORMANCE_MONITORING=true          # Monitoreo de performance
 MEMORY_LIMIT_WARNING=512M            # Advertencia uso memoria
 EXECUTION_TIME_WARNING=5             # Advertencia tiempo ejecución (segundos)
 ```
+
+### Cache y Redis
+
+```bash
+# Configuración básica para Redis en producción
+CACHE_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_DB=0
+REDIS_CACHE_TTL=3600
+```
+
+Añade aquí instrucciones sobre cómo instalar y tunear Redis (maxmemory, eviction policy), y cómo habilitar el driver de cache en `config/cache.php` o la configuración equivalente.
+
+### Configuración de SSL
+
+```bash
+# Notas rápidas para SSL/TLS
+TLS_CERT_PATH=/etc/letsencrypt/live/tu-dominio/fullchain.pem
+TLS_KEY_PATH=/etc/letsencrypt/live/tu-dominio/privkey.pem
+```
+
+Describe la configuración recomendada: forzar HTTPS, HSTS, redirecciones en Nginx/Apache, renovación automática con certbot y pruebas con SSL Labs.
+
+### Configuración de Backup
+
+```bash
+# Ejemplo de script de backup (esquema resumido)
+# 1) Dump de base de datos
+mysqldump -u user -p password snackshop > /backups/snackshop_$(date +%F).sql
+# 2) Comprimir y rotar
+tar -czf /backups/snackshop_$(date +%F).tar.gz /backups/snackshop_$(date +%F).sql
+find /backups -type f -mtime +30 -delete  # eliminar backups viejos a 30 días
+```
+
+Explica políticas de retención, backups offsite y pruebas de restauración periódicas.
 
 ### Email Configuration
 

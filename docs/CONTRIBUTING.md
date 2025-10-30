@@ -14,18 +14,18 @@
 
 ## 📋 Índice
 
-- [Código de Conducta](#-código-de-conducta)
-- [Cómo Contribuir](#-cómo-contribuir)
-- [Setup para Contribuidores](#-setup-para-contribuidores)
-- [Estándares de Código](#-estándares-de-código)
-- [Proceso de Pull Request](#-proceso-de-pull-request)
-- [Code Review Guidelines](#-code-review-guidelines)
-- [Tipos de Contribuciones](#-tipos-de-contribuciones)
-- [Documentación](#-documentación)
-- [Reportar Bugs](#-reportar-bugs)
-- [Solicitar Features](#-solicitar-features)
-- [Comunidad y Comunicación](#-comunidad-y-comunicación)
-- [Reconocimientos](#-reconocimientos)
+- [Código de Conducta](#código-de-conducta)
+- [Cómo Contribuir](#cómo-contribuir)
+- [Setup para Contribuidores](#setup-para-contribuidores)
+- [Estándares de Código](#estándares-de-código)
+- [Proceso de Pull Request](#proceso-de-pull-request)
+- [Code Review Guidelines](#code-review-guidelines)
+- [Tipos de Contribuciones](#tipos-de-contribuciones)
+- [Documentación](#documentation)
+- [Reportar Bugs](#reportar-bugs)
+- [Solicitar Features](#solicitar-features)
+- [Comunidad y Comunicación](#comunidad-y-comunicación)
+- [Reconocimientos](#reconocimientos)
 
 ---
 

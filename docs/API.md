@@ -14,15 +14,15 @@
 
 ## 📋 Índice
 
-- [Resumen de APIs](#-resumen-de-apis)
-- [Autenticación y Autorización](#-autenticación-y-autorización)
-- [Endpoints Web (Views)](#-endpoints-web-views)
-- [Endpoints JSON API](#-endpoints-json-api)
-- [Códigos de Estado HTTP](#-códigos-de-estado-http)
-- [Ejemplos de Integración](#-ejemplos-de-integración)
-- [Manejo de Errores](#-manejo-de-errores)
-- [Tokens CSRF](#-tokens-csrf)
-- [Rate Limiting](#-rate-limiting)
+- [Resumen de APIs](#resumen-de-apis)
+- [Autenticación y Autorización](#autenticación-y-autorización)
+- [Endpoints Web (Views)](#endpoints-web-views)
+- [Endpoints JSON API](#endpoints-json-api)
+- [Códigos de Estado HTTP](#códigos-de-estado-http)
+- [Ejemplos de Integración](#ejemplos-de-integración)
+- [Manejo de Errores](#manejo-de-errores)
+- [Tokens CSRF](#tokens-csrf)
+- [Rate Limiting](#rate-limiting)
 
 ---
 
