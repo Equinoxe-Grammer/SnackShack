@@ -1,8 +1,65 @@
 
+<a id="snackshop"></a>
+<a id="-snackshop"></a>
 # SnackShop
+<!-- TOC -->
+<a id="contenido"></a>
+<a id="-contenido"></a>
+## Contenido
 
-Proyecto web PHP modular para la gestión de una tienda de snacks (productos, ventas, usuarios, variantes e inventario). Este README resume la instalación, configuración y estructura, y enlaza a la documentación técnica completa.
+- [📚 Documentación Modular](#-documentacion-modular)
+- [Resumen](#resumen)
+- [Requisitos](#requisitos)
+- [Instalación Rápida](#instalacion-rapida)
+- [Configuración](#configuracion)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Arrancar la Aplicación](#arrancar-la-aplicacion)
+- [Buenas Prácticas y Optimización](#buenas-practicas-y-optimizacion)
+- [Testing y Calidad](#testing-y-calidad)
+- [Contribuir](#contribuir)
+- [Licencia](#licencia)
+- [Requisitos](#requisitos)
+- [Instalación rápida](#instalacion-rapida)
+- [Configuración](#configuracion)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Arrancar la aplicación](#arrancar-la-aplicacion)
+- [Arquitectura y responsabilidades](#arquitectura-y-responsabilidades)
+- [Modelos, Repositorios y Servicios](#modelos-repositorios-y-servicios)
+- [Contenido rápido](#contenido-rapido)
+- [Resumen](#resumen)
+- [Requisitos mínimos](#requisitos-minimos)
+- [Instalación y arranque (rápido)](#instalacion-y-arranque-rapido)
+- [Configuración](#configuracion)
+- [Estructura del proyecto (resumen)](#estructura-del-proyecto-resumen)
+- [Comandos útiles](#comandos-utiles)
+- [Pruebas y calidad](#pruebas-y-calidad)
+- [Siguientes pasos recomendados](#siguientes-pasos-recomendados)
+<!-- /TOC -->
 
+Aplicación PHP ligera para gestionar una tienda de snacks — pensada para desarrolladores que quieren un punto de partida claro, extensible y fácil de desplegar.
+
+Quick links:
+
+- 📚 Índice maestro: [docs/INDEX.md](docs/INDEX.md)
+- 🧭 Guía de arquitectura: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- 🔌 API: [docs/API.md](docs/API.md)
+- 🚀 Despliegue: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+
+Developer quickstart (copy & paste):
+
+```powershell
+cd C:\Users\david\Downloads\SnackShop\SnackShop\www\Snackshop
+composer install
+php -S localhost:8000 -t public
+```
+
+Abre http://localhost:8000
+
+Resumen rápido:
+Proyecto modular (Controllers → Services → Repositories → Models) con ejemplos y tests listos para desarrolladores.
+
+<a id="documentacion-modular"></a>
+<a id="-documentacion-modular"></a>
 ## 📚 Documentación Modular
 
 - [Índice Maestro](docs/INDEX.md)
@@ -18,10 +75,14 @@ Proyecto web PHP modular para la gestión de una tienda de snacks (productos, ve
 - [Ejemplos y Tutoriales](docs/EXAMPLES.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 
+<a id="resumen"></a>
+<a id="-resumen"></a>
 ## Resumen
 
 SnackShop es una aplicación PHP backend + vistas, con autenticación, gestión de productos, ventas, variantes, control de stock y estructura limpia (MVC, servicios, repositorios, middlewares y vistas). Pensado para despliegue rápido en LAMP/LEMP o desarrollo local.
 
+<a id="requisitos"></a>
+<a id="-requisitos"></a>
 ## Requisitos
 
 - PHP 7.4+ (recomendado 8.0+)
@@ -29,6 +90,8 @@ SnackShop es una aplicación PHP backend + vistas, con autenticación, gestión 
 - Extensiones: PDO, mbstring, openssl, fileinfo
 - MySQL/MariaDB/Postgres (ver `src/Database/Connection.php` y `src/Config/AppConfig.php`)
 
+<a id="instalacion-rapida"></a>
+<a id="-instalacion-rapida"></a>
 ## Instalación Rápida
 
 ```powershell
@@ -38,6 +101,8 @@ composer install
 
 Si composer falla, revisa `composer.json` y tu versión de PHP.
 
+<a id="configuracion"></a>
+<a id="-configuracion"></a>
 ## Configuración
 
 Edita `src/Config/AppConfig.php` o usa `.env` si está soportado. Define:
@@ -46,6 +111,8 @@ Edita `src/Config/AppConfig.php` o usa `.env` si está soportado. Define:
 - APP_ENV (development|production)
 - APP_DEBUG (true|false)
 
+<a id="estructura-del-proyecto"></a>
+<a id="-estructura-del-proyecto"></a>
 ## Estructura del Proyecto
 
 Ver detalles y convenciones en los README de cada subcarpeta:
@@ -62,12 +129,16 @@ Ver detalles y convenciones en los README de cada subcarpeta:
 - [`public/`](public/README.md): DocumentRoot y assets
 - [`data/`](data/README.md): Archivos generados/locales
 
+<a id="arrancar-la-aplicacion"></a>
+<a id="-arrancar-la-aplicacion"></a>
 ## Arrancar la Aplicación
 
 ```powershell
 php -S localhost:8000 -t public
 ```
 
+<a id="buenas-practicas-y-optimizacion"></a>
+<a id="-buenas-practicas-y-optimizacion"></a>
 ## Buenas Prácticas y Optimización
 
 - Sigue PSR-12/PSR-4 y mantén controllers delgados.
@@ -76,20 +147,28 @@ php -S localhost:8000 -t public
 - Usa prepared statements y valida toda entrada de usuario.
 - Consulta [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) para resolución de problemas y optimización avanzada.
 
+<a id="testing-y-calidad"></a>
+<a id="-testing-y-calidad"></a>
 ## Testing y Calidad
 
 - Usa PHPUnit para tests unitarios/integración.
 - Mockea repositorios en tests de servicios.
 - Usa PHPStan y PHP CS Fixer para análisis estático y estilo.
 
+<a id="contribuir"></a>
+<a id="-contribuir"></a>
 ## Contribuir
 
 Consulta [CONTRIBUTING.md](docs/CONTRIBUTING.md) para el flujo de trabajo, estándares y código de conducta.
 
+<a id="licencia"></a>
+<a id="-licencia"></a>
 ## Licencia
 
 MIT
 
+<a id="requisitos"></a>
+<a id="-requisitos"></a>
 ## Requisitos
 
 - PHP 7.4 o superior (recomendado PHP 8.0+). (Suposición basada en presencia de composer y estructura; ajusta según tu entorno.)
@@ -97,6 +176,8 @@ MIT
 - Extensiones PHP típicas: PDO (para la DB que uses), mbstring, openssl, fileinfo (para subida de imágenes). Ajusta según errores.
 - Un servidor de base de datos compatible (MySQL/MariaDB/Postgres — la conexión está en `src/Database/Connection.php` y la configuración en `src/Config/AppConfig.php`).
 
+<a id="instalacion-rapida"></a>
+<a id="-instalacion-rapida"></a>
 ## Instalación rápida
 
 En PowerShell (Windows) o terminal:
@@ -110,6 +191,8 @@ Notas:
 - Si tu versión de PHP no está en PATH, usa la ruta completa hacia el ejecutable php.
 - Si composer falla por dependencias, revisa `composer.json`.
 
+<a id="configuracion"></a>
+<a id="-configuracion"></a>
 ## Configuración
 
 1. Configura la conexión a la base de datos. Edita `src/Config/AppConfig.php` o crea un archivo `.env` si tu proyecto lo soporta. Valores típicos a definir:
@@ -144,6 +227,8 @@ return [
 
 2. Asegura permisos en la carpeta `data/` si se usa para almacenaje local.
 
+<a id="estructura-del-proyecto"></a>
+<a id="-estructura-del-proyecto"></a>
 ## Estructura del proyecto
 
 Raíz (resumen):
@@ -162,13 +247,19 @@ Raíz (resumen):
 - `vendor/` — Dependencias instaladas por Composer.
 - `data/` — Almacenamiento local (si se utiliza).
 
+<a id="arrancar-la-aplicacion"></a>
+<a id="-arrancar-la-aplicacion"></a>
 ## Arrancar la aplicación
 
 Modo desarrollo (servidor embebido PHP):
 
 ```powershell
+<a id="desde-la-carpeta-project-root-que-contiene-public"></a>
+<a id="-desde-la-carpeta-project-root-que-contiene-public"></a>
 # Desde la carpeta project root que contiene public/
 php -S localhost:8000 -t public
+<a id="abre-httplocalhost8000-en-tu-navegador"></a>
+<a id="-abre-httplocalhost8000-en-tu-navegador"></a>
 # Abre http://localhost:8000 en tu navegador
 ```
 
@@ -176,6 +267,8 @@ Usando Apache o Nginx:
 - Apunta el DocumentRoot a `.../public/`.
 - Habilita mod_rewrite (si `pretty-urls.php`/htaccess lo requiere).
 
+<a id="arquitectura-y-responsabilidades"></a>
+<a id="-arquitectura-y-responsabilidades"></a>
 ## Arquitectura y responsabilidades
 
 - Controllers: reciben Request, usan Services y Repositories, devuelven Views o JSON.
@@ -186,15 +279,21 @@ Usando Apache o Nginx:
 
 Controladores observables en `src/Controllers/` (ejemplos): `ProductController`, `SalesController`, `UserController`, `AuthController`, `DashboardController`, `ComprasController`, `VariantController`, etc. Revisa esos archivos para ver acciones disponibles (index, create, update, delete, show, etc.).
 
+<a id="modelos-repositorios-y-servicios"></a>
+<a id="-modelos-repositorios-y-servicios"></a>
 ## Modelos, Repositorios y Servicios
 
 - `src/Models/` contiene modelos como `Product.php`, `User.php`, `Sale.php`, `Variant.php`.
+<a id="snackshop"></a>
+<a id="-snackshop"></a>
 # SnackShop
 
 Documentación general y guía rápida del proyecto SnackShop — aplicación PHP ligera para gestionar una tienda de snacks (productos, variantes, ventas y usuarios).
 
 Este README ha sido reorganizado y condensado para facilitar la lectura por desarrolladores y operadores.
 
+<a id="contenido-rapido"></a>
+<a id="-contenido-rapido"></a>
 ## Contenido rápido
 
 - Resumen
@@ -207,10 +306,14 @@ Este README ha sido reorganizado y condensado para facilitar la lectura por desa
 
 ---
 
+<a id="resumen"></a>
+<a id="-resumen"></a>
 ## Resumen
 
 SnackShop es una aplicación backend con vistas server-rendered en PHP. Sigue un patrón en capas: Controllers → Services → Repositories → Models → Views. Es una base mínima pensada para ser fácil de entender, extender y desplegar en plataformas LAMP/LEMP o contenedores.
 
+<a id="requisitos-minimos"></a>
+<a id="-requisitos-minimos"></a>
 ## Requisitos mínimos
 
 - PHP 7.4+ (se recomienda PHP 8.0+)
@@ -220,6 +323,8 @@ SnackShop es una aplicación backend con vistas server-rendered en PHP. Sigue un
 
 Si prefieres variables de entorno, recomiendo añadir `vlucas/phpdotenv`; puedo añadir la integración si lo deseas.
 
+<a id="instalacion-y-arranque-rapido"></a>
+<a id="-instalacion-y-arranque-rapido"></a>
 ## Instalación y arranque (rápido)
 
 En PowerShell:
@@ -234,6 +339,8 @@ Abrir http://localhost:8000
 
 Para producción, apunta tu DocumentRoot a la carpeta `public/` y configura el servidor web (Nginx/Apache) correctamente.
 
+<a id="configuracion"></a>
+<a id="-configuracion"></a>
 ## Configuración
 
 La configuración principal se carga desde `src/Config/AppConfig.php`. Valores habituales:
@@ -258,6 +365,8 @@ APP_DEBUG=true
 BASE_URL=http://localhost:8000
 ```
 
+<a id="estructura-del-proyecto-resumen"></a>
+<a id="-estructura-del-proyecto-resumen"></a>
 ## Estructura del proyecto (resumen)
 
 - `public/` — Punto de entrada (DocumentRoot). Contiene `index.php`, assets y rutas públicas.
@@ -274,6 +383,8 @@ BASE_URL=http://localhost:8000
 
 Consulta los README específicos en `src/` y `public/` para detalles por capa.
 
+<a id="comandos-utiles"></a>
+<a id="-comandos-utiles"></a>
 ## Comandos útiles
 
 - Instalar dependencias: `composer install`
@@ -281,6 +392,8 @@ Consulta los README específicos en `src/` y `public/` para detalles por capa.
 - Servidor embebido: `php -S localhost:8000 -t public`
 - Instalar PHPUnit (dev): `composer require --dev phpunit/phpunit ^9`
 
+<a id="pruebas-y-calidad"></a>
+<a id="-pruebas-y-calidad"></a>
 ## Pruebas y calidad
 
 No hay tests en el repo actualmente. Recomendación mínima:
@@ -291,6 +404,8 @@ No hay tests en el repo actualmente. Recomendación mínima:
 
 Puedo generar un `phpunit.xml` y un test ejemplo si lo deseas.
 
+<a id="siguientes-pasos-recomendados"></a>
+<a id="-siguientes-pasos-recomendados"></a>
 ## Siguientes pasos recomendados
 
 - Añadir `.env` y `vlucas/phpdotenv` para manejar configuraciones.
@@ -301,4 +416,6 @@ Puedo generar un `phpunit.xml` y un test ejemplo si lo deseas.
 ---
 
 Si quieres que escriba un `CONTRIBUTING.md`, un `phpunit.xml` y un ejemplo de `docker-compose.yml`, dime y lo añado.
+<a id="desde-la-carpeta-del-proyecto"></a>
+<a id="-desde-la-carpeta-del-proyecto"></a>
 # Desde la carpeta del proyecto

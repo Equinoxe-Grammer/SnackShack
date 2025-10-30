@@ -1,4 +1,62 @@
+<a id="snackshop-guia-de-desarrollo"></a>
+<a id="-snackshop-guia-de-desarrollo"></a>
 # 🛠️ SnackShop - Guía de Desarrollo
+<!-- TOC -->
+<a id="contenido"></a>
+<a id="-contenido"></a>
+## Contenido
+
+- [🧭 Navegación](#-navegacion)
+- [📋 Índice](#-indice)
+- [🚀 Setup Inicial](#-setup-inicial)
+  - [Prerrequisitos](#prerrequisitos)
+  - [Instalación Rápida](#instalacion-rapida)
+  - [Configuración .env para Desarrollo](#configuracion-env-para-desarrollo)
+- [Comandos Útiles](#comandos-utiles)
+- [API Development](#api-development)
+- [💻 Entorno de Desarrollo](#-entorno-de-desarrollo)
+  - [Opción 1: Servidor Embebido PHP (Recomendado)](#opcion-1-servidor-embebido-php-recomendado)
+  - [Opción 2: Docker para Desarrollo](#opcion-2-docker-para-desarrollo)
+  - [Opción 3: XAMPP/WAMP (Windows)](#opcion-3-xamppwamp-windows)
+- [🏗️ Estructura del Proyecto](#-estructura-del-proyecto)
+  - [Organización de Archivos](#organizacion-de-archivos)
+  - [Convenciones de Naming](#convenciones-de-naming)
+  - [Namespaces y Autoloading](#namespaces-y-autoloading)
+- [📏 Estándares de Código](#-estandares-de-codigo)
+  - [PHP Coding Standards (PSR-12)](#php-coding-standards-psr-12)
+  - [Code Quality Guidelines](#code-quality-guidelines)
+  - [Frontend Standards](#frontend-standards)
+- [🔄 Workflows de Desarrollo](#-workflows-de-desarrollo)
+  - [Feature Development Workflow](#feature-development-workflow)
+  - [Commit Message Convention](#commit-message-convention)
+  - [Code Review Checklist](#code-review-checklist)
+- [Code Review Checklist](#code-review-checklist)
+  - [Funcionalidad](#funcionalidad)
+  - [Código](#codigo)
+  - [Seguridad](#seguridad)
+  - [Performance](#performance)
+  - [Testing](#testing)
+  - [Documentación](#documentacion)
+- [🐛 Debugging y Profiling](#-debugging-y-profiling)
+  - [Xdebug Configuration](#xdebug-configuration)
+  - [VSCode Debug Configuration](#vscode-debug-configuration)
+  - [Debug Utilities](#debug-utilities)
+  - [Query Debugging](#query-debugging)
+- [🛠️ Herramientas de Desarrollo](#-herramientas-de-desarrollo)
+  - [Composer Scripts](#composer-scripts)
+  - [Development Scripts](#development-scripts)
+  - [Useful Development Commands](#useful-development-commands)
+- [📊 Performance Guidelines](#-performance-guidelines)
+  - [Database Optimization](#database-optimization)
+  - [Caching Strategies](#caching-strategies)
+  - [Memory Management](#memory-management)
+- [🔒 Security Guidelines](#-security-guidelines)
+  - [Input Validation](#input-validation)
+  - [SQL Injection Prevention](#sql-injection-prevention)
+  - [XSS Prevention](#xss-prevention)
+- [🔗 Documentos Relacionados](#-documentos-relacionados)
+- [📞 Soporte para Desarrolladores](#-soporte-para-desarrolladores)
+<!-- /TOC -->
 
 **🏠 Ubicación:** `DEVELOPMENT.md`
 **📅 Última actualización:** 29 de octubre, 2025
@@ -6,12 +64,16 @@
 
 ---
 
+<a id="navegacion"></a>
+<a id="-navegacion"></a>
 ## 🧭 Navegación
 
 **[📖 Índice General](docs/INDEX.md)** | **[🏠 README](README.md)** | **[🏗️ Arquitectura](ARCHITECTURE.md)** | **[🚀 Deployment](DEPLOYMENT.md)** | **[⚙️ Configuration](CONFIGURATION.md)**
 
 ---
 
+<a id="indice"></a>
+<a id="-indice"></a>
 ## 📋 Índice
 
 - [Setup Inicial](#setup-inicial)
@@ -29,11 +91,17 @@
 
 ---
 
+<a id="setup-inicial"></a>
+<a id="-setup-inicial"></a>
 ## 🚀 Setup Inicial
 
+<a id="prerrequisitos"></a>
+<a id="-prerrequisitos"></a>
 ### Prerrequisitos
 
 ```bash
+<a id="verificar-versiones-requeridas"></a>
+<a id="-verificar-versiones-requeridas"></a>
 # Verificar versiones requeridas
 php --version          # PHP 7.4+ (recomendado 8.1+)
 composer --version     # Composer 2.0+
@@ -41,62 +109,94 @@ node --version         # Node.js 16+ (para herramientas frontend)
 git --version          # Git 2.20+
 ```
 
+<a id="instalacion-rapida"></a>
+<a id="-instalacion-rapida"></a>
 ### Instalación Rápida
 
 ```bash
+<a id="1-clonar-repositorio"></a>
+<a id="-1-clonar-repositorio"></a>
 # 1. Clonar repositorio
 git clone https://github.com/Equinoxe-Grammer/SnackShack.git
 cd SnackShack/SnackShop/www/Snackshop
 
+<a id="2-instalar-dependencias-php"></a>
+<a id="-2-instalar-dependencias-php"></a>
 # 2. Instalar dependencias PHP
 composer install
 
+<a id="3-configurar-entorno-de-desarrollo"></a>
+<a id="-3-configurar-entorno-de-desarrollo"></a>
 # 3. Configurar entorno de desarrollo
 cp .env.example .env.development
+<a id="editar-envdevelopment-con-configuraciones-locales"></a>
+<a id="-editar-envdevelopment-con-configuraciones-locales"></a>
 # Editar .env.development con configuraciones locales
 
+<a id="4-verificar-estructura-de-base-de-datos"></a>
+<a id="-4-verificar-estructura-de-base-de-datos"></a>
 # 4. Verificar estructura de base de datos
 ls -la data/          # Verificar snackshop.db existe
 php -r "new PDO('sqlite:data/snackshop.db'); echo 'DB OK\n';"
 
+<a id="5-iniciar-servidor-de-desarrollo"></a>
+<a id="-5-iniciar-servidor-de-desarrollo"></a>
 # 5. Iniciar servidor de desarrollo
 php -S localhost:8000 -t public
 
+<a id="6-verificar-instalacion"></a>
+<a id="-6-verificar-instalacion"></a>
 # 6. Verificar instalación
 curl http://localhost:8000
 ```
 
+<a id="configuracion-env-para-desarrollo"></a>
+<a id="-configuracion-env-para-desarrollo"></a>
 ### Configuración .env para Desarrollo
 
 ```bash
+<a id="envdevelopment"></a>
+<a id="-envdevelopment"></a>
 # .env.development
 APP_ENV=development
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
+<a id="database-sqlite-para-desarrollo-local"></a>
+<a id="-database-sqlite-para-desarrollo-local"></a>
 # Database - SQLite para desarrollo local
 SNACKSHOP_DB_HOST=127.0.0.1
 SNACKSHOP_DB_NAME=data/snackshop.db
 SNACKSHOP_DB_TYPE=sqlite
 
+<a id="session"></a>
+<a id="-session"></a>
 # Session
 SESSION_SECURE=false
 SESSION_DRIVER=file
 SESSION_PATH=/tmp/snackshop_sessions
 
+<a id="logging"></a>
+<a id="-logging"></a>
 # Logging
 LOG_LEVEL=debug
 LOG_FILE=/tmp/snackshop-dev.log
 ERROR_REPORTING=E_ALL
 
+<a id="development-tools"></a>
+<a id="-development-tools"></a>
 # Development tools
 QUERY_LOG_ENABLED=true
 MEMORY_PROFILING=true
 EXECUTION_TIME_TRACKING=true
 
+<a id="cache-disabled-para-desarrollo"></a>
+<a id="-cache-disabled-para-desarrollo"></a>
 # Cache (disabled para desarrollo)
 CACHE_DRIVER=none
 
+<a id="email-log-driver-para-testing"></a>
+<a id="-email-log-driver-para-testing"></a>
 # Email (log driver para testing)
 MAIL_DRIVER=log
 MAIL_LOG_FILE=/tmp/snackshop-emails.log
@@ -104,27 +204,41 @@ MAIL_LOG_FILE=/tmp/snackshop-emails.log
 
 ---
 
+<a id="comandos-utiles"></a>
+<a id="-comandos-utiles"></a>
 ## Comandos Útiles
 
 Pequeña guía de comandos y scripts útiles para desarrollo local y tareas diarias:
 
 ```powershell
+<a id="instalar-dependencias"></a>
+<a id="-instalar-dependencias"></a>
 # Instalar dependencias
 composer install
 
+<a id="ejecutar-migraciones"></a>
+<a id="-ejecutar-migraciones"></a>
 # Ejecutar migraciones
 php scripts/migrate.php
 
+<a id="ejecutar-tests-unitarios"></a>
+<a id="-ejecutar-tests-unitarios"></a>
 # Ejecutar tests unitarios
 ./vendor/bin/phpunit --testsuite unit
 
+<a id="correr-servidor-de-desarrollo"></a>
+<a id="-correr-servidor-de-desarrollo"></a>
 # Correr servidor de desarrollo
 php -S localhost:8000 -t public
 
+<a id="limpiar-cache-ejemplos"></a>
+<a id="-limpiar-cache-ejemplos"></a>
 # Limpiar cache (ejemplos)
 php scripts/clear-cache.php
 ```
 
+<a id="api-development"></a>
+<a id="-api-development"></a>
 ## API Development
 
 Consejos rápidos para desarrollar y probar endpoints API:
@@ -139,24 +253,38 @@ curl -X GET http://localhost:8000/api/v1/products
 
 ---
 
+<a id="entorno-de-desarrollo"></a>
+<a id="-entorno-de-desarrollo"></a>
 ## 💻 Entorno de Desarrollo
 
+<a id="opcion-1-servidor-embebido-php-recomendado"></a>
+<a id="-opcion-1-servidor-embebido-php-recomendado"></a>
 ### Opción 1: Servidor Embebido PHP (Recomendado)
 
 ```bash
+<a id="servidor-basico"></a>
+<a id="-servidor-basico"></a>
 # Servidor básico
 php -S localhost:8000 -t public
 
+<a id="con-configuracion-personalizada"></a>
+<a id="-con-configuracion-personalizada"></a>
 # Con configuración personalizada
 php -S localhost:8000 -t public -c php-dev.ini
 
+<a id="con-logs-detallados"></a>
+<a id="-con-logs-detallados"></a>
 # Con logs detallados
 php -S localhost:8000 -t public 2>&1 | tee server.log
 ```
 
+<a id="opcion-2-docker-para-desarrollo"></a>
+<a id="-opcion-2-docker-para-desarrollo"></a>
 ### Opción 2: Docker para Desarrollo
 
 ```yaml
+<a id="docker-composedevyml"></a>
+<a id="-docker-composedevyml"></a>
 # docker-compose.dev.yml
 version: '3.8'
 
@@ -202,9 +330,13 @@ volumes:
 ```
 
 ```dockerfile
+<a id="dockerfiledev"></a>
+<a id="-dockerfiledev"></a>
 # Dockerfile.dev
 FROM php:8.1-apache
 
+<a id="instalar-extensiones-necesarias"></a>
+<a id="-instalar-extensiones-necesarias"></a>
 # Instalar extensiones necesarias
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev \
@@ -212,17 +344,25 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mbstring xml
 
+<a id="habilitar-mod_rewrite"></a>
+<a id="-habilitar-mod_rewrite"></a>
 # Habilitar mod_rewrite
 RUN a2enmod rewrite
 
+<a id="instalar-xdebug-para-desarrollo"></a>
+<a id="-instalar-xdebug-para-desarrollo"></a>
 # Instalar Xdebug para desarrollo
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
+<a id="configurar-xdebug"></a>
+<a id="-configurar-xdebug"></a>
 # Configurar Xdebug
 RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+<a id="configurar-documentroot"></a>
+<a id="-configurar-documentroot"></a>
 # Configurar DocumentRoot
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -230,13 +370,23 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 WORKDIR /var/www/html
 ```
 
+<a id="opcion-3-xamppwamp-windows"></a>
+<a id="-opcion-3-xamppwamp-windows"></a>
 ### Opción 3: XAMPP/WAMP (Windows)
 
 ```powershell
+<a id="configuracion-para-xampp"></a>
+<a id="-configuracion-para-xampp"></a>
 # Configuración para XAMPP
+<a id="1-copiar-proyecto-a-cxampphtdocssnackshop"></a>
+<a id="-1-copiar-proyecto-a-cxampphtdocssnackshop"></a>
 # 1. Copiar proyecto a C:\xampp\htdocs\snackshop
+<a id="2-configurar-virtual-host"></a>
+<a id="-2-configurar-virtual-host"></a>
 # 2. Configurar virtual host
 
+<a id="httpd-vhostsconf"></a>
+<a id="-httpd-vhostsconf"></a>
 # httpd-vhosts.conf
 <VirtualHost *:80>
     DocumentRoot "C:/xampp/htdocs/snackshop/public"
@@ -248,14 +398,20 @@ WORKDIR /var/www/html
     </Directory>
 </VirtualHost>
 
+<a id="hosts-file-cwindowssystem32driversetchosts"></a>
+<a id="-hosts-file-cwindowssystem32driversetchosts"></a>
 # hosts file (C:\Windows\System32\drivers\etc\hosts)
 127.0.0.1    snackshop.local
 ```
 
 ---
 
+<a id="estructura-del-proyecto"></a>
+<a id="-estructura-del-proyecto"></a>
 ## 🏗️ Estructura del Proyecto
 
+<a id="organizacion-de-archivos"></a>
+<a id="-organizacion-de-archivos"></a>
 ### Organización de Archivos
 
 ```bash
@@ -284,6 +440,8 @@ SnackShop/
 └── README.md             # Documentación principal
 ```
 
+<a id="convenciones-de-naming"></a>
+<a id="-convenciones-de-naming"></a>
 ### Convenciones de Naming
 
 ```php
@@ -312,6 +470,8 @@ usuarios, productos, detalle_ventas
 user_id, created_at, payment_method_id
 ```
 
+<a id="namespaces-y-autoloading"></a>
+<a id="-namespaces-y-autoloading"></a>
 ### Namespaces y Autoloading
 
 ```php
@@ -340,8 +500,12 @@ use App\Models\Product;
 
 ---
 
+<a id="estandares-de-codigo"></a>
+<a id="-estandares-de-codigo"></a>
 ## 📏 Estándares de Código
 
+<a id="php-coding-standards-psr-12"></a>
+<a id="-php-coding-standards-psr-12"></a>
 ### PHP Coding Standards (PSR-12)
 
 ```php
@@ -448,8 +612,12 @@ class ProductController extends BaseController
 }
 ```
 
+<a id="code-quality-guidelines"></a>
+<a id="-code-quality-guidelines"></a>
 ### Code Quality Guidelines
 
+<a id="1-solid-principles"></a>
+<a id="-1-solid-principles"></a>
 #### 1. SOLID Principles
 
 ```php
@@ -479,6 +647,8 @@ class OrderService {
 }
 ```
 
+<a id="2-error-handling"></a>
+<a id="-2-error-handling"></a>
 #### 2. Error Handling
 
 ```php
@@ -499,6 +669,8 @@ try {
 }
 ```
 
+<a id="3-documentation-standards"></a>
+<a id="-3-documentation-standards"></a>
 #### 3. Documentation Standards
 
 ```php
@@ -529,8 +701,12 @@ public function calculateTotal(
 }
 ```
 
+<a id="frontend-standards"></a>
+<a id="-frontend-standards"></a>
 ### Frontend Standards
 
+<a id="cssscss-organization"></a>
+<a id="-cssscss-organization"></a>
 #### CSS/SCSS Organization
 
 ```scss
@@ -567,6 +743,8 @@ public function calculateTotal(
 }
 ```
 
+<a id="javascript-standards"></a>
+<a id="-javascript-standards"></a>
 #### JavaScript Standards
 
 ```javascript
@@ -635,15 +813,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ---
 
+<a id="workflows-de-desarrollo"></a>
+<a id="-workflows-de-desarrollo"></a>
 ## 🔄 Workflows de Desarrollo
 
+<a id="feature-development-workflow"></a>
+<a id="-feature-development-workflow"></a>
 ### Feature Development Workflow
 
 ```bash
+<a id="1-crear-rama-para-nueva-feature"></a>
+<a id="-1-crear-rama-para-nueva-feature"></a>
 # 1. Crear rama para nueva feature
 git checkout -b feature/add-product-variants
 git push -u origin feature/add-product-variants
 
+<a id="2-desarrollar-en-pequenos-commits"></a>
+<a id="-2-desarrollar-en-pequenos-commits"></a>
 # 2. Desarrollar en pequeños commits
 git add src/Controllers/VariantController.php
 git commit -m "feat: add VariantController with CRUD operations"
@@ -654,20 +840,34 @@ git commit -m "feat: implement variant business logic"
 git add src/Views/products/variants.php
 git commit -m "feat: add variant management UI"
 
+<a id="3-testing-local"></a>
+<a id="-3-testing-local"></a>
 # 3. Testing local
 php -S localhost:8000 -t public
+<a id="probar-manualmente-la-funcionalidad"></a>
+<a id="-probar-manualmente-la-funcionalidad"></a>
 # Probar manualmente la funcionalidad
 
+<a id="4-crear-pull-request"></a>
+<a id="-4-crear-pull-request"></a>
 # 4. Crear Pull Request
 git push origin feature/add-product-variants
+<a id="abrir-pr-en-github-con-descripcion-detallada"></a>
+<a id="-abrir-pr-en-github-con-descripcion-detallada"></a>
 # Abrir PR en GitHub con descripción detallada
 ```
 
+<a id="commit-message-convention"></a>
+<a id="-commit-message-convention"></a>
 ### Commit Message Convention
 
 ```bash
+<a id="formato-typescope-description"></a>
+<a id="-formato-typescope-description"></a>
 # Formato: <type>(<scope>): <description>
 
+<a id="types"></a>
+<a id="-types"></a>
 # Types:
 feat:     # Nueva funcionalidad
 fix:      # Bug fix
@@ -677,6 +877,8 @@ refactor: # Refactoring sin cambiar funcionalidad
 test:     # Agregar/modificar tests
 chore:    # Tareas de mantenimiento
 
+<a id="ejemplos"></a>
+<a id="-ejemplos"></a>
 # Ejemplos:
 git commit -m "feat(products): add image upload functionality"
 git commit -m "fix(auth): resolve session timeout issue"
@@ -686,39 +888,55 @@ git commit -m "test(services): add unit tests for UserService"
 git commit -m "chore(deps): update composer dependencies"
 ```
 
+<a id="code-review-checklist"></a>
+<a id="-code-review-checklist"></a>
 ### Code Review Checklist
 
 ```markdown
+<a id="code-review-checklist"></a>
+<a id="-code-review-checklist"></a>
 ## Code Review Checklist
 
+<a id="funcionalidad"></a>
+<a id="-funcionalidad"></a>
 ### Funcionalidad
 - [ ] ¿El código hace lo que se supone que debe hacer?
 - [ ] ¿Los casos edge están manejados correctamente?
 - [ ] ¿La funcionalidad está completa según los requirements?
 
+<a id="codigo"></a>
+<a id="-codigo"></a>
 ### Código
 - [ ] ¿El código es fácil de entender?
 - [ ] ¿Los nombres de variables/funciones son descriptivos?
 - [ ] ¿Hay código duplicado que se pueda refactorizar?
 - [ ] ¿Se siguen los estándares de código del proyecto?
 
+<a id="seguridad"></a>
+<a id="-seguridad"></a>
 ### Seguridad
 - [ ] ¿Los inputs están validados y sanitizados?
 - [ ] ¿No hay vulnerabilidades de SQL injection?
 - [ ] ¿Los datos sensibles están protegidos?
 - [ ] ¿Se usan tokens CSRF donde corresponde?
 
+<a id="performance"></a>
+<a id="-performance"></a>
 ### Performance
 - [ ] ¿No hay queries N+1?
 - [ ] ¿Se usan índices de base de datos apropiados?
 - [ ] ¿El código es eficiente en memoria?
 - [ ] ¿Se implementa caching donde es beneficioso?
 
+<a id="testing"></a>
+<a id="-testing"></a>
 ### Testing
 - [ ] ¿Hay tests unitarios para la nueva funcionalidad?
 - [ ] ¿Los tests existentes siguen pasando?
 - [ ] ¿Los casos edge están cubiertos por tests?
 
+<a id="documentacion"></a>
+<a id="-documentacion"></a>
 ### Documentación
 - [ ] ¿El código está bien documentado?
 - [ ] ¿Los README están actualizados si es necesario?
@@ -727,8 +945,12 @@ git commit -m "chore(deps): update composer dependencies"
 
 ---
 
+<a id="debugging-y-profiling"></a>
+<a id="-debugging-y-profiling"></a>
 ## 🐛 Debugging y Profiling
 
+<a id="xdebug-configuration"></a>
+<a id="-xdebug-configuration"></a>
 ### Xdebug Configuration
 
 ```ini
@@ -752,6 +974,8 @@ xdebug.log=/tmp/xdebug.log
 xdebug.log_level=7
 ```
 
+<a id="vscode-debug-configuration"></a>
+<a id="-vscode-debug-configuration"></a>
 ### VSCode Debug Configuration
 
 ```json
@@ -790,6 +1014,8 @@ xdebug.log_level=7
 }
 ```
 
+<a id="debug-utilities"></a>
+<a id="-debug-utilities"></a>
 ### Debug Utilities
 
 ```php
@@ -893,6 +1119,8 @@ class Debug {
 }
 ```
 
+<a id="query-debugging"></a>
+<a id="-query-debugging"></a>
 ### Query Debugging
 
 ```php
@@ -950,8 +1178,12 @@ class QueryDebugger {
 
 ---
 
+<a id="herramientas-de-desarrollo"></a>
+<a id="-herramientas-de-desarrollo"></a>
 ## 🛠️ Herramientas de Desarrollo
 
+<a id="composer-scripts"></a>
+<a id="-composer-scripts"></a>
 ### Composer Scripts
 
 ```json
@@ -978,9 +1210,13 @@ class QueryDebugger {
 }
 ```
 
+<a id="development-scripts"></a>
+<a id="-development-scripts"></a>
 ### Development Scripts
 
 ```php
+<a id="usrbinenv-php"></a>
+<a id="-usrbinenv-php"></a>
 #!/usr/bin/env php
 <?php
 // scripts/dev-setup.php - Script de configuración para nuevos desarrolladores
@@ -1058,29 +1294,41 @@ echo "🌐 Iniciar servidor: composer run dev\n";
 echo "🧪 Ejecutar tests: composer run test\n";
 ```
 
+<a id="useful-development-commands"></a>
+<a id="-useful-development-commands"></a>
 ### Useful Development Commands
 
 ```bash
+<a id="desarrollo-diario"></a>
+<a id="-desarrollo-diario"></a>
 # Desarrollo diario
 composer run dev                    # Iniciar servidor
 composer run test                   # Ejecutar tests
 composer run lint                   # Verificar código
 composer run fix                    # Corregir estilo
 
+<a id="base-de-datos"></a>
+<a id="-base-de-datos"></a>
 # Base de datos
 php scripts/migrate.php             # Ejecutar migraciones
 php scripts/seed.php                # Poblar datos de prueba
 php scripts/db-backup.php           # Crear backup
 
+<a id="limpieza"></a>
+<a id="-limpieza"></a>
 # Limpieza
 composer run cache-clear            # Limpiar cache
 composer run logs-clear             # Limpiar logs
 rm -rf vendor/ && composer install  # Reinstalar deps
 
+<a id="analisis-de-codigo"></a>
+<a id="-analisis-de-codigo"></a>
 # Análisis de código
 composer run analyze                # PHPStan análisis
 composer run docs                   # Generar documentación
 
+<a id="git-workflows"></a>
+<a id="-git-workflows"></a>
 # Git workflows
 git flow feature start nueva-feature
 git flow feature finish nueva-feature
@@ -1090,8 +1338,12 @@ git flow release finish 1.1.0
 
 ---
 
+<a id="performance-guidelines"></a>
+<a id="-performance-guidelines"></a>
 ## 📊 Performance Guidelines
 
+<a id="database-optimization"></a>
+<a id="-database-optimization"></a>
 ### Database Optimization
 
 ```php
@@ -1118,6 +1370,8 @@ foreach ($sales as $sale) {
 }
 ```
 
+<a id="caching-strategies"></a>
+<a id="-caching-strategies"></a>
 ### Caching Strategies
 
 ```php
@@ -1145,6 +1399,8 @@ class ProductService {
 }
 ```
 
+<a id="memory-management"></a>
+<a id="-memory-management"></a>
 ### Memory Management
 
 ```php
@@ -1180,8 +1436,12 @@ class ReportGenerator {
 
 ---
 
+<a id="security-guidelines"></a>
+<a id="-security-guidelines"></a>
 ## 🔒 Security Guidelines
 
+<a id="input-validation"></a>
+<a id="-input-validation"></a>
 ### Input Validation
 
 ```php
@@ -1228,6 +1488,8 @@ class SecurityValidator {
 }
 ```
 
+<a id="sql-injection-prevention"></a>
+<a id="-sql-injection-prevention"></a>
 ### SQL Injection Prevention
 
 ```php
@@ -1251,6 +1513,8 @@ $stmt->execute([
 ]);
 ```
 
+<a id="xss-prevention"></a>
+<a id="-xss-prevention"></a>
 ### XSS Prevention
 
 ```php
@@ -1270,6 +1534,8 @@ echo "<h1>Bienvenido " . h($_GET['name']) . "</h1>";
 
 ---
 
+<a id="documentos-relacionados"></a>
+<a id="-documentos-relacionados"></a>
 ## 🔗 Documentos Relacionados
 
 - **[📖 Índice General](docs/INDEX.md)** — Navegación completa del manual
@@ -1281,6 +1547,8 @@ echo "<h1>Bienvenido " . h($_GET['name']) . "</h1>";
 
 ---
 
+<a id="soporte-para-desarrolladores"></a>
+<a id="-soporte-para-desarrolladores"></a>
 ## 📞 Soporte para Desarrolladores
 
 **¿Necesitas ayuda con el desarrollo?**

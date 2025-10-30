@@ -1,4 +1,45 @@
+<a id="snackshop-testing-guide"></a>
+<a id="-snackshop-testing-guide"></a>
 # 🧪 SnackShop - Testing Guide
+<!-- TOC -->
+<a id="contenido"></a>
+<a id="-contenido"></a>
+## Contenido
+
+- [🧭 Navegación](#-navegacion)
+- [📋 Índice](#-indice)
+- [Testing Workflows](#testing-workflows)
+- [Mocking y Fixtures](#mocking-y-fixtures)
+- [🚀 Setup de Testing](#-setup-de-testing)
+  - [Instalación de PHPUnit](#instalacion-de-phpunit)
+  - [Estructura de Directorios](#estructura-de-directorios)
+  - [Configuración PHPUnit](#configuracion-phpunit)
+  - [Bootstrap para Tests](#bootstrap-para-tests)
+- [🔬 Unit Testing](#-unit-testing)
+  - [Testing de Models](#testing-de-models)
+  - [Testing de Services](#testing-de-services)
+  - [Testing de Controllers](#testing-de-controllers)
+- [🔗 Integration Testing](#-integration-testing)
+  - [Database Integration Tests](#database-integration-tests)
+  - [API Integration Tests](#api-integration-tests)
+- [🎭 Frontend Testing](#-frontend-testing)
+  - [JavaScript Unit Tests (usando Jest)](#javascript-unit-tests-usando-jest)
+  - [End-to-End Testing (usando Cypress)](#end-to-end-testing-usando-cypress)
+- [📊 Code Coverage](#-code-coverage)
+  - [Configuración de Coverage](#configuracion-de-coverage)
+  - [Coverage Goals](#coverage-goals)
+  - [Coverage Analysis Script](#coverage-analysis-script)
+- [🚀 Performance Testing](#-performance-testing)
+  - [Load Testing con Artillery](#load-testing-con-artillery)
+  - [Database Performance Tests](#database-performance-tests)
+- [🔒 Security Testing](#-security-testing)
+  - [Security Test Suite](#security-test-suite)
+- [🤖 CI/CD Integration](#-cicd-integration)
+  - [GitHub Actions Workflow](#github-actions-workflow)
+  - [Test Commands for Development](#test-commands-for-development)
+- [🔗 Documentos Relacionados](#-documentos-relacionados)
+- [📞 Soporte](#-soporte)
+<!-- /TOC -->
 
 **🏠 Ubicación:** `TESTING.md`
 **📅 Última actualización:** 29 de octubre, 2025
@@ -6,12 +47,16 @@
 
 ---
 
+<a id="navegacion"></a>
+<a id="-navegacion"></a>
 ## 🧭 Navegación
 
 **[📖 Índice General](docs/INDEX.md)** | **[🏠 README](README.md)** | **[🛠️ Development](DEVELOPMENT.md)** | **[🏗️ Arquitectura](ARCHITECTURE.md)**
 
 ---
 
+<a id="indice"></a>
+<a id="-indice"></a>
 ## 📋 Índice
 
 - [Setup de Testing](#setup-de-testing)
@@ -29,6 +74,8 @@
 
 ---
 
+<a id="testing-workflows"></a>
+<a id="-testing-workflows"></a>
 ## Testing Workflows
 
 Descripción de los flujos de testing recomendados (local -> CI -> staging):
@@ -37,6 +84,8 @@ Descripción de los flujos de testing recomendados (local -> CI -> staging):
 - Ejecutar integration tests con base de datos de testing (containers o sqlite).
 - Pipeline CI: ejecutar linters, unit tests, integration tests y publicar reportes de coverage.
 
+<a id="mocking-y-fixtures"></a>
+<a id="-mocking-y-fixtures"></a>
 ## Mocking y Fixtures
 
 Breve guía sobre cómo usar mocks y fixtures en los tests:
@@ -45,19 +94,29 @@ Breve guía sobre cómo usar mocks y fixtures en los tests:
 - Prefiere mocks para llamadas externas (servicios, APIs) en unit tests.
 - Ejemplo con PHPUnit + Prophecy/Mockery en `tests/`.
 
+<a id="setup-de-testing"></a>
+<a id="-setup-de-testing"></a>
 ## 🚀 Setup de Testing
 
+<a id="instalacion-de-phpunit"></a>
+<a id="-instalacion-de-phpunit"></a>
 ### Instalación de PHPUnit
 
 ```bash
+<a id="instalar-phpunit-via-composer"></a>
+<a id="-instalar-phpunit-via-composer"></a>
 # Instalar PHPUnit via Composer
 composer require --dev phpunit/phpunit ^9.5
 composer require --dev phpunit/php-code-coverage ^9.2
 
+<a id="verificar-instalacion"></a>
+<a id="-verificar-instalacion"></a>
 # Verificar instalación
 ./vendor/bin/phpunit --version
 ```
 
+<a id="estructura-de-directorios"></a>
+<a id="-estructura-de-directorios"></a>
 ### Estructura de Directorios
 
 ```
@@ -78,6 +137,8 @@ tests/
 └── phpunit.xml              # Configuración PHPUnit
 ```
 
+<a id="configuracion-phpunit"></a>
+<a id="-configuracion-phpunit"></a>
 ### Configuración PHPUnit
 
 ```xml
@@ -131,6 +192,8 @@ tests/
 </phpunit>
 ```
 
+<a id="bootstrap-para-tests"></a>
+<a id="-bootstrap-para-tests"></a>
 ### Bootstrap para Tests
 
 ```php
@@ -191,8 +254,12 @@ abstract class TestCase extends PHPUnit\Framework\TestCase {
 
 ---
 
+<a id="unit-testing"></a>
+<a id="-unit-testing"></a>
 ## 🔬 Unit Testing
 
+<a id="testing-de-models"></a>
+<a id="-testing-de-models"></a>
 ### Testing de Models
 
 ```php
@@ -282,6 +349,8 @@ class ProductTest extends TestCase
 }
 ```
 
+<a id="testing-de-services"></a>
+<a id="-testing-de-services"></a>
 ### Testing de Services
 
 ```php
@@ -432,6 +501,8 @@ class ProductServiceTest extends TestCase
 }
 ```
 
+<a id="testing-de-controllers"></a>
+<a id="-testing-de-controllers"></a>
 ### Testing de Controllers
 
 ```php
@@ -563,8 +634,12 @@ class ProductControllerTest extends TestCase
 
 ---
 
+<a id="integration-testing"></a>
+<a id="-integration-testing"></a>
 ## 🔗 Integration Testing
 
+<a id="database-integration-tests"></a>
+<a id="-database-integration-tests"></a>
 ### Database Integration Tests
 
 ```php
@@ -746,6 +821,8 @@ class ProductRepositoryTest extends TestCase
 }
 ```
 
+<a id="api-integration-tests"></a>
+<a id="-api-integration-tests"></a>
 ### API Integration Tests
 
 ```php
@@ -947,8 +1024,12 @@ class ProductAPITest extends TestCase
 
 ---
 
+<a id="frontend-testing"></a>
+<a id="-frontend-testing"></a>
 ## 🎭 Frontend Testing
 
+<a id="javascript-unit-tests-usando-jest"></a>
+<a id="-javascript-unit-tests-usando-jest"></a>
 ### JavaScript Unit Tests (usando Jest)
 
 ```javascript
@@ -1113,6 +1194,8 @@ describe('ProductManager', () => {
 });
 ```
 
+<a id="end-to-end-testing-usando-cypress"></a>
+<a id="-end-to-end-testing-usando-cypress"></a>
 ### End-to-End Testing (usando Cypress)
 
 ```javascript
@@ -1218,24 +1301,38 @@ describe('Product Management', () => {
 
 ---
 
+<a id="code-coverage"></a>
+<a id="-code-coverage"></a>
 ## 📊 Code Coverage
 
+<a id="configuracion-de-coverage"></a>
+<a id="-configuracion-de-coverage"></a>
 ### Configuración de Coverage
 
 ```bash
+<a id="generar-coverage-report"></a>
+<a id="-generar-coverage-report"></a>
 # Generar coverage report
 ./vendor/bin/phpunit --coverage-html coverage/
 
+<a id="coverage-con-filtros-especificos"></a>
+<a id="-coverage-con-filtros-especificos"></a>
 # Coverage con filtros específicos
 ./vendor/bin/phpunit --coverage-html coverage/ --testsuite Unit
 
+<a id="coverage-en-formato-texto"></a>
+<a id="-coverage-en-formato-texto"></a>
 # Coverage en formato texto
 ./vendor/bin/phpunit --coverage-text
 
+<a id="coverage-minimo-requerido"></a>
+<a id="-coverage-minimo-requerido"></a>
 # Coverage mínimo requerido
 ./vendor/bin/phpunit --coverage-text --coverage-clover coverage.xml
 ```
 
+<a id="coverage-goals"></a>
+<a id="-coverage-goals"></a>
 ### Coverage Goals
 
 ```xml
@@ -1255,9 +1352,13 @@ describe('Product Management', () => {
 </coverage>
 ```
 
+<a id="coverage-analysis-script"></a>
+<a id="-coverage-analysis-script"></a>
 ### Coverage Analysis Script
 
 ```php
+<a id="usrbinenv-php"></a>
+<a id="-usrbinenv-php"></a>
 #!/usr/bin/env php
 <?php
 // scripts/coverage-analysis.php
@@ -1338,11 +1439,17 @@ exit($analyzer->analyze());
 
 ---
 
+<a id="performance-testing"></a>
+<a id="-performance-testing"></a>
 ## 🚀 Performance Testing
 
+<a id="load-testing-con-artillery"></a>
+<a id="-load-testing-con-artillery"></a>
 ### Load Testing con Artillery
 
 ```yaml
+<a id="artillery-configyml"></a>
+<a id="-artillery-configyml"></a>
 # artillery-config.yml
 config:
   target: 'http://localhost:8000'
@@ -1391,6 +1498,8 @@ scenarios:
             categoria_id: "{{ $randomInt(1, 5) }}"
 ```
 
+<a id="database-performance-tests"></a>
+<a id="-database-performance-tests"></a>
 ### Database Performance Tests
 
 ```php
@@ -1478,8 +1587,12 @@ class DatabasePerformanceTest extends TestCase
 
 ---
 
+<a id="security-testing"></a>
+<a id="-security-testing"></a>
 ## 🔒 Security Testing
 
+<a id="security-test-suite"></a>
+<a id="-security-test-suite"></a>
 ### Security Test Suite
 
 ```php
@@ -1607,11 +1720,17 @@ class SecurityTest extends TestCase
 
 ---
 
+<a id="cicd-integration"></a>
+<a id="-cicd-integration"></a>
 ## 🤖 CI/CD Integration
 
+<a id="github-actions-workflow"></a>
+<a id="-github-actions-workflow"></a>
 ### GitHub Actions Workflow
 
 ```yaml
+<a id="githubworkflowstestsyml"></a>
+<a id="-githubworkflowstestsyml"></a>
 # .github/workflows/tests.yml
 name: Tests
 
@@ -1714,36 +1833,54 @@ jobs:
       run: ./vendor/bin/phpstan analyse src/ --level=5
 ```
 
+<a id="test-commands-for-development"></a>
+<a id="-test-commands-for-development"></a>
 ### Test Commands for Development
 
 ```bash
+<a id="ejecutar-todos-los-tests"></a>
+<a id="-ejecutar-todos-los-tests"></a>
 # Ejecutar todos los tests
 composer test
 
+<a id="tests-especificos"></a>
+<a id="-tests-especificos"></a>
 # Tests específicos
 composer test -- --testsuite=Unit
 composer test -- --testsuite=Integration
 composer test -- tests/Unit/Services/ProductServiceTest.php
 
+<a id="tests-con-coverage"></a>
+<a id="-tests-con-coverage"></a>
 # Tests con coverage
 composer test-coverage
 
+<a id="tests-en-modo-watch-con-entr"></a>
+<a id="-tests-en-modo-watch-con-entr"></a>
 # Tests en modo watch (con entr)
 find tests/ -name "*.php" | entr -c composer test
 
+<a id="linting-y-analisis"></a>
+<a id="-linting-y-analisis"></a>
 # Linting y análisis
 composer lint
 composer analyze
 
+<a id="security-tests"></a>
+<a id="-security-tests"></a>
 # Security tests
 composer test -- tests/Security/
 
+<a id="performance-tests"></a>
+<a id="-performance-tests"></a>
 # Performance tests
 composer test -- tests/Performance/
 ```
 
 ---
 
+<a id="documentos-relacionados"></a>
+<a id="-documentos-relacionados"></a>
 ## 🔗 Documentos Relacionados
 
 - **[📖 Índice General](docs/INDEX.md)** — Navegación completa del manual
@@ -1755,6 +1892,8 @@ composer test -- tests/Performance/
 
 ---
 
+<a id="soporte"></a>
+<a id="-soporte"></a>
 ## 📞 Soporte
 
 **¿Problemas con los tests?**

@@ -1,4 +1,61 @@
+<a id="snackshop-documentacion-de-base-de-datos"></a>
+<a id="-snackshop-documentacion-de-base-de-datos"></a>
 # 🗄️ SnackShop - Documentación de Base de Datos
+<!-- TOC -->
+<a id="contenido"></a>
+<a id="-contenido"></a>
+## Contenido
+
+- [🧭 Navegación](#-navegacion)
+- [📋 Índice](#-indice)
+- [🎯 Resumen del Sistema de Datos](#-resumen-del-sistema-de-datos)
+  - [Características Principales](#caracteristicas-principales)
+  - [Entidades Principales](#entidades-principales)
+- [⚙️ Configuración de Base de Datos](#-configuracion-de-base-de-datos)
+  - [SQLite (Desarrollo)](#sqlite-desarrollo)
+  - [MySQL (Producción)](#mysql-produccion)
+  - [Variables de Entorno](#variables-de-entorno)
+- [📊 Esquema de Tablas](#-esquema-de-tablas)
+  - [👥 Tabla: `usuarios`](#-tabla-usuarios)
+  - [🏷️ Tabla: `categorias`](#-tabla-categorias)
+  - [🍔 Tabla: `productos`](#-tabla-productos)
+  - [📦 Tabla: `variantes`](#-tabla-variantes)
+  - [💳 Tabla: `metodos_de_pago`](#-tabla-metodos_de_pago)
+  - [🛒 Tabla: `ventas`](#-tabla-ventas)
+  - [🧾 Tabla: `detalle_ventas`](#-tabla-detalle_ventas)
+  - [🥬 Tabla: `ingredientes`](#-tabla-ingredientes)
+  - [🛍️ Tabla: `compras`](#-tabla-compras)
+  - [🧮 Tabla: `recetas` (Opcional - Para Costeo)](#-tabla-recetas-opcional-para-costeo)
+- [🔗 Diagrama de Relaciones](#-diagrama-de-relaciones)
+  - [ERD (Entidad-Relación)](#erd-entidad-relacion)
+  - [Relaciones Principales](#relaciones-principales)
+- [🔍 Queries Importantes](#-queries-importantes)
+  - [Consultas de Ventas](#consultas-de-ventas)
+  - [Consultas de Inventario y Costeo](#consultas-de-inventario-y-costeo)
+  - [Consultas de Análisis](#consultas-de-analisis)
+  - [Consultas de Integridad](#consultas-de-integridad)
+- [🔄 Migraciones y Versionado](#-migraciones-y-versionado)
+  - [Estado Actual](#estado-actual)
+  - [Propuesta de Sistema de Migraciones](#propuesta-de-sistema-de-migraciones)
+  - [Esquema Inicial para Nueva Instalación](#esquema-inicial-para-nueva-instalacion)
+- [🌱 Seeds y Datos de Prueba](#-seeds-y-datos-de-prueba)
+  - [Datos de Demostración](#datos-de-demostracion)
+  - [Script de Seeding](#script-de-seeding)
+- [⚡ Índices y Performance](#-indices-y-performance)
+  - [Índices Recomendados](#indices-recomendados)
+  - [Optimizaciones SQLite](#optimizaciones-sqlite)
+  - [Queries de Monitoreo](#queries-de-monitoreo)
+- [💾 Backup y Restauración](#-backup-y-restauracion)
+  - [Backup SQLite](#backup-sqlite)
+  - [Backup MySQL](#backup-mysql)
+  - [Restauración](#restauracion)
+  - [Estrategia de Backup Recomendada](#estrategia-de-backup-recomendada)
+- [🚨 Troubleshooting](#-troubleshooting)
+  - [Problemas Comunes](#problemas-comunes)
+  - [Herramientas de Diagnóstico](#herramientas-de-diagnostico)
+- [🔗 Documentos Relacionados](#-documentos-relacionados)
+- [📞 Soporte](#-soporte)
+<!-- /TOC -->
 
 **🏠 Ubicación:** `DATABASE.md`
 **📅 Última actualización:** 28 de octubre, 2025
@@ -6,12 +63,16 @@
 
 ---
 
+<a id="navegacion"></a>
+<a id="-navegacion"></a>
 ## 🧭 Navegación
 
 **[📖 Índice General](docs/INDEX.md)** | **[🏠 README](README.md)** | **[🏗️ Arquitectura](ARCHITECTURE.md)** | **[🔌 API](API.md)**
 
 ---
 
+<a id="indice"></a>
+<a id="-indice"></a>
 ## 📋 Índice
 
 - [Resumen del Sistema de Datos](#resumen-del-sistema-de-datos)
@@ -27,8 +88,12 @@
 
 ---
 
+<a id="resumen-del-sistema-de-datos"></a>
+<a id="-resumen-del-sistema-de-datos"></a>
 ## 🎯 Resumen del Sistema de Datos
 
+<a id="caracteristicas-principales"></a>
+<a id="-caracteristicas-principales"></a>
 ### Características Principales
 
 - **Base de datos:** SQLite (desarrollo) / MySQL (producción)
@@ -37,6 +102,8 @@
 - **Transacciones:** Soporte completo para operaciones atómicas
 - **Ubicación:** `data/snackshop.db` (SQLite) o configuración MySQL
 
+<a id="entidades-principales"></a>
+<a id="-entidades-principales"></a>
 ### Entidades Principales
 
 - **Productos** y sus **Variantes** (tallas, presentaciones)
@@ -48,8 +115,12 @@
 
 ---
 
+<a id="configuracion-de-base-de-datos"></a>
+<a id="-configuracion-de-base-de-datos"></a>
 ## ⚙️ Configuración de Base de Datos
 
+<a id="sqlite-desarrollo"></a>
+<a id="-sqlite-desarrollo"></a>
 ### SQLite (Desarrollo)
 
 ```php
@@ -68,6 +139,8 @@ $options = [
 $pdo->exec('PRAGMA foreign_keys = ON');
 ```
 
+<a id="mysql-produccion"></a>
+<a id="-mysql-produccion"></a>
 ### MySQL (Producción)
 
 ```php
@@ -81,9 +154,13 @@ return [
 ];
 ```
 
+<a id="variables-de-entorno"></a>
+<a id="-variables-de-entorno"></a>
 ### Variables de Entorno
 
 ```bash
+<a id="env"></a>
+<a id="-env"></a>
 # .env
 SNACKSHOP_DB_HOST=127.0.0.1
 SNACKSHOP_DB_NAME=snackshop
@@ -93,8 +170,12 @@ SNACKSHOP_DB_PASS=secure_password
 
 ---
 
+<a id="esquema-de-tablas"></a>
+<a id="-esquema-de-tablas"></a>
 ## 📊 Esquema de Tablas
 
+<a id="tabla-usuarios"></a>
+<a id="-tabla-usuarios"></a>
 ### 👥 Tabla: `usuarios`
 
 ```sql
@@ -116,6 +197,8 @@ CREATE TABLE usuarios (
 - `fecha_creacion` — Timestamp de creación
 - `activo` — Estado del usuario (soft delete)
 
+<a id="tabla-categorias"></a>
+<a id="-tabla-categorias"></a>
 ### 🏷️ Tabla: `categorias`
 
 ```sql
@@ -133,6 +216,8 @@ CREATE TABLE categorias (
 - `descripcion` — Descripción opcional
 - `activo` — Estado de la categoría
 
+<a id="tabla-productos"></a>
+<a id="-tabla-productos"></a>
 ### 🍔 Tabla: `productos`
 
 ```sql
@@ -165,6 +250,8 @@ CREATE TABLE productos (
 - `imagen_size` — Tamaño de la imagen en bytes
 - `imagen_original_name` — Nombre original del archivo
 
+<a id="tabla-variantes"></a>
+<a id="-tabla-variantes"></a>
 ### 📦 Tabla: `variantes`
 
 ```sql
@@ -190,6 +277,8 @@ CREATE TABLE variantes (
 - `descripcion` — Descripción específica de la variante
 - `activo` — Estado de la variante
 
+<a id="tabla-metodos_de_pago"></a>
+<a id="-tabla-metodos_de_pago"></a>
 ### 💳 Tabla: `metodos_de_pago`
 
 ```sql
@@ -207,6 +296,8 @@ CREATE TABLE metodos_de_pago (
 - `descripcion` — Descripción del método
 - `activo` — Estado del método
 
+<a id="tabla-ventas"></a>
+<a id="-tabla-ventas"></a>
 ### 🛒 Tabla: `ventas`
 
 ```sql
@@ -234,6 +325,8 @@ CREATE TABLE ventas (
 - `notas` — Notas adicionales del cajero
 - `fecha_hora` — Timestamp de la venta
 
+<a id="tabla-detalle_ventas"></a>
+<a id="-tabla-detalle_ventas"></a>
 ### 🧾 Tabla: `detalle_ventas`
 
 ```sql
@@ -259,6 +352,8 @@ CREATE TABLE detalle_ventas (
 - `iva` — IVA calculado para este item
 - `sub_total` — Subtotal del item (cantidad × precio_unitario)
 
+<a id="tabla-ingredientes"></a>
+<a id="-tabla-ingredientes"></a>
 ### 🥬 Tabla: `ingredientes`
 
 ```sql
@@ -279,6 +374,8 @@ CREATE TABLE ingredientes (
 - `merma_pct` — Porcentaje de merma esperado
 - `activo` — Estado del ingrediente
 
+<a id="tabla-compras"></a>
+<a id="-tabla-compras"></a>
 ### 🛍️ Tabla: `compras`
 
 ```sql
@@ -305,6 +402,8 @@ CREATE TABLE compras (
 - `proveedor` — Nombre del proveedor
 - `notas` — Notas adicionales
 
+<a id="tabla-recetas-opcional-para-costeo"></a>
+<a id="-tabla-recetas-opcional-para-costeo"></a>
 ### 🧮 Tabla: `recetas` (Opcional - Para Costeo)
 
 ```sql
@@ -328,8 +427,12 @@ CREATE TABLE recetas (
 
 ---
 
+<a id="diagrama-de-relaciones"></a>
+<a id="-diagrama-de-relaciones"></a>
 ## 🔗 Diagrama de Relaciones
 
+<a id="erd-entidad-relacion"></a>
+<a id="-erd-entidad-relacion"></a>
 ### ERD (Entidad-Relación)
 
 ```
@@ -414,6 +517,8 @@ CREATE TABLE recetas (
                         └─────────────────┘
 ```
 
+<a id="relaciones-principales"></a>
+<a id="-relaciones-principales"></a>
 ### Relaciones Principales
 
 1. **usuarios** 1:N **ventas** — Un usuario puede procesar múltiples ventas
@@ -427,10 +532,16 @@ CREATE TABLE recetas (
 
 ---
 
+<a id="queries-importantes"></a>
+<a id="-queries-importantes"></a>
 ## 🔍 Queries Importantes
 
+<a id="consultas-de-ventas"></a>
+<a id="-consultas-de-ventas"></a>
 ### Consultas de Ventas
 
+<a id="reporte-de-ventas-diarias"></a>
+<a id="-reporte-de-ventas-diarias"></a>
 #### Reporte de Ventas Diarias
 
 ```sql
@@ -445,6 +556,8 @@ GROUP BY DATE(fecha_hora)
 ORDER BY fecha DESC;
 ```
 
+<a id="top-productos-vendidos"></a>
+<a id="-top-productos-vendidos"></a>
 #### Top Productos Vendidos
 
 ```sql
@@ -463,6 +576,8 @@ ORDER BY total_vendido DESC
 LIMIT 10;
 ```
 
+<a id="ventas-por-usuario-cajeros"></a>
+<a id="-ventas-por-usuario-cajeros"></a>
 #### Ventas por Usuario (Cajeros)
 
 ```sql
@@ -478,8 +593,12 @@ GROUP BY u.usuario_id, DATE(v.fecha_hora)
 ORDER BY fecha DESC, total_vendido DESC;
 ```
 
+<a id="consultas-de-inventario-y-costeo"></a>
+<a id="-consultas-de-inventario-y-costeo"></a>
 ### Consultas de Inventario y Costeo
 
+<a id="costo-de-produccion-por-producto"></a>
+<a id="-costo-de-produccion-por-producto"></a>
 #### Costo de Producción por Producto
 
 ```sql
@@ -501,6 +620,8 @@ GROUP BY p.producto_id
 ORDER BY costo_estimado DESC;
 ```
 
+<a id="ingredientes-con-stock-bajo-estimado"></a>
+<a id="-ingredientes-con-stock-bajo-estimado"></a>
 #### Ingredientes con Stock Bajo (Estimado)
 
 ```sql
@@ -523,8 +644,12 @@ HAVING stock_estimado < 100
 ORDER BY stock_estimado ASC;
 ```
 
+<a id="consultas-de-analisis"></a>
+<a id="-consultas-de-analisis"></a>
 ### Consultas de Análisis
 
+<a id="analisis-de-margenes"></a>
+<a id="-analisis-de-margenes"></a>
 #### Análisis de Márgenes
 
 ```sql
@@ -556,8 +681,12 @@ GROUP BY p.producto_id, v.variante_id
 ORDER BY margen_estimado DESC;
 ```
 
+<a id="consultas-de-integridad"></a>
+<a id="-consultas-de-integridad"></a>
 ### Consultas de Integridad
 
+<a id="verificar-integridad-de-datos"></a>
+<a id="-verificar-integridad-de-datos"></a>
 #### Verificar Integridad de Datos
 
 ```sql
@@ -579,15 +708,23 @@ WHERE p.producto_id IS NULL;
 
 ---
 
+<a id="migraciones-y-versionado"></a>
+<a id="-migraciones-y-versionado"></a>
 ## 🔄 Migraciones y Versionado
 
+<a id="estado-actual"></a>
+<a id="-estado-actual"></a>
 ### Estado Actual
 
 - **Sin sistema de migraciones implementado**
 - **Recomendación:** Implementar sistema de versionado
 
+<a id="propuesta-de-sistema-de-migraciones"></a>
+<a id="-propuesta-de-sistema-de-migraciones"></a>
 ### Propuesta de Sistema de Migraciones
 
+<a id="tabla-de-control-migrations"></a>
+<a id="-tabla-de-control-migrations"></a>
 #### Tabla de Control `migrations`
 
 ```sql
@@ -600,6 +737,8 @@ CREATE TABLE migrations (
 );
 ```
 
+<a id="estructura-de-archivos"></a>
+<a id="-estructura-de-archivos"></a>
 #### Estructura de Archivos
 
 ```
@@ -610,6 +749,8 @@ migrations/
 └── v1.3.0_add_compras_table.sql
 ```
 
+<a id="script-de-migracion-propuesta"></a>
+<a id="-script-de-migracion-propuesta"></a>
 #### Script de Migración (Propuesta)
 
 ```php
@@ -630,8 +771,12 @@ class MigrationManager {
 }
 ```
 
+<a id="esquema-inicial-para-nueva-instalacion"></a>
+<a id="-esquema-inicial-para-nueva-instalacion"></a>
 ### Esquema Inicial para Nueva Instalación
 
+<a id="migrationsv100_initial_schemasql"></a>
+<a id="-migrationsv100_initial_schemasql"></a>
 #### `migrations/v1.0.0_initial_schema.sql`
 
 ```sql
@@ -654,10 +799,16 @@ INSERT INTO usuarios (usuario, contrasena_hash, rol) VALUES
 
 ---
 
+<a id="seeds-y-datos-de-prueba"></a>
+<a id="-seeds-y-datos-de-prueba"></a>
 ## 🌱 Seeds y Datos de Prueba
 
+<a id="datos-de-demostracion"></a>
+<a id="-datos-de-demostracion"></a>
 ### Datos de Demostración
 
+<a id="seedsdemo_datasql"></a>
+<a id="-seedsdemo_datasql"></a>
 #### `seeds/demo_data.sql`
 
 ```sql
@@ -698,6 +849,8 @@ INSERT INTO recetas (producto_id, ingrediente_id, cantidad, unidad) VALUES
 (1, 5, 15, 'gramo');   -- 15g cebolla
 ```
 
+<a id="script-de-seeding"></a>
+<a id="-script-de-seeding"></a>
 ### Script de Seeding
 
 ```php
@@ -724,8 +877,12 @@ class DatabaseSeeder {
 
 ---
 
+<a id="indices-y-performance"></a>
+<a id="-indices-y-performance"></a>
 ## ⚡ Índices y Performance
 
+<a id="indices-recomendados"></a>
+<a id="-indices-recomendados"></a>
 ### Índices Recomendados
 
 ```sql
@@ -750,6 +907,8 @@ CREATE INDEX idx_recetas_producto ON recetas(producto_id);
 CREATE INDEX idx_recetas_ingrediente ON recetas(ingrediente_id);
 ```
 
+<a id="optimizaciones-sqlite"></a>
+<a id="-optimizaciones-sqlite"></a>
 ### Optimizaciones SQLite
 
 ```sql
@@ -763,8 +922,12 @@ PRAGMA optimize;
 ANALYZE;
 ```
 
+<a id="queries-de-monitoreo"></a>
+<a id="-queries-de-monitoreo"></a>
 ### Queries de Monitoreo
 
+<a id="tablas-con-mas-registros"></a>
+<a id="-tablas-con-mas-registros"></a>
 #### Tablas con Más Registros
 
 ```sql
@@ -780,6 +943,8 @@ WHERE type='table'
 AND name NOT LIKE 'sqlite_%';
 ```
 
+<a id="espacio-en-disco"></a>
+<a id="-espacio-en-disco"></a>
 #### Espacio en Disco
 
 ```sql
@@ -796,20 +961,32 @@ SELECT
 
 ---
 
+<a id="backup-y-restauracion"></a>
+<a id="-backup-y-restauracion"></a>
 ## 💾 Backup y Restauración
 
+<a id="backup-sqlite"></a>
+<a id="-backup-sqlite"></a>
 ### Backup SQLite
 
+<a id="backup-completo"></a>
+<a id="-backup-completo"></a>
 #### Backup Completo
 
 ```bash
+<a id="backup-directo-del-archivo"></a>
+<a id="-backup-directo-del-archivo"></a>
 # Backup directo del archivo
 cp data/snackshop.db backups/snackshop_$(date +%Y%m%d_%H%M%S).db
 
+<a id="backup-sql-dump"></a>
+<a id="-backup-sql-dump"></a>
 # Backup SQL dump
 sqlite3 data/snackshop.db .dump > backups/snackshop_$(date +%Y%m%d_%H%M%S).sql
 ```
 
+<a id="backup-incremental-propuesta"></a>
+<a id="-backup-incremental-propuesta"></a>
 #### Backup Incremental (Propuesta)
 
 ```sql
@@ -819,41 +996,65 @@ WHERE fecha_hora > '2025-10-27 00:00:00'
 ORDER BY fecha_hora;
 ```
 
+<a id="backup-mysql"></a>
+<a id="-backup-mysql"></a>
 ### Backup MySQL
 
 ```bash
+<a id="backup-completo"></a>
+<a id="-backup-completo"></a>
 # Backup completo
 mysqldump -u snackshop_user -p snackshop > backups/snackshop_$(date +%Y%m%d_%H%M%S).sql
 
+<a id="backup-solo-datos-sin-estructura"></a>
+<a id="-backup-solo-datos-sin-estructura"></a>
 # Backup solo datos (sin estructura)
 mysqldump -u snackshop_user -p --no-create-info snackshop > backups/snackshop_data_$(date +%Y%m%d_%H%M%S).sql
 
+<a id="backup-comprimido"></a>
+<a id="-backup-comprimido"></a>
 # Backup comprimido
 mysqldump -u snackshop_user -p snackshop | gzip > backups/snackshop_$(date +%Y%m%d_%H%M%S).sql.gz
 ```
 
+<a id="restauracion"></a>
+<a id="-restauracion"></a>
 ### Restauración
 
+<a id="sqlite"></a>
+<a id="-sqlite"></a>
 #### SQLite
 
 ```bash
+<a id="restaurar-desde-archivo"></a>
+<a id="-restaurar-desde-archivo"></a>
 # Restaurar desde archivo
 cp backups/snackshop_20251028_143000.db data/snackshop.db
 
+<a id="restaurar-desde-sql-dump"></a>
+<a id="-restaurar-desde-sql-dump"></a>
 # Restaurar desde SQL dump
 sqlite3 data/snackshop.db < backups/snackshop_20251028_143000.sql
 ```
 
+<a id="mysql"></a>
+<a id="-mysql"></a>
 #### MySQL
 
 ```bash
+<a id="restaurar-base-completa"></a>
+<a id="-restaurar-base-completa"></a>
 # Restaurar base completa
 mysql -u snackshop_user -p snackshop < backups/snackshop_20251028_143000.sql
 
+<a id="restaurar-tabla-especifica"></a>
+<a id="-restaurar-tabla-especifica"></a>
 # Restaurar tabla específica
 mysql -u snackshop_user -p snackshop < backups/tabla_ventas.sql
 ```
 
+<a id="estrategia-de-backup-recomendada"></a>
+<a id="-estrategia-de-backup-recomendada"></a>
 ### Estrategia de Backup Recomendada
 
 1. **Diario:** Backup automático a las 2 AM
@@ -862,20 +1063,32 @@ mysql -u snackshop_user -p snackshop < backups/tabla_ventas.sql
 4. **Pre-actualización:** Backup antes de cambios importantes
 
 ```bash
+<a id="script-cron-para-backup-automatico"></a>
+<a id="-script-cron-para-backup-automatico"></a>
 # Script cron para backup automático
+<a id="binbash"></a>
+<a id="-binbash"></a>
 #!/bin/bash
+<a id="0-2-pathtobackup_scriptsh"></a>
+<a id="-0-2-pathtobackup_scriptsh"></a>
 # 0 2 * * * /path/to/backup_script.sh
 
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="/path/to/backups"
 DB_PATH="/path/to/data/snackshop.db"
 
+<a id="backup-diario"></a>
+<a id="-backup-diario"></a>
 # Backup diario
 cp "$DB_PATH" "$BACKUP_DIR/daily/snackshop_$DATE.db"
 
+<a id="limpiar-backups-antiguos-mantener-7-dias"></a>
+<a id="-limpiar-backups-antiguos-mantener-7-dias"></a>
 # Limpiar backups antiguos (mantener 7 días)
 find "$BACKUP_DIR/daily" -name "*.db" -mtime +7 -delete
 
+<a id="backup-semanal-domingos"></a>
+<a id="-backup-semanal-domingos"></a>
 # Backup semanal (domingos)
 if [ $(date +%u) -eq 7 ]; then
     cp "$DB_PATH" "$BACKUP_DIR/weekly/snackshop_$DATE.db"
@@ -884,21 +1097,35 @@ fi
 
 ---
 
+<a id="troubleshooting"></a>
+<a id="-troubleshooting"></a>
 ## 🚨 Troubleshooting
 
+<a id="problemas-comunes"></a>
+<a id="-problemas-comunes"></a>
 ### Problemas Comunes
 
+<a id="error-database-is-locked"></a>
+<a id="-error-database-is-locked"></a>
 #### Error: "Database is locked"
 
 ```bash
+<a id="verificar-procesos-que-usan-la-bd"></a>
+<a id="-verificar-procesos-que-usan-la-bd"></a>
 # Verificar procesos que usan la BD
 lsof data/snackshop.db
 
+<a id="solucion-cerrar-conexiones-activas"></a>
+<a id="-solucion-cerrar-conexiones-activas"></a>
 # Solución: cerrar conexiones activas
+<a id="reiniciar-servidor-web"></a>
+<a id="-reiniciar-servidor-web"></a>
 # Reiniciar servidor web
 sudo systemctl restart apache2
 ```
 
+<a id="error-no-such-table"></a>
+<a id="-error-no-such-table"></a>
 #### Error: "No such table"
 
 ```sql
@@ -913,6 +1140,8 @@ SHOW TABLES;
 DESCRIBE productos;
 ```
 
+<a id="error-foreign-key-constraint-failed"></a>
+<a id="-error-foreign-key-constraint-failed"></a>
 #### Error: "Foreign key constraint failed"
 
 ```sql
@@ -925,6 +1154,8 @@ PRAGMA foreign_keys = OFF;
 PRAGMA foreign_keys = ON;
 ```
 
+<a id="performance-lenta"></a>
+<a id="-performance-lenta"></a>
 #### Performance Lenta
 
 ```sql
@@ -941,8 +1172,12 @@ ANALYZE;
 SELECT name FROM sqlite_master WHERE type='index';
 ```
 
+<a id="herramientas-de-diagnostico"></a>
+<a id="-herramientas-de-diagnostico"></a>
 ### Herramientas de Diagnóstico
 
+<a id="verificacion-de-integridad"></a>
+<a id="-verificacion-de-integridad"></a>
 #### Verificación de Integridad
 
 ```sql
@@ -955,6 +1190,8 @@ CHECK TABLE ventas;
 CHECK TABLE productos;
 ```
 
+<a id="estadisticas-de-uso"></a>
+<a id="-estadisticas-de-uso"></a>
 #### Estadísticas de Uso
 
 ```sql
@@ -972,6 +1209,8 @@ SELECT
     'detalle_ventas' as tabla, COUNT(*) as registros FROM detalle_ventas;
 ```
 
+<a id="log-de-errores"></a>
+<a id="-log-de-errores"></a>
 #### Log de Errores
 
 ```php
@@ -988,6 +1227,8 @@ try {
 
 ---
 
+<a id="documentos-relacionados"></a>
+<a id="-documentos-relacionados"></a>
 ## 🔗 Documentos Relacionados
 
 - **[📖 Índice General](docs/INDEX.md)** — Navegación completa del manual
@@ -998,6 +1239,8 @@ try {
 
 ---
 
+<a id="soporte"></a>
+<a id="-soporte"></a>
 ## 📞 Soporte
 
 **¿Problemas con la base de datos?**
