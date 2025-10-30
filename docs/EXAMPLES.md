@@ -23,6 +23,7 @@ Este documento proporciona ejemplos prácticos y tutoriales paso a paso para las
 ## 1. Crear un Producto con Variantes
 
 ### Paso 1: Crear el Producto
+
 ```php
 $productService = new ProductService($productRepo, $variantRepo);
 $productId = $productService->createProduct([
@@ -33,6 +34,7 @@ $productId = $productService->createProduct([
 ```
 
 ### Paso 2: Agregar Variantes
+
 ```php
 $variantId = $productService->addVariant($productId, [
     'name' => 'Brownie con nuez',

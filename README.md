@@ -196,6 +196,7 @@ Documentación general y guía rápida del proyecto SnackShop — aplicación PH
 Este README ha sido reorganizado y condensado para facilitar la lectura por desarrolladores y operadores.
 
 ## Contenido rápido
+
 - Resumen
 - Requisitos mínimos
 - Instalación y arranque rápido

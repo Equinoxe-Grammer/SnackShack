@@ -1,7 +1,7 @@
 # ⚙️ SnackShop - Configuración Avanzada
 
-**🏠 Ubicación:** `CONFIGURATION.md`  
-**📅 Última actualización:** 28 de octubre, 2025  
+**🏠 Ubicación:** `CONFIGURATION.md`
+**📅 Última actualización:** 28 de octubre, 2025
 **🎯 Propósito:** Configuración avanzada, optimización de producción y fine-tuning del sistema
 
 ---
@@ -387,7 +387,7 @@ php_admin_value[error_log] = /var/log/php/snackshop-error.log
 server {
     listen 80;
     server_name tu-dominio.com www.tu-dominio.com;
-    
+
     # Redirect to HTTPS
     return 301 https://$server_name$request_uri;
 }
@@ -395,15 +395,15 @@ server {
 server {
     listen 443 ssl http2;
     server_name tu-dominio.com www.tu-dominio.com;
-    
+
     root /var/www/snackshop/public;
     index index.php index.html;
-    
+
     # SSL Configuration
     ssl_certificate /etc/letsencrypt/live/tu-dominio.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/tu-dominio.com/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/tu-dominio.com/chain.pem;
-    
+
     # SSL Settings
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
@@ -413,7 +413,7 @@ server {
     ssl_session_tickets off;
     ssl_stapling on;
     ssl_stapling_verify on;
-    
+
     # Security Headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
@@ -421,15 +421,15 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self';" always;
-    
+
     # Hide server information
     server_tokens off;
-    
+
     # Rate Limiting Zones
     limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;
     limit_req_zone $binary_remote_addr zone=api:10m rate=100r/m;
     limit_req_zone $binary_remote_addr zone=general:10m rate=60r/m;
-    
+
     # Performance Settings
     sendfile on;
     tcp_nopush on;
@@ -439,7 +439,7 @@ server {
     client_max_body_size 50M;
     client_body_timeout 60s;
     client_header_timeout 60s;
-    
+
     # Gzip Compression
     gzip on;
     gzip_vary on;
@@ -456,29 +456,29 @@ server {
         application/xml+rss
         application/atom+xml
         image/svg+xml;
-    
+
     # Main location
     location / {
         limit_req zone=general burst=20 nodelay;
         try_files $uri $uri/ /index.php?$query_string;
     }
-    
+
     # Authentication endpoints (stricter rate limiting)
     location ~ ^/(login|logout|auth) {
         limit_req zone=login burst=3 nodelay;
         try_files $uri $uri/ /index.php?$query_string;
     }
-    
+
     # API endpoints
     location ~ ^/api/ {
         limit_req zone=api burst=50 nodelay;
         try_files $uri $uri/ /index.php?$query_string;
-        
+
         # CORS headers for API
         add_header Access-Control-Allow-Origin "https://app.tu-dominio.com" always;
         add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
         add_header Access-Control-Allow-Headers "Authorization, Content-Type, X-Requested-With" always;
-        
+
         if ($request_method = 'OPTIONS') {
             add_header Access-Control-Allow-Origin "https://app.tu-dominio.com";
             add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS";
@@ -489,7 +489,7 @@ server {
             return 204;
         }
     }
-    
+
     # PHP handling
     location ~ \\.php$ {
         fastcgi_split_path_info ^(.+\\.php)(/.+)$;
@@ -497,7 +497,7 @@ server {
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         include fastcgi_params;
-        
+
         # Security & Performance
         fastcgi_hide_header X-Powered-By;
         fastcgi_read_timeout 120;
@@ -507,56 +507,56 @@ server {
         fastcgi_buffers 4 256k;
         fastcgi_busy_buffers_size 256k;
     }
-    
+
     # Static files with aggressive caching
     location ~* \\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
         add_header Vary "Accept-Encoding";
         access_log off;
-        
+
         # Optional: serve WebP if available
         location ~* \\.(png|jpg|jpeg)$ {
             add_header Vary "Accept";
             try_files $uri$webp_suffix $uri =404;
         }
     }
-    
+
     # Deny access to sensitive files
     location ~ /\\. {
         deny all;
         access_log off;
         log_not_found off;
     }
-    
+
     location ~ \\.(env|log|sql|md|txt|conf)$ {
         deny all;
         access_log off;
         log_not_found off;
     }
-    
+
     location ~ /vendor/ {
         deny all;
         access_log off;
         log_not_found off;
     }
-    
+
     # Robots and favicon
     location = /robots.txt {
         access_log off;
         log_not_found off;
     }
-    
+
     location = /favicon.ico {
         access_log off;
         log_not_found off;
     }
-    
+
     # Error pages
     error_page 404 /errors/404.php;
     error_page 403 /errors/403.php;
     error_page 500 502 503 504 /errors/500.php;
-    
+
     # Logging
     access_log /var/log/nginx/snackshop-access.log combined;
     error_log /var/log/nginx/snackshop-error.log warn;
@@ -592,11 +592,11 @@ http {
     keepalive_requests 1000;
     types_hash_max_size 2048;
     server_tokens off;
-    
+
     # MIME
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
-    
+
     # Buffer Settings
     client_body_buffer_size 128k;
     client_max_body_size 50m;
@@ -604,21 +604,21 @@ http {
     large_client_header_buffers 4 4k;
     output_buffers 1 32k;
     postpone_output 1460;
-    
+
     # Timeouts
     client_header_timeout 30s;
     client_body_timeout 60s;
     send_timeout 60s;
-    
+
     # Logging Format
     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
                    '$status $body_bytes_sent "$http_referer" '
                    '"$http_user_agent" "$http_x_forwarded_for" '
                    '$request_time $upstream_response_time';
-    
+
     access_log /var/log/nginx/access.log main;
     error_log /var/log/nginx/error.log warn;
-    
+
     # Gzip Settings
     gzip on;
     gzip_vary on;
@@ -635,11 +635,11 @@ http {
         application/xml+rss
         application/atom+xml
         image/svg+xml;
-    
+
     # Rate Limiting (Global)
     limit_req_zone $binary_remote_addr zone=global:10m rate=30r/m;
     limit_req_status 429;
-    
+
     # Include virtual hosts
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/sites-enabled/*;
@@ -748,6 +748,7 @@ write_buffer = 2M
 ### Optimización por Tamaño de Servidor
 
 #### Servidor Pequeño (1-2GB RAM)
+
 ```ini
 innodb_buffer_pool_size = 512M
 max_connections = 50
@@ -755,6 +756,7 @@ innodb_log_file_size = 64M
 ```
 
 #### Servidor Mediano (4-8GB RAM)
+
 ```ini
 innodb_buffer_pool_size = 2G
 max_connections = 150
@@ -762,6 +764,7 @@ innodb_log_file_size = 256M
 ```
 
 #### Servidor Grande (16GB+ RAM)
+
 ```ini
 innodb_buffer_pool_size = 8G
 max_connections = 300
@@ -776,12 +779,13 @@ innodb_buffer_pool_instances = 8
 ### Configuración de Cache
 
 #### Implementación de Cache en PHP
+
 ```php
 // src/Utils/Cache.php
 class Cache {
     private static $redis = null;
     private static $enabled = false;
-    
+
     public static function init() {
         if (getenv('CACHE_DRIVER') === 'redis') {
             self::$redis = new Redis();
@@ -792,29 +796,29 @@ class Cache {
             self::$enabled = true;
         }
     }
-    
+
     public static function get($key, $default = null) {
         if (!self::$enabled) return $default;
-        
+
         $value = self::$redis->get($key);
         return $value !== false ? json_decode($value, true) : $default;
     }
-    
+
     public static function set($key, $value, $ttl = 3600) {
         if (!self::$enabled) return false;
-        
+
         return self::$redis->setex($key, $ttl, json_encode($value));
     }
-    
+
     public static function delete($key) {
         if (!self::$enabled) return false;
-        
+
         return self::$redis->del($key);
     }
-    
+
     public static function flush() {
         if (!self::$enabled) return false;
-        
+
         return self::$redis->flushAll();
     }
 }
@@ -824,18 +828,19 @@ class ProductService {
     public function getProductById($id) {
         $cacheKey = "product_$id";
         $product = Cache::get($cacheKey);
-        
+
         if (!$product) {
             $product = $this->productRepository->findById($id);
             Cache::set($cacheKey, $product, 1800); // 30 minutos
         }
-        
+
         return $product;
     }
 }
 ```
 
 #### Redis Configuration
+
 ```bash
 # Variables de entorno para Redis
 CACHE_DRIVER=redis
@@ -877,32 +882,33 @@ stop-writes-on-bgsave-error no
 ### Database Optimization
 
 #### Query Optimization
+
 ```php
 // src/Utils/QueryOptimizer.php
 class QueryOptimizer {
     private $db;
     private $slowQueries = [];
-    
+
     public function __construct($database) {
         $this->db = $database;
     }
-    
+
     public function executeWithProfiling($query, $params = []) {
         $start = microtime(true);
-        
+
         $stmt = $this->db->prepare($query);
         $result = $stmt->execute($params);
-        
+
         $executionTime = microtime(true) - $start;
-        
+
         // Log slow queries
         if ($executionTime > (float)getenv('SLOW_QUERY_THRESHOLD')) {
             $this->logSlowQuery($query, $params, $executionTime);
         }
-        
+
         return $result;
     }
-    
+
     private function logSlowQuery($query, $params, $time) {
         $logEntry = [
             'query' => $query,
@@ -910,7 +916,7 @@ class QueryOptimizer {
             'execution_time' => $time,
             'timestamp' => date('Y-m-d H:i:s')
         ];
-        
+
         file_put_contents(
             '/var/log/snackshop/slow-queries.log',
             json_encode($logEntry) . PHP_EOL,
@@ -921,6 +927,7 @@ class QueryOptimizer {
 ```
 
 #### Database Indices
+
 ```sql
 -- Índices recomendados para SnackShop
 
@@ -959,22 +966,22 @@ class OptimizedImageProcessingService {
     private $maxWidth;
     private $maxHeight;
     private $quality;
-    
+
     public function __construct() {
         $this->allowedTypes = explode(',', getenv('ALLOWED_IMAGE_TYPES'));
         $this->maxWidth = (int)getenv('IMAGE_MAX_WIDTH');
         $this->maxHeight = (int)getenv('IMAGE_MAX_HEIGHT');
         $this->quality = (int)getenv('IMAGE_QUALITY');
     }
-    
+
     public function optimizeImage($inputPath, $outputPath) {
         $imageInfo = getimagesize($inputPath);
         if (!$imageInfo) {
             throw new InvalidArgumentException('Invalid image file');
         }
-        
+
         list($width, $height, $type) = $imageInfo;
-        
+
         // Calcular nuevas dimensiones si excede límites
         if ($width > $this->maxWidth || $height > $this->maxHeight) {
             $ratio = min($this->maxWidth / $width, $this->maxHeight / $height);
@@ -984,33 +991,33 @@ class OptimizedImageProcessingService {
             $newWidth = $width;
             $newHeight = $height;
         }
-        
+
         // Crear imagen fuente
         $source = $this->createImageFromType($inputPath, $type);
-        
+
         // Crear imagen destino
         $destination = imagecreatetruecolor($newWidth, $newHeight);
-        
+
         // Preservar transparencia para PNG y GIF
         if ($type === IMAGETYPE_PNG || $type === IMAGETYPE_GIF) {
             imagealphablending($destination, false);
             imagesavealpha($destination, true);
         }
-        
+
         // Redimensionar
         imagecopyresampled(
             $destination, $source,
             0, 0, 0, 0,
             $newWidth, $newHeight, $width, $height
         );
-        
+
         // Guardar imagen optimizada
         $this->saveOptimizedImage($destination, $outputPath, $type);
-        
+
         // Limpiar memoria
         imagedestroy($source);
         imagedestroy($destination);
-        
+
         return [
             'original_size' => filesize($inputPath),
             'optimized_size' => filesize($outputPath),
@@ -1018,7 +1025,7 @@ class OptimizedImageProcessingService {
             'dimensions' => "$newWidth x $newHeight"
         ];
     }
-    
+
     private function createImageFromType($path, $type) {
         switch ($type) {
             case IMAGETYPE_JPEG:
@@ -1033,7 +1040,7 @@ class OptimizedImageProcessingService {
                 throw new InvalidArgumentException('Unsupported image type');
         }
     }
-    
+
     private function saveOptimizedImage($image, $path, $type) {
         switch ($type) {
             case IMAGETYPE_JPEG:
@@ -1066,11 +1073,11 @@ class OptimizedImageProcessingService {
 class SecurityHeadersMiddleware {
     public function handle($request, $next) {
         $response = $next($request);
-        
+
         // HSTS
-        $response->header('Strict-Transport-Security', 
+        $response->header('Strict-Transport-Security',
             'max-age=31536000; includeSubDomains; preload');
-        
+
         // CSP
         $csp = "default-src 'self'; " .
                "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " .
@@ -1081,16 +1088,16 @@ class SecurityHeadersMiddleware {
                "frame-ancestors 'none'; " .
                "base-uri 'self'; " .
                "form-action 'self'";
-        
+
         $response->header('Content-Security-Policy', $csp);
-        
+
         // Otros headers
         $response->header('X-Frame-Options', 'SAMEORIGIN');
         $response->header('X-Content-Type-Options', 'nosniff');
         $response->header('X-XSS-Protection', '1; mode=block');
         $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->header('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
-        
+
         return $response;
     }
 }
@@ -1101,14 +1108,14 @@ class SecurityHeadersMiddleware {
 ```php
 // src/Utils/SecurityValidator.php
 class SecurityValidator {
-    
+
     public static function sanitizeInput($input, $type = 'string') {
         if (is_array($input)) {
             return array_map(function($item) use ($type) {
                 return self::sanitizeInput($item, $type);
             }, $input);
         }
-        
+
         switch ($type) {
             case 'email':
                 return filter_var($input, FILTER_SANITIZE_EMAIL);
@@ -1124,48 +1131,48 @@ class SecurityValidator {
                 return trim(strip_tags($input));
         }
     }
-    
+
     public static function validateCSRF($token) {
-        if (!isset($_SESSION['csrf_token']) || 
+        if (!isset($_SESSION['csrf_token']) ||
             !hash_equals($_SESSION['csrf_token'], $token)) {
             throw new SecurityException('Invalid CSRF token');
         }
-        
+
         // Regenerar token después de uso
         self::generateCSRFToken();
         return true;
     }
-    
+
     public static function generateCSRFToken() {
         $token = bin2hex(random_bytes(32));
         $_SESSION['csrf_token'] = $token;
         return $token;
     }
-    
+
     public static function validatePassword($password) {
         $minLength = (int)getenv('PASSWORD_MIN_LENGTH') ?: 8;
         $requireSpecial = getenv('PASSWORD_REQUIRE_SPECIAL') === 'true';
         $requireNumbers = getenv('PASSWORD_REQUIRE_NUMBERS') === 'true';
         $requireUppercase = getenv('PASSWORD_REQUIRE_UPPERCASE') === 'true';
-        
+
         $errors = [];
-        
+
         if (strlen($password) < $minLength) {
             $errors[] = "Password must be at least $minLength characters long";
         }
-        
+
         if ($requireSpecial && !preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
             $errors[] = 'Password must contain at least one special character';
         }
-        
+
         if ($requireNumbers && !preg_match('/[0-9]/', $password)) {
             $errors[] = 'Password must contain at least one number';
         }
-        
+
         if ($requireUppercase && !preg_match('/[A-Z]/', $password)) {
             $errors[] = 'Password must contain at least one uppercase letter';
         }
-        
+
         return empty($errors) ? true : $errors;
     }
 }
@@ -1181,11 +1188,11 @@ class SecurityValidator {
 // src/Utils/StructuredLogger.php
 class StructuredLogger {
     private static $handlers = [];
-    
+
     public static function addHandler($name, $handler) {
         self::$handlers[$name] = $handler;
     }
-    
+
     public static function log($level, $message, $context = [], $channel = 'app') {
         $logEntry = [
             'timestamp' => date('c'),
@@ -1200,24 +1207,24 @@ class StructuredLogger {
             'memory_usage' => memory_get_usage(true),
             'peak_memory' => memory_get_peak_usage(true)
         ];
-        
+
         foreach (self::$handlers as $handler) {
             $handler->handle($logEntry);
         }
     }
-    
+
     public static function error($message, $context = []) {
         self::log('error', $message, $context);
     }
-    
+
     public static function warning($message, $context = []) {
         self::log('warning', $message, $context);
     }
-    
+
     public static function info($message, $context = []) {
         self::log('info', $message, $context);
     }
-    
+
     public static function debug($message, $context = []) {
         if (getenv('APP_DEBUG') === 'true') {
             self::log('debug', $message, $context);
@@ -1228,11 +1235,11 @@ class StructuredLogger {
 // Handler para archivos JSON
 class JSONFileHandler {
     private $filePath;
-    
+
     public function __construct($filePath) {
         $this->filePath = $filePath;
     }
-    
+
     public function handle($logEntry) {
         $json = json_encode($logEntry, JSON_UNESCAPED_UNICODE) . PHP_EOL;
         file_put_contents($this->filePath, $json, FILE_APPEND | LOCK_EX);
@@ -1246,7 +1253,7 @@ class SyslogHandler {
         $message = json_encode($logEntry, JSON_UNESCAPED_UNICODE);
         syslog($priority, $message);
     }
-    
+
     private function getLevelPriority($level) {
         switch (strtolower($level)) {
             case 'emergency': return LOG_EMERG;
@@ -1416,9 +1423,9 @@ class HealthController {
             'memory' => $this->checkMemory(),
             'services' => $this->checkServices()
         ];
-        
+
         $overallStatus = $this->determineOverallStatus($checks);
-        
+
         return json_response([
             'status' => $overallStatus,
             'timestamp' => date('c'),
@@ -1427,19 +1434,19 @@ class HealthController {
             'environment' => getenv('APP_ENV')
         ], $overallStatus === 'healthy' ? 200 : 503);
     }
-    
+
     private function checkDatabase() {
         try {
             $db = new PDO(
-                "mysql:host=" . getenv('SNACKSHOP_DB_HOST') . 
+                "mysql:host=" . getenv('SNACKSHOP_DB_HOST') .
                 ";dbname=" . getenv('SNACKSHOP_DB_NAME'),
                 getenv('SNACKSHOP_DB_USER'),
                 getenv('SNACKSHOP_DB_PASS')
             );
-            
+
             $stmt = $db->query('SELECT 1');
             $result = $stmt->fetch();
-            
+
             return [
                 'status' => 'healthy',
                 'response_time' => '< 1ms',
@@ -1452,17 +1459,17 @@ class HealthController {
             ];
         }
     }
-    
+
     private function checkCache() {
         if (getenv('CACHE_DRIVER') !== 'redis') {
             return ['status' => 'healthy', 'message' => 'File cache is working'];
         }
-        
+
         try {
             $redis = new Redis();
             $redis->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'));
             $redis->ping();
-            
+
             return [
                 'status' => 'healthy',
                 'message' => 'Redis connection successful'
@@ -1474,15 +1481,15 @@ class HealthController {
             ];
         }
     }
-    
+
     private function checkDiskSpace() {
         $diskFree = disk_free_space('/');
         $diskTotal = disk_total_space('/');
         $usagePercent = (1 - $diskFree / $diskTotal) * 100;
-        
-        $status = $usagePercent > 90 ? 'critical' : 
+
+        $status = $usagePercent > 90 ? 'critical' :
                  ($usagePercent > 80 ? 'warning' : 'healthy');
-        
+
         return [
             'status' => $status,
             'usage_percent' => round($usagePercent, 2),
@@ -1490,7 +1497,7 @@ class HealthController {
             'total_space' => $this->formatBytes($diskTotal)
         ];
     }
-    
+
     private function formatBytes($size, $precision = 2) {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
         for ($i = 0; $size > 1024 && $i < count($units) - 1; $i++) {
@@ -1507,11 +1514,11 @@ class HealthController {
 // src/Services/AlertingService.php
 class AlertingService {
     private $channels = [];
-    
+
     public function addChannel($name, $channel) {
         $this->channels[$name] = $channel;
     }
-    
+
     public function alert($level, $message, $context = []) {
         $alert = [
             'level' => $level,
@@ -1521,16 +1528,16 @@ class AlertingService {
             'server' => gethostname(),
             'environment' => getenv('APP_ENV')
         ];
-        
+
         foreach ($this->channels as $channel) {
             $channel->send($alert);
         }
     }
-    
+
     public function critical($message, $context = []) {
         $this->alert('critical', $message, $context);
     }
-    
+
     public function warning($message, $context = []) {
         $this->alert('warning', $message, $context);
     }
@@ -1540,12 +1547,12 @@ class AlertingService {
 class TelegramAlertChannel {
     private $botToken;
     private $chatId;
-    
+
     public function __construct($botToken, $chatId) {
         $this->botToken = $botToken;
         $this->chatId = $chatId;
     }
-    
+
     public function send($alert) {
         $emoji = $this->getLevelEmoji($alert['level']);
         $text = "$emoji *SnackShop Alert*\n\n" .
@@ -1554,17 +1561,17 @@ class TelegramAlertChannel {
                 "*Server:* {$alert['server']}\n" .
                 "*Environment:* {$alert['environment']}\n" .
                 "*Time:* {$alert['timestamp']}";
-        
+
         $url = "https://api.telegram.org/bot{$this->botToken}/sendMessage";
         $data = [
             'chat_id' => $this->chatId,
             'text' => $text,
             'parse_mode' => 'Markdown'
         ];
-        
+
         $this->sendRequest($url, $data);
     }
-    
+
     private function getLevelEmoji($level) {
         switch ($level) {
             case 'critical': return '🚨';
@@ -1574,7 +1581,7 @@ class TelegramAlertChannel {
             default: return '📝';
         }
     }
-    
+
     private function sendRequest($url, $data) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -1607,12 +1614,12 @@ KIBANA_URL=https://kibana.tu-dominio.com
 class ElasticsearchLogger {
     private $client;
     private $index;
-    
+
     public function __construct($host, $index = 'snackshop-logs') {
         $this->client = new \GuzzleHttp\Client(['base_uri' => $host]);
         $this->index = $index;
     }
-    
+
     public function log($level, $message, $context = []) {
         $document = [
             '@timestamp' => date('c'),
@@ -1624,7 +1631,7 @@ class ElasticsearchLogger {
             'server' => gethostname(),
             'tags' => ['php', 'snackshop']
         ];
-        
+
         try {
             $this->client->post("/{$this->index}/_doc", [
                 'json' => $document,

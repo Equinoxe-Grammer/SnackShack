@@ -1,7 +1,7 @@
 # 🗄️ SnackShop - Documentación de Base de Datos
 
-**🏠 Ubicación:** `DATABASE.md`  
-**📅 Última actualización:** 28 de octubre, 2025  
+**🏠 Ubicación:** `DATABASE.md`
+**📅 Última actualización:** 28 de octubre, 2025
 **🎯 Propósito:** Esquema completo, relaciones, queries y estrategias de gestión de datos
 
 ---
@@ -30,6 +30,7 @@
 ## 🎯 Resumen del Sistema de Datos
 
 ### Características Principales
+
 - **Base de datos:** SQLite (desarrollo) / MySQL (producción)
 - **Acceso:** PDO con prepared statements
 - **Integridad:** Foreign keys habilitadas
@@ -37,6 +38,7 @@
 - **Ubicación:** `data/snackshop.db` (SQLite) o configuración MySQL
 
 ### Entidades Principales
+
 - **Productos** y sus **Variantes** (tallas, presentaciones)
 - **Ventas** con **Detalle de Items** vendidos
 - **Usuarios** con roles (admin/cajero)
@@ -49,6 +51,7 @@
 ## ⚙️ Configuración de Base de Datos
 
 ### SQLite (Desarrollo)
+
 ```php
 // src/Database/Connection.php
 $dbPath = dirname(__DIR__, 2) . '/data/snackshop.db';
@@ -66,6 +69,7 @@ $pdo->exec('PRAGMA foreign_keys = ON');
 ```
 
 ### MySQL (Producción)
+
 ```php
 // src/Config/AppConfig.php
 return [
@@ -78,6 +82,7 @@ return [
 ```
 
 ### Variables de Entorno
+
 ```bash
 # .env
 SNACKSHOP_DB_HOST=127.0.0.1
@@ -91,6 +96,7 @@ SNACKSHOP_DB_PASS=secure_password
 ## 📊 Esquema de Tablas
 
 ### 👥 Tabla: `usuarios`
+
 ```sql
 CREATE TABLE usuarios (
     usuario_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -111,6 +117,7 @@ CREATE TABLE usuarios (
 - `activo` — Estado del usuario (soft delete)
 
 ### 🏷️ Tabla: `categorias`
+
 ```sql
 CREATE TABLE categorias (
     categoria_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -127,6 +134,7 @@ CREATE TABLE categorias (
 - `activo` — Estado de la categoría
 
 ### 🍔 Tabla: `productos`
+
 ```sql
 CREATE TABLE productos (
     producto_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -158,6 +166,7 @@ CREATE TABLE productos (
 - `imagen_original_name` — Nombre original del archivo
 
 ### 📦 Tabla: `variantes`
+
 ```sql
 CREATE TABLE variantes (
     variante_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -182,6 +191,7 @@ CREATE TABLE variantes (
 - `activo` — Estado de la variante
 
 ### 💳 Tabla: `metodos_de_pago`
+
 ```sql
 CREATE TABLE metodos_de_pago (
     metodo_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -198,6 +208,7 @@ CREATE TABLE metodos_de_pago (
 - `activo` — Estado del método
 
 ### 🛒 Tabla: `ventas`
+
 ```sql
 CREATE TABLE ventas (
     venta_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -224,6 +235,7 @@ CREATE TABLE ventas (
 - `fecha_hora` — Timestamp de la venta
 
 ### 🧾 Tabla: `detalle_ventas`
+
 ```sql
 CREATE TABLE detalle_ventas (
     detalle_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -248,6 +260,7 @@ CREATE TABLE detalle_ventas (
 - `sub_total` — Subtotal del item (cantidad × precio_unitario)
 
 ### 🥬 Tabla: `ingredientes`
+
 ```sql
 CREATE TABLE ingredientes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -267,6 +280,7 @@ CREATE TABLE ingredientes (
 - `activo` — Estado del ingrediente
 
 ### 🛍️ Tabla: `compras`
+
 ```sql
 CREATE TABLE compras (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -292,6 +306,7 @@ CREATE TABLE compras (
 - `notas` — Notas adicionales
 
 ### 🧮 Tabla: `recetas` (Opcional - Para Costeo)
+
 ```sql
 CREATE TABLE recetas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -316,6 +331,7 @@ CREATE TABLE recetas (
 ## 🔗 Diagrama de Relaciones
 
 ### ERD (Entidad-Relación)
+
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │    usuarios     │    │   categorias    │    │  metodos_pago   │
@@ -416,21 +432,23 @@ CREATE TABLE recetas (
 ### Consultas de Ventas
 
 #### Reporte de Ventas Diarias
+
 ```sql
-SELECT 
+SELECT
     DATE(fecha_hora) as fecha,
     COUNT(*) as num_ventas,
     SUM(total) as total_ventas,
     AVG(total) as ticket_promedio
-FROM ventas 
+FROM ventas
 WHERE fecha_hora >= DATE('now', '-30 days')
 GROUP BY DATE(fecha_hora)
 ORDER BY fecha DESC;
 ```
 
 #### Top Productos Vendidos
+
 ```sql
-SELECT 
+SELECT
     p.nombre_producto,
     v.nombre_variante,
     SUM(dv.cantidad) as total_vendido,
@@ -446,8 +464,9 @@ LIMIT 10;
 ```
 
 #### Ventas por Usuario (Cajeros)
+
 ```sql
-SELECT 
+SELECT
     u.usuario,
     COUNT(v.venta_id) as num_ventas,
     SUM(v.total) as total_vendido,
@@ -462,14 +481,15 @@ ORDER BY fecha DESC, total_vendido DESC;
 ### Consultas de Inventario y Costeo
 
 #### Costo de Producción por Producto
+
 ```sql
-SELECT 
+SELECT
     p.nombre_producto,
     SUM(
         r.cantidad * (
-            SELECT AVG(c.costo_total / c.cantidad) 
-            FROM compras c 
-            WHERE c.ingrediente_id = r.ingrediente_id 
+            SELECT AVG(c.costo_total / c.cantidad)
+            FROM compras c
+            WHERE c.ingrediente_id = r.ingrediente_id
             AND c.fecha >= DATE('now', '-90 days')
         )
     ) as costo_estimado
@@ -482,8 +502,9 @@ ORDER BY costo_estimado DESC;
 ```
 
 #### Ingredientes con Stock Bajo (Estimado)
+
 ```sql
-SELECT 
+SELECT
     i.nombre,
     SUM(c.cantidad) as total_comprado,
     SUM(
@@ -505,21 +526,22 @@ ORDER BY stock_estimado ASC;
 ### Consultas de Análisis
 
 #### Análisis de Márgenes
+
 ```sql
-SELECT 
+SELECT
     p.nombre_producto,
     v.nombre_variante,
     v.precio as precio_venta,
     AVG(dv.precio_unitario) as precio_promedio_real,
     -- Costo estimado (requiere datos de recetas)
     (
-        SELECT SUM(r.cantidad * c.costo_unitario) 
-        FROM recetas r 
+        SELECT SUM(r.cantidad * c.costo_unitario)
+        FROM recetas r
         JOIN (
-            SELECT 
-                ingrediente_id, 
+            SELECT
+                ingrediente_id,
                 AVG(costo_total/cantidad) as costo_unitario
-            FROM compras 
+            FROM compras
             WHERE fecha >= DATE('now', '-90 days')
             GROUP BY ingrediente_id
         ) c ON r.ingrediente_id = c.ingrediente_id
@@ -537,20 +559,21 @@ ORDER BY margen_estimado DESC;
 ### Consultas de Integridad
 
 #### Verificar Integridad de Datos
+
 ```sql
 -- Ventas sin detalles
-SELECT v.* FROM ventas v 
-LEFT JOIN detalle_ventas dv ON v.venta_id = dv.venta_id 
+SELECT v.* FROM ventas v
+LEFT JOIN detalle_ventas dv ON v.venta_id = dv.venta_id
 WHERE dv.venta_id IS NULL;
 
 -- Productos sin variantes
-SELECT p.* FROM productos p 
-LEFT JOIN variantes v ON p.producto_id = v.producto_id 
+SELECT p.* FROM productos p
+LEFT JOIN variantes v ON p.producto_id = v.producto_id
 WHERE v.producto_id IS NULL AND p.activo = 1;
 
 -- Variantes huérfanas
-SELECT v.* FROM variantes v 
-LEFT JOIN productos p ON v.producto_id = p.producto_id 
+SELECT v.* FROM variantes v
+LEFT JOIN productos p ON v.producto_id = p.producto_id
 WHERE p.producto_id IS NULL;
 ```
 
@@ -559,12 +582,14 @@ WHERE p.producto_id IS NULL;
 ## 🔄 Migraciones y Versionado
 
 ### Estado Actual
+
 - **Sin sistema de migraciones implementado**
 - **Recomendación:** Implementar sistema de versionado
 
 ### Propuesta de Sistema de Migraciones
 
 #### Tabla de Control `migrations`
+
 ```sql
 CREATE TABLE migrations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -576,6 +601,7 @@ CREATE TABLE migrations (
 ```
 
 #### Estructura de Archivos
+
 ```
 migrations/
 ├── v1.0.0_initial_schema.sql
@@ -585,6 +611,7 @@ migrations/
 ```
 
 #### Script de Migración (Propuesta)
+
 ```php
 // scripts/migrate.php
 class MigrationManager {
@@ -594,7 +621,7 @@ class MigrationManager {
             $this->executeMigration($migration);
         }
     }
-    
+
     private function executeMigration(string $file): void {
         $sql = file_get_contents($file);
         $this->pdo->exec($sql);
@@ -606,21 +633,22 @@ class MigrationManager {
 ### Esquema Inicial para Nueva Instalación
 
 #### `migrations/v1.0.0_initial_schema.sql`
+
 ```sql
 -- Crear todas las tablas base
 -- (Incluir aquí todo el esquema completo)
 
 -- Datos iniciales
-INSERT INTO metodos_de_pago (nombre_metodo, descripcion) VALUES 
+INSERT INTO metodos_de_pago (nombre_metodo, descripcion) VALUES
 ('Efectivo', 'Pago en efectivo'),
 ('Tarjeta', 'Pago con tarjeta de crédito/débito');
 
-INSERT INTO categorias (nombre_categoria, descripcion) VALUES 
+INSERT INTO categorias (nombre_categoria, descripcion) VALUES
 ('Hamburguesas', 'Hamburguesas y sandwiches'),
 ('Bebidas', 'Bebidas frías y calientes'),
 ('Acompañamientos', 'Papas, aros de cebolla, etc.');
 
-INSERT INTO usuarios (usuario, contrasena_hash, rol) VALUES 
+INSERT INTO usuarios (usuario, contrasena_hash, rol) VALUES
 ('admin', '$2y$10$example...', 'admin');
 ```
 
@@ -631,16 +659,17 @@ INSERT INTO usuarios (usuario, contrasena_hash, rol) VALUES
 ### Datos de Demostración
 
 #### `seeds/demo_data.sql`
+
 ```sql
 -- Productos de ejemplo
-INSERT INTO productos (nombre_producto, descripcion, categoria_id, activo) VALUES 
+INSERT INTO productos (nombre_producto, descripcion, categoria_id, activo) VALUES
 ('Hamburguesa Clásica', 'Hamburguesa con carne, lechuga, tomate y cebolla', 1, 1),
 ('Hamburguesa Doble', 'Doble carne con queso y bacon', 1, 1),
 ('Coca Cola', 'Bebida gaseosa', 2, 1),
 ('Papas Fritas', 'Papas fritas crujientes', 3, 1);
 
 -- Variantes de ejemplo
-INSERT INTO variantes (producto_id, nombre_variante, precio, activo) VALUES 
+INSERT INTO variantes (producto_id, nombre_variante, precio, activo) VALUES
 (1, 'Normal', 15.50, 1),
 (1, 'Grande', 18.50, 1),
 (2, 'Normal', 22.00, 1),
@@ -650,7 +679,7 @@ INSERT INTO variantes (producto_id, nombre_variante, precio, activo) VALUES
 (4, 'Grande', 9.50, 1);
 
 -- Ingredientes de ejemplo
-INSERT INTO ingredientes (nombre, unidad_base, merma_pct) VALUES 
+INSERT INTO ingredientes (nombre, unidad_base, merma_pct) VALUES
 ('Carne de res', 'gramo', 5.0),
 ('Pan de hamburguesa', 'unidad', 2.0),
 ('Lechuga', 'gramo', 10.0),
@@ -660,7 +689,7 @@ INSERT INTO ingredientes (nombre, unidad_base, merma_pct) VALUES
 ('Papas', 'gramo', 12.0);
 
 -- Recetas de ejemplo
-INSERT INTO recetas (producto_id, ingrediente_id, cantidad, unidad) VALUES 
+INSERT INTO recetas (producto_id, ingrediente_id, cantidad, unidad) VALUES
 -- Hamburguesa Clásica
 (1, 1, 120, 'gramo'),  -- 120g carne
 (1, 2, 1, 'unidad'),   -- 1 pan
@@ -670,6 +699,7 @@ INSERT INTO recetas (producto_id, ingrediente_id, cantidad, unidad) VALUES
 ```
 
 ### Script de Seeding
+
 ```php
 // scripts/seed.php
 class DatabaseSeeder {
@@ -682,7 +712,7 @@ class DatabaseSeeder {
         $this->seedIngredients();
         $this->seedRecipes();
     }
-    
+
     public function seedDemoSales(): void {
         // Generar ventas de prueba para testing
         for ($i = 0; $i < 50; $i++) {
@@ -736,28 +766,30 @@ ANALYZE;
 ### Queries de Monitoreo
 
 #### Tablas con Más Registros
+
 ```sql
-SELECT 
+SELECT
     name as tabla,
     (
-        SELECT COUNT(*) 
-        FROM sqlite_master 
+        SELECT COUNT(*)
+        FROM sqlite_master
         WHERE type='table' AND name=m.name
     ) as registros_estimados
-FROM sqlite_master m 
-WHERE type='table' 
+FROM sqlite_master m
+WHERE type='table'
 AND name NOT LIKE 'sqlite_%';
 ```
 
 #### Espacio en Disco
+
 ```sql
 -- Solo SQLite
-SELECT 
+SELECT
     name,
     (SELECT COUNT(*) FROM ventas) as ventas_count,
     (SELECT COUNT(*) FROM detalle_ventas) as detalles_count,
     (SELECT COUNT(*) FROM productos) as productos_count;
-    
+
 -- Tamaño del archivo
 -- Ver desde sistema operativo el tamaño de data/snackshop.db
 ```
@@ -769,6 +801,7 @@ SELECT
 ### Backup SQLite
 
 #### Backup Completo
+
 ```bash
 # Backup directo del archivo
 cp data/snackshop.db backups/snackshop_$(date +%Y%m%d_%H%M%S).db
@@ -778,9 +811,10 @@ sqlite3 data/snackshop.db .dump > backups/snackshop_$(date +%Y%m%d_%H%M%S).sql
 ```
 
 #### Backup Incremental (Propuesta)
+
 ```sql
 -- Backup de ventas nuevas desde última fecha
-SELECT * FROM ventas 
+SELECT * FROM ventas
 WHERE fecha_hora > '2025-10-27 00:00:00'
 ORDER BY fecha_hora;
 ```
@@ -801,6 +835,7 @@ mysqldump -u snackshop_user -p snackshop | gzip > backups/snackshop_$(date +%Y%m
 ### Restauración
 
 #### SQLite
+
 ```bash
 # Restaurar desde archivo
 cp backups/snackshop_20251028_143000.db data/snackshop.db
@@ -810,6 +845,7 @@ sqlite3 data/snackshop.db < backups/snackshop_20251028_143000.sql
 ```
 
 #### MySQL
+
 ```bash
 # Restaurar base completa
 mysql -u snackshop_user -p snackshop < backups/snackshop_20251028_143000.sql
@@ -853,6 +889,7 @@ fi
 ### Problemas Comunes
 
 #### Error: "Database is locked"
+
 ```bash
 # Verificar procesos que usan la BD
 lsof data/snackshop.db
@@ -863,6 +900,7 @@ sudo systemctl restart apache2
 ```
 
 #### Error: "No such table"
+
 ```sql
 -- Verificar tablas existentes
 .tables  -- En SQLite CLI
@@ -876,6 +914,7 @@ DESCRIBE productos;
 ```
 
 #### Error: "Foreign key constraint failed"
+
 ```sql
 -- Verificar foreign keys
 PRAGMA foreign_key_check;
@@ -887,11 +926,12 @@ PRAGMA foreign_keys = ON;
 ```
 
 #### Performance Lenta
+
 ```sql
 -- Analizar query plan
-EXPLAIN QUERY PLAN 
-SELECT * FROM ventas v 
-JOIN detalle_ventas dv ON v.venta_id = dv.venta_id 
+EXPLAIN QUERY PLAN
+SELECT * FROM ventas v
+JOIN detalle_ventas dv ON v.venta_id = dv.venta_id
 WHERE v.fecha_hora >= '2025-10-01';
 
 -- Actualizar estadísticas
@@ -904,6 +944,7 @@ SELECT name FROM sqlite_master WHERE type='index';
 ### Herramientas de Diagnóstico
 
 #### Verificación de Integridad
+
 ```sql
 -- SQLite
 PRAGMA integrity_check;
@@ -915,22 +956,24 @@ CHECK TABLE productos;
 ```
 
 #### Estadísticas de Uso
+
 ```sql
 -- Conteo por tablas
-SELECT 
+SELECT
     'usuarios' as tabla, COUNT(*) as registros FROM usuarios
 UNION ALL
-SELECT 
+SELECT
     'productos' as tabla, COUNT(*) as registros FROM productos
 UNION ALL
-SELECT 
+SELECT
     'ventas' as tabla, COUNT(*) as registros FROM ventas
 UNION ALL
-SELECT 
+SELECT
     'detalle_ventas' as tabla, COUNT(*) as registros FROM detalle_ventas;
 ```
 
 #### Log de Errores
+
 ```php
 // En Connection.php - logging de errores
 try {

@@ -1,7 +1,7 @@
 # 🔌 SnackShop - Documentación de API
 
-**🏠 Ubicación:** `API.md`  
-**📅 Última actualización:** 28 de octubre, 2025  
+**🏠 Ubicación:** `API.md`
+**📅 Última actualización:** 28 de octubre, 2025
 **🎯 Propósito:** Documentación completa de todos los endpoints web y API JSON del sistema
 
 ---
@@ -31,11 +31,13 @@
 SnackShop proporciona dos tipos de interfaces:
 
 ### 🌐 **Web Routes** (Server-Side Rendering)
+
 - **Propósito:** Interfaz web tradicional con formularios HTML
 - **Respuesta:** HTML renderizado server-side
 - **Uso:** Aplicación web principal para administradores y cajeros
 
 ### 🔌 **JSON API** (REST-like)
+
 - **Propósito:** Endpoints para integraciones y AJAX
 - **Respuesta:** JSON estructurado
 - **Uso:** Integraciones externas, SPA frontend, mobile apps
@@ -45,22 +47,26 @@ SnackShop proporciona dos tipos de interfaces:
 ## 🔐 Autenticación y Autorización
 
 ### Sistema de Autenticación
+
 - **Método:** Session-based authentication
 - **Cookie de sesión:** `PHPSESSID`
 - **Variables de sesión:** `usuario_id`, `usuario`, `rol`
 
 ### Roles del Sistema
+
 | Rol | Descripción | Permisos |
 |-----|-------------|----------|
 | **admin** | Administrador completo | CRUD productos, ver historial, gestionar usuarios |
 | **cajero** | Operador de ventas | Procesar ventas, ver productos |
 
 ### Headers Requeridos
+
 ```http
 Cookie: PHPSESSID=abc123...
 ```
 
 ### Middleware de Seguridad
+
 - **`AuthMiddleware`** — verificación de sesión activa
 - **`RoleMiddleware`** — control de acceso por rol
 - **`CsrfMiddleware`** — protección contra CSRF en formularios
@@ -72,30 +78,34 @@ Cookie: PHPSESSID=abc123...
 ### Autenticación
 
 #### `GET /` - Página de Login
+
 - **Descripción:** Formulario de inicio de sesión
 - **Autenticación:** No requerida
 - **Respuesta:** HTML del formulario de login
 
 #### `GET /login` - Formulario de Login
+
 - **Descripción:** Alias para la página principal
 - **Autenticación:** No requerida
 - **Respuesta:** HTML del formulario de login
 
 #### `POST /login` - Procesar Login
+
 - **Descripción:** Autenticar usuario y crear sesión
 - **Autenticación:** No requerida
 - **Middleware:** `CsrfMiddleware`
 - **Parámetros:**
-  ```http
+```http
   Content-Type: application/x-www-form-urlencoded
-  
+
   usuario=admin&password=secreto&csrf_token=abc123
-  ```
+```
 - **Respuesta:**
   - **Éxito:** Redirect 302 a `/menu`
   - **Error:** HTML con mensaje de error
 
 #### `GET /logout` - Cerrar Sesión
+
 - **Descripción:** Destruir sesión y redirigir
 - **Autenticación:** Requerida
 - **Respuesta:** Redirect 302 a `/login`
@@ -105,12 +115,14 @@ Cookie: PHPSESSID=abc123...
 ### Dashboard y Navegación
 
 #### `GET /menu` - Panel Principal
+
 - **Descripción:** Dashboard administrativo
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Respuesta:** HTML con widgets de dashboard
 
 #### `GET /dashboard` - Alias del Panel
+
 - **Descripción:** Alias para `/menu`
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -121,31 +133,35 @@ Cookie: PHPSESSID=abc123...
 ### Gestión de Productos
 
 #### `GET /productos` - Lista de Productos
+
 - **Descripción:** Catálogo completo de productos con costos calculados
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Respuesta:** HTML con tabla de productos
 
 #### `GET /productos/nuevo` - Formulario Nuevo Producto
+
 - **Descripción:** Formulario para crear producto
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Respuesta:** HTML con formulario
 
 #### `POST /productos/guardar` - Crear Producto
+
 - **Descripción:** Guardar nuevo producto
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Middleware:** `CsrfMiddleware`
 - **Parámetros:**
-  ```http
+```http
   Content-Type: application/x-www-form-urlencoded
-  
+
   nombre=Hamburguesa&descripcion=Deliciosa hamburguesa&precio=15.50&categoria_id=1
-  ```
+```
 - **Respuesta:** Redirect 302 a `/productos`
 
 #### `GET /productos/editar/{id}` - Formulario Editar
+
 - **Descripción:** Formulario pre-llenado para editar producto
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -153,6 +169,7 @@ Cookie: PHPSESSID=abc123...
 - **Respuesta:** HTML con formulario de edición
 
 #### `POST /productos/actualizar/{id}` - Actualizar Producto
+
 - **Descripción:** Actualizar producto existente
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -161,6 +178,7 @@ Cookie: PHPSESSID=abc123...
 - **Respuesta:** Redirect 302 a `/productos`
 
 #### `POST /productos/eliminar/{id}` - Eliminar Producto
+
 - **Descripción:** Soft delete del producto
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -173,6 +191,7 @@ Cookie: PHPSESSID=abc123...
 ### Gestión de Variantes
 
 #### `GET /productos/{id}/variantes` - Lista de Variantes
+
 - **Descripción:** Variantes del producto específico
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -180,6 +199,7 @@ Cookie: PHPSESSID=abc123...
 - **Respuesta:** HTML con tabla de variantes
 
 #### `GET /productos/{id}/variantes/nueva` - Nueva Variante
+
 - **Descripción:** Formulario para crear variante
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -187,39 +207,43 @@ Cookie: PHPSESSID=abc123...
 - **Respuesta:** HTML con formulario
 
 #### `POST /productos/{id}/variantes/guardar` - Crear Variante
+
 - **Descripción:** Guardar nueva variante
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Middleware:** `CsrfMiddleware`
 - **Parámetros de URL:** `{id}` - ID del producto
 - **Parámetros:**
-  ```http
+```http
   nombre=Grande&precio=18.50&descripcion=Tamaño grande
-  ```
+```
 
 #### `GET /productos/{id}/variantes/editar/{vid}` - Editar Variante
+
 - **Descripción:** Formulario para editar variante
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
-- **Parámetros de URL:** 
+- **Parámetros de URL:**
   - `{id}` - ID del producto
   - `{vid}` - ID de la variante
 
 #### `POST /productos/{id}/variantes/actualizar/{vid}` - Actualizar Variante
+
 - **Descripción:** Actualizar variante existente
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Middleware:** `CsrfMiddleware`
-- **Parámetros de URL:** 
+- **Parámetros de URL:**
   - `{id}` - ID del producto
   - `{vid}` - ID de la variante
 
 #### `POST /productos/{id}/variantes/eliminar/{vid}` - Eliminar Variante
+
 - **Descripción:** Eliminar variante
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Middleware:** `CsrfMiddleware`
-- **Parámetros de URL:** 
+- **Parámetros de URL:**
   - `{id}` - ID del producto
   - `{vid}` - ID de la variante
 
@@ -228,12 +252,14 @@ Cookie: PHPSESSID=abc123...
 ### Ventas
 
 #### `GET /ventas` - Interfaz de Ventas
+
 - **Descripción:** Punto de venta con catálogo y carrito
 - **Autenticación:** Requerida
 - **Autorización:** `admin`, `cajero`
 - **Respuesta:** HTML con interfaz de POS
 
 #### `GET /venta` - Alias de Ventas (Legacy)
+
 - **Descripción:** Alias legacy para `/ventas`
 - **Autenticación:** Requerida
 - **Autorización:** `admin`, `cajero`
@@ -244,18 +270,21 @@ Cookie: PHPSESSID=abc123...
 ### Historial y Reportes
 
 #### `GET /historial` - Historial de Ventas
+
 - **Descripción:** Histórico completo de transacciones
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Respuesta:** HTML con tabla de ventas
 
 #### `GET /agregarCajero` - Gestión de Usuarios
+
 - **Descripción:** Lista y formulario para gestionar cajeros
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Respuesta:** HTML con gestión de usuarios
 
 #### `POST /agregarCajero` - Crear Usuario
+
 - **Descripción:** Crear nuevo usuario cajero
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -268,24 +297,26 @@ Cookie: PHPSESSID=abc123...
 ### Dashboard y Datos Generales
 
 #### `GET /api/dashboard` - Datos del Dashboard
+
 - **Descripción:** Métricas y estadísticas para el dashboard
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Respuesta:**
-  ```json
+```json
   {
     \"ventas_hoy\": 1250.50,
     \"productos_vendidos\": 45,
     \"transacciones\": 12,
     \"productos_activos\": 28
   }
-  ```
+```
 
 #### `GET /api/productos` - Catálogo JSON
+
 - **Descripción:** Lista de productos activos con variantes
 - **Autenticación:** Requerida
 - **Respuesta:**
-  ```json
+```json
   [
     {
       \"id\": 1,
@@ -303,13 +334,14 @@ Cookie: PHPSESSID=abc123...
       ]
     }
   ]
-  ```
+```
 
 #### `GET /api/categorias` - Lista de Categorías
+
 - **Descripción:** Categorías de productos disponibles
 - **Autenticación:** Requerida
 - **Respuesta:**
-  ```json
+```json
   [
     {
       \"id\": 1,
@@ -317,13 +349,14 @@ Cookie: PHPSESSID=abc123...
       \"descripcion\": \"Hamburguesas y sandwiches\"
     }
   ]
-  ```
+```
 
 #### `GET /api/metodos-pago` - Métodos de Pago
+
 - **Descripción:** Métodos de pago disponibles
 - **Autenticación:** Requerida
 - **Respuesta:**
-  ```json
+```json
   [
     {
       \"id\": 1,
@@ -336,18 +369,19 @@ Cookie: PHPSESSID=abc123...
       \"descripcion\": \"Pago con tarjeta\"
     }
   ]
-  ```
+```
 
 ---
 
 ### Costos y Análisis
 
 #### `GET /api/productos/{id}/costo` - Análisis de Costos
+
 - **Descripción:** Desglose completo de costos de un producto
 - **Autenticación:** Requerida
 - **Parámetros de URL:** `{id}` - ID del producto
 - **Respuesta:**
-  ```json
+```json
   {
     \"producto_id\": 1,
     \"nombre_producto\": \"Hamburguesa Clásica\",
@@ -370,13 +404,14 @@ Cookie: PHPSESSID=abc123...
       }
     ]
   }
-  ```
+```
 
 #### `GET /api/ingredientes/costos` - Costos de Ingredientes
+
 - **Descripción:** Lista de ingredientes con costos unitarios
 - **Autenticación:** Requerida
 - **Respuesta:**
-  ```json
+```json
   [
     {
       \"id\": 1,
@@ -386,13 +421,14 @@ Cookie: PHPSESSID=abc123...
       \"stock_actual\": 5000
     }
   ]
-  ```
+```
 
 ---
 
 ### Gestión de Imágenes
 
 #### `GET /api/productos/{id}/imagen` - Obtener Imagen
+
 - **Descripción:** Imagen BLOB del producto
 - **Autenticación:** Requerida
 - **Parámetros de URL:** `{id}` - ID del producto
@@ -400,6 +436,7 @@ Cookie: PHPSESSID=abc123...
 - **Content-Type:** `image/jpeg`, `image/png`, etc.
 
 #### `POST /api/productos/{id}/imagen` - Subir Imagen
+
 - **Descripción:** Subir imagen del producto
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -407,30 +444,31 @@ Cookie: PHPSESSID=abc123...
 - **Parámetros de URL:** `{id}` - ID del producto
 - **Content-Type:** `multipart/form-data`
 - **Parámetros:**
-  ```http
+```http
   Content-Type: multipart/form-data
-  
+
   imagen=@product.jpg&csrf_token=abc123
-  ```
+```
 - **Respuesta:**
-  ```json
+```json
   {
     \"success\": true,
     \"message\": \"Imagen subida correctamente\"
   }
-  ```
+```
 
 ---
 
 ### Transacciones de Venta
 
 #### `POST /api/ventas` - Procesar Venta
+
 - **Descripción:** Procesar una nueva venta con múltiples items
 - **Autenticación:** Requerida
 - **Autorización:** `admin`, `cajero`
 - **Content-Type:** `application/json`
 - **Parámetros:**
-  ```json
+```json
   {
     \"items\": [
       {
@@ -448,9 +486,9 @@ Cookie: PHPSESSID=abc123...
     \"total\": 39.00,
     \"notes\": \"Sin cebolla\"
   }
-  ```
+```
 - **Respuesta:**
-  ```json
+```json
   {
     \"success\": true,
     \"sale_id\": 123,
@@ -458,13 +496,14 @@ Cookie: PHPSESSID=abc123...
     \"items_count\": 3,
     \"timestamp\": \"2025-10-28T14:30:00Z\"
   }
-  ```
+```
 
 ---
 
 ### Historial y Reportes
 
 #### `GET /api/ventas/historial` - Historial de Ventas
+
 - **Descripción:** Lista paginada de ventas
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
@@ -475,7 +514,7 @@ Cookie: PHPSESSID=abc123...
   - `date_to` (opcional) - Fecha hasta (YYYY-MM-DD)
 - **Ejemplo:** `GET /api/ventas/historial?page=1&limit=20&date_from=2025-10-01`
 - **Respuesta:**
-  ```json
+```json
   {
     \"data\": [
       {
@@ -494,15 +533,16 @@ Cookie: PHPSESSID=abc123...
       \"items_per_page\": 20
     }
   }
-  ```
+```
 
 #### `GET /api/ventas/{id}` - Detalle de Venta
+
 - **Descripción:** Detalle completo de una venta específica
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Parámetros de URL:** `{id}` - ID de la venta
 - **Respuesta:**
-  ```json
+```json
   {
     \"id\": 123,
     \"total\": 39.00,
@@ -521,18 +561,19 @@ Cookie: PHPSESSID=abc123...
       }
     ]
   }
-  ```
+```
 
 ---
 
 ### Gestión de Usuarios
 
 #### `GET /api/usuarios` - Lista de Usuarios
+
 - **Descripción:** Lista de usuarios del sistema
 - **Autenticación:** Requerida
 - **Autorización:** `admin`
 - **Respuesta:**
-  ```json
+```json
   [
     {
       \"id\": 1,
@@ -549,7 +590,7 @@ Cookie: PHPSESSID=abc123...
       \"created_at\": \"2025-02-01T10:30:00Z\"
     }
   ]
-  ```
+```
 
 ---
 
@@ -632,6 +673,7 @@ curl -X POST 'http://localhost:8000/api/productos/1/imagen' \\
 ### Estructura de Respuestas de Error
 
 #### Para APIs JSON:
+
 ```json
 {
   \"error\": \"Descripción del error\",
@@ -645,12 +687,14 @@ curl -X POST 'http://localhost:8000/api/productos/1/imagen' \\
 ```
 
 #### Para Formularios Web:
+
 - **Redirect** a página de error con mensaje en session
 - **Render** de vista con errores inline
 
 ### Errores Comunes
 
 #### 401 - Sesión Expirada
+
 ```json
 {
   \"error\": \"Sesión expirada\",
@@ -660,6 +704,7 @@ curl -X POST 'http://localhost:8000/api/productos/1/imagen' \\
 ```
 
 #### 403 - Permisos Insuficientes
+
 ```json
 {
   \"error\": \"No tiene permisos para esta acción\",
@@ -670,6 +715,7 @@ curl -X POST 'http://localhost:8000/api/productos/1/imagen' \\
 ```
 
 #### 404 - Producto No Encontrado
+
 ```json
 {
   \"error\": \"Producto no encontrado\",
@@ -679,6 +725,7 @@ curl -X POST 'http://localhost:8000/api/productos/1/imagen' \\
 ```
 
 #### 422 - Error de Validación
+
 ```json
 {
   \"error\": \"Errores de validación\",
@@ -695,17 +742,20 @@ curl -X POST 'http://localhost:8000/api/productos/1/imagen' \\
 ## 🛡️ Tokens CSRF
 
 ### Implementación
+
 - **Middleware:** `CsrfMiddleware`
 - **Métodos protegidos:** POST, PUT, DELETE
 - **Token en formularios:** Campo oculto `csrf_token`
 
 ### Obtener Token CSRF
+
 ```php
 // En vista PHP
 echo '<input type=\"hidden\" name=\"csrf_token\" value=\"' . $_SESSION['csrf_token'] . '\">';
 ```
 
 ### Validación
+
 ```php
 // El middleware valida automáticamente
 if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -718,10 +768,12 @@ if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
 ## ⚡ Rate Limiting
 
 ### Estado Actual
+
 - **No implementado** en la versión actual
 - **Recomendación:** Implementar en nivel de servidor web (Nginx/Apache)
 
 ### Límites Sugeridos
+
 - **Web routes:** 60 requests/minuto por IP
 - **API routes:** 100 requests/minuto por sesión
 - **Upload endpoints:** 10 requests/minuto por IP

@@ -1,7 +1,7 @@
 # 🛠️ SnackShop - Guía de Desarrollo
 
-**🏠 Ubicación:** `DEVELOPMENT.md`  
-**📅 Última actualización:** 29 de octubre, 2025  
+**🏠 Ubicación:** `DEVELOPMENT.md`
+**📅 Última actualización:** 29 de octubre, 2025
 **🎯 Propósito:** Guía completa para desarrolladores: setup, herramientas, workflows y estándares de código
 
 ---
@@ -258,7 +258,7 @@ WORKDIR /var/www/html
 
 ### Organización de Archivos
 
-```
+```bash
 SnackShop/
 ├── 📁 public/              # Document root, assets públicos
 │   ├── index.php           # Entry point principal
@@ -356,7 +356,7 @@ use Exception;
 
 /**
  * Controller para gestión de productos
- * 
+ *
  * @package App\Controllers
  * @author  SnackShop Team
  * @since   1.0.0
@@ -429,7 +429,7 @@ class ProductController extends BaseController
 
         try {
             $newProduct = $this->productService->createProduct($productData);
-            
+
             header('Content-Type: application/json');
             echo json_encode([
                 'success' => true,
@@ -511,7 +511,7 @@ try {
  * @return array ['subtotal' => float, 'impuestos' => float, 'total' => float]
  * @throws InvalidArgumentException Si los items están malformados
  * @throws ProductNotFoundException Si un producto no existe
- * 
+ *
  * @example
  * $calculator = new PriceCalculator();
  * $result = $calculator->calculateTotal([
@@ -521,8 +521,8 @@ try {
  * echo $result['total']; // 45.60
  */
 public function calculateTotal(
-    array $items, 
-    int $descuento = 0, 
+    array $items,
+    int $descuento = 0,
     bool $incluirImpuestos = true
 ): array {
     // Implementation...
@@ -551,15 +551,15 @@ public function calculateTotal(
         height: 200px;
         object-fit: cover;
     }
-    
+
     &__title {
         font-size: 1.2rem;
         font-weight: bold;
     }
-    
+
     &__price {
         color: $primary-color;
-        
+
         &--discounted {
             color: $error-color;
         }
@@ -586,11 +586,11 @@ class ProductManager {
         try {
             const params = new URLSearchParams(filters);
             const response = await fetch(`${this.apiBaseUrl}/products?${params}`);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-            
+
             const data = await response.json();
             this.products = data.products || [];
             return this.products;
@@ -613,12 +613,12 @@ class ProductManager {
 
         container.innerHTML = this.products.map(product => `
             <div class="product-card" data-product-id="${product.id}">
-                <img class="product-card__image" 
-                     src="${product.imagen_url || '/assets/images/no-image.png'}" 
+                <img class="product-card__image"
+                     src="${product.imagen_url || '/assets/images/no-image.png'}"
                      alt="${product.nombre}">
                 <h3 class="product-card__title">${product.nombre}</h3>
                 <p class="product-card__price">$${product.precio}</p>
-                <button class="btn btn--primary" 
+                <button class="btn btn--primary"
                         onclick="productManager.addToCart(${product.id})">
                     Agregar al Carrito
                 </button>
@@ -803,7 +803,7 @@ class Debug {
     public static function init() {
         self::$enabled = getenv('APP_DEBUG') === 'true';
         self::$startTime = microtime(true);
-        
+
         if (self::$enabled) {
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
@@ -812,7 +812,7 @@ class Debug {
 
     public static function dump($var, $label = null) {
         if (!self::$enabled) return;
-        
+
         echo "<pre style='background:#f5f5f5;padding:10px;border:1px solid #ddd;margin:10px;'>";
         if ($label) {
             echo "<strong>$label:</strong>\n";
@@ -823,19 +823,19 @@ class Debug {
 
     public static function log($message, $context = []) {
         if (!self::$enabled) return;
-        
+
         $timestamp = date('Y-m-d H:i:s');
         $memory = self::formatBytes(memory_get_usage());
         $contextStr = $context ? json_encode($context) : '';
-        
+
         error_log("[$timestamp] [$memory] $message $contextStr");
     }
 
     public static function timer($label) {
         if (!self::$enabled) return;
-        
+
         static $timers = [];
-        
+
         if (!isset($timers[$label])) {
             $timers[$label] = microtime(true);
             echo "⏱️ Timer '$label' started\n";
@@ -848,7 +848,7 @@ class Debug {
 
     public static function queryLog($query, $params = [], $time = 0) {
         if (!self::$enabled) return;
-        
+
         self::$queries[] = [
             'query' => $query,
             'params' => $params,
@@ -859,7 +859,7 @@ class Debug {
 
     public static function getStats() {
         if (!self::$enabled) return [];
-        
+
         return [
             'execution_time' => round((microtime(true) - self::$startTime) * 1000, 2),
             'memory_usage' => self::formatBytes(memory_get_usage()),
@@ -871,13 +871,13 @@ class Debug {
 
     public static function showDebugBar() {
         if (!self::$enabled) return;
-        
+
         $stats = self::getStats();
         echo "
         <div style='position:fixed;bottom:0;left:0;right:0;background:#333;color:#fff;padding:10px;font-family:monospace;font-size:12px;z-index:9999;'>
-            <strong>Debug Info:</strong> 
-            Time: {$stats['execution_time']}ms | 
-            Memory: {$stats['memory_usage']} (Peak: {$stats['memory_peak']}) | 
+            <strong>Debug Info:</strong>
+            Time: {$stats['execution_time']}ms |
+            Memory: {$stats['memory_usage']} (Peak: {$stats['memory_peak']}) |
             Queries: {$stats['queries_count']}
             <button onclick='this.parentNode.style.display=\"none\"' style='float:right;'>✕</button>
         </div>";
@@ -1128,13 +1128,13 @@ class ProductService {
 
     public function getPopularProducts($limit = 10) {
         $cacheKey = "popular_products_$limit";
-        
+
         $products = $this->cache->get($cacheKey);
         if ($products === null) {
             $products = $this->repository->findPopular($limit);
             $this->cache->set($cacheKey, $products, 3600); // 1 hora
         }
-        
+
         return $products;
     }
 
@@ -1151,7 +1151,7 @@ class ProductService {
 // ❌ Memory Leak
 class ReportGenerator {
     private $data = [];
-    
+
     public function generateReport() {
         $this->data = $this->loadLargeDataset(); // Nunca se libera
         return $this->processData();
@@ -1166,7 +1166,7 @@ class ReportGenerator {
         unset($data); // Liberar memoria explícitamente
         return $result;
     }
-    
+
     // ✅ Generator para datasets grandes
     public function processLargeDataset() {
         $handle = fopen('large-file.csv', 'r');

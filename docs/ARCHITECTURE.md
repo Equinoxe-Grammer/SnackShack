@@ -1,7 +1,7 @@
 # 🏗️ SnackShop - Arquitectura del Sistema
 
-**🏠 Ubicación:** `ARCHITECTURE.md`  
-**📅 Última actualización:** 28 de octubre, 2025  
+**🏠 Ubicación:** `ARCHITECTURE.md`
+**📅 Última actualización:** 28 de octubre, 2025
 **🎯 Propósito:** Documentación completa de la arquitectura, patrones y diseño del sistema
 
 ---
@@ -38,6 +38,7 @@ SnackShop implementa una **arquitectura en capas** basada en el patrón **MVC am
 - **Seguro:** Middlewares transversales para autenticación, autorización y CSRF
 
 ### Tecnologías Base
+
 - **PHP 7.4+** con namespaces PSR-4
 - **PDO** para acceso a base de datos
 - **Session-based authentication** con roles
@@ -82,7 +83,7 @@ Controllers ──depends on──> Services ──depends on──> Repositorie
 
 **Responsabilidad:** Interfaz de usuario y puntos de entrada HTTP
 
-```
+```bash
 public/
 ├── index.php ..................... Entry point principal
 ├── pretty-urls.php ............... URLs amigables (opcional)
@@ -106,6 +107,7 @@ src/Views/
 **Responsabilidad:** Orquestación de peticiones HTTP y control de flujo
 
 #### Controllers (🎮)
+
 ```php
 // Ejemplo: ProductController
 class ProductController {
@@ -129,6 +131,7 @@ class ProductController {
 - `ApiController` + `Api/CostoController` — endpoints JSON
 
 #### Routes (🔗)
+
 ```php
 // src/Routes/routes.php - Registro centralizado
 $router->get('/productos', [ProductController::class, 'index'], [
@@ -138,6 +141,7 @@ $router->get('/productos', [ProductController::class, 'index'], [
 ```
 
 #### Middleware (🛡️)
+
 - **`AuthMiddleware`** — verificación de sesión activa
 - **`CsrfMiddleware`** — protección contra CSRF en formularios
 - **`RoleMiddleware`** — autorización basada en roles (admin/cajero)
@@ -174,6 +178,7 @@ class CostoService {
 **Responsabilidad:** Persistencia y acceso a datos
 
 #### Repositories (🗃️)
+
 ```php
 interface ProductRepositoryInterface {
     public function find(int $id): ?Product;
@@ -187,6 +192,7 @@ class ProductRepository implements ProductRepositoryInterface {
 ```
 
 #### Models (📦)
+
 ```php
 class Product {
     public int $id;
@@ -199,6 +205,7 @@ class Product {
 ```
 
 #### Database (🗄️)
+
 - **`Connection`** — singleton PDO con configuración centralizada
 - Soporte MySQL/SQLite via configuración
 - Manejo de transacciones a nivel de Service
@@ -208,11 +215,13 @@ class Product {
 ## 🔄 Flujo de Peticiones
 
 ### 1. **Request HTTP**
+
 ```
 Usuario ──HTTP──> public/index.php
 ```
 
 ### 2. **Bootstrapping**
+
 ```php
 // public/index.php
 require_once '../vendor/autoload.php';  // Composer PSR-4
@@ -222,28 +231,32 @@ $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 ```
 
 ### 3. **Resolución de Ruta**
+
 ```
 Router ──matching──> Route + Middlewares + Controller
 ```
 
 ### 4. **Ejecución de Middlewares**
+
 ```
 AuthMiddleware ──> RoleMiddleware ──> CsrfMiddleware ──> Controller
 ```
 
 ### 5. **Ejecución del Controller**
+
 ```php
 public function index() {
     // Validaciones de entrada
     $service = new ProductService();
     $data = $service->getAllWithVariants();
-    
+
     // Preparar datos para vista
     require_once '../src/Views/products/index.php';
 }
 ```
 
 ### 6. **Llamada a Services**
+
 ```php
 class ProductService {
     public function getAllWithVariants(): array {
@@ -255,6 +268,7 @@ class ProductService {
 ```
 
 ### 7. **Acceso a Datos via Repository**
+
 ```php
 class ProductRepository {
     public function findActiveProducts(): array {
@@ -266,6 +280,7 @@ class ProductRepository {
 ```
 
 ### 8. **Response**
+
 ```
 View Template ──HTML──> Browser
   o
@@ -277,23 +292,27 @@ JSON Response ──API──> Client
 ## 🧩 Componentes Principales
 
 ### Router (`src/Routes/Router.php`)
+
 - **Propósito:** Matching de URLs a controllers + middlewares
-- **Características:** 
+- **Características:**
   - Soporte para parámetros en rutas (`/products/{id}`)
   - Registro de middlewares por ruta
   - Métodos HTTP (GET, POST, PUT, DELETE)
 
 ### Service Container
+
 - **Estado actual:** Dependencias manuales en constructores
 - **Patrón:** Dependency Injection manual
 - **Futuro:** Considerar PSR-11 Container para mayor flexibilidad
 
 ### Error Handling
+
 - **Desarrollo:** Errores visibles con detalles
 - **Producción:** Páginas de error custom (`src/Views/errors/`)
 - **Logs:** Manejo básico de excepciones
 
 ### Session Management
+
 - **Autenticación:** Session-based con `$_SESSION`
 - **Datos almacenados:** `usuario_id`, `usuario`, `rol`
 - **Seguridad:** Regeneración de session ID en login
@@ -303,6 +322,7 @@ JSON Response ──API──> Client
 ## 🎨 Patrones de Diseño
 
 ### 1. **Repository Pattern**
+
 ```php
 interface ProductRepositoryInterface {
     public function find(int $id): ?Product;
@@ -315,6 +335,7 @@ class ProductRepository implements ProductRepositoryInterface {
 **Beneficio:** Abstrae la persistencia del negocio
 
 ### 2. **Service Layer Pattern**
+
 ```php
 class SaleService {
     public function processSale(array $items, int $paymentMethod): Sale {
@@ -327,6 +348,7 @@ class SaleService {
 **Beneficio:** Centraliza lógica de negocio compleja
 
 ### 3. **Front Controller Pattern**
+
 ```php
 // public/index.php actúa como front controller
 $router->dispatch($uri, $method);
@@ -334,6 +356,7 @@ $router->dispatch($uri, $method);
 **Beneficio:** Punto único de entrada para todas las requests
 
 ### 4. **Middleware Pattern**
+
 ```php
 $router->get('/admin', [Controller::class, 'method'], [
     AuthMiddleware::class,
@@ -343,6 +366,7 @@ $router->get('/admin', [Controller::class, 'method'], [
 **Beneficio:** Concerns transversales (auth, logging, etc.)
 
 ### 5. **Factory Pattern** (Limitado)
+
 ```php
 // src/Database/Connection.php
 class Connection {
@@ -357,6 +381,7 @@ class Connection {
 ## 📦 Manejo de Dependencias
 
 ### Composer (PSR-4)
+
 ```json
 {
     "autoload": {
@@ -368,10 +393,11 @@ class Connection {
 ```
 
 ### Dependency Injection Manual
+
 ```php
 class ProductController {
     private ProductService $service;
-    
+
     public function __construct(?ProductService $service = null) {
         $this->service = $service ?? new ProductService();
     }
@@ -379,6 +405,7 @@ class ProductController {
 ```
 
 ### Configuration Management
+
 ```php
 // src/Config/AppConfig.php
 class AppConfig {
@@ -397,6 +424,7 @@ class AppConfig {
 ## 🔒 Seguridad y Middleware
 
 ### Autenticación
+
 ```php
 class AuthMiddleware {
     public function handle($request, $next) {
@@ -410,10 +438,11 @@ class AuthMiddleware {
 ```
 
 ### Autorización por Roles
+
 ```php
 class RoleMiddleware {
     private array $allowedRoles;
-    
+
     public function handle($request, $next) {
         if (!in_array($_SESSION['rol'], $this->allowedRoles)) {
             header('Location: /acceso-denegado');
@@ -425,6 +454,7 @@ class RoleMiddleware {
 ```
 
 ### CSRF Protection
+
 ```php
 class CsrfMiddleware {
     public function handle($request, $next) {
@@ -441,6 +471,7 @@ class CsrfMiddleware {
 ## 📊 Diagramas de Arquitectura
 
 ### Diagrama de Componentes
+
 ```
                     ┌─────────────────┐
                     │   PUBLIC WEB    │
@@ -478,6 +509,7 @@ class CsrfMiddleware {
 ```
 
 ### Flujo de Datos (Request Lifecycle)
+
 ```
 HTTP Request ──▶ public/index.php
                         │
@@ -539,21 +571,25 @@ HTTP Request ──▶ public/index.php
 ## 🎯 Decisiones de Diseño
 
 ### ¿Por qué sin Framework?
+
 - **Pros:** Control total, mínimas dependencias, fácil debugging
 - **Cons:** Más código boilerplate, menos features out-of-the-box
 - **Decisión:** Adecuado para proyectos pequeños-medianos con requerimientos específicos
 
 ### ¿Por qué Session-based Auth?
+
 - **Alternativas:** JWT, OAuth2
 - **Decisión:** Simplicidad para aplicación web tradicional
 - **Trade-off:** Menos escalable que tokens, pero más simple de implementar
 
 ### ¿Por qué Repository Pattern sin ORM?
+
 - **Alternativas:** Active Record, Eloquent, Doctrine
 - **Decisión:** Control directo sobre SQL, performance predecible
 - **Trade-off:** Más código manual, pero mayor flexibilidad
 
 ### ¿Por qué estructura de carpetas actual?
+
 ```
 src/
 ├── Config/      ← Configuración centralizada
@@ -573,6 +609,7 @@ src/
 ## 🔧 Puntos de Extensión
 
 ### 1. **Añadir Nuevos Controllers**
+
 ```php
 namespace App\Controllers;
 
@@ -589,12 +626,13 @@ $router->get('/new-feature', [NewController::class, 'index'], [
 ```
 
 ### 2. **Crear Services Custom**
+
 ```php
 namespace App\Services;
 
 class CustomService {
     private CustomRepository $repository;
-    
+
     public function __construct(?CustomRepository $repo = null) {
         $this->repository = $repo ?? new CustomRepository();
     }
@@ -602,6 +640,7 @@ class CustomService {
 ```
 
 ### 3. **Implementar Middlewares Adicionales**
+
 ```php
 namespace App\Middleware;
 
@@ -616,6 +655,7 @@ class LoggingMiddleware {
 ```
 
 ### 4. **Añadir APIs JSON**
+
 ```php
 // En Controller
 public function apiMethod() {
@@ -626,19 +666,20 @@ public function apiMethod() {
 ```
 
 ### 5. **Integrar Cache**
+
 ```php
 // Ejemplo de extensión con cache
 class ProductService {
     public function getAllWithVariants(): array {
         $cacheKey = 'products_with_variants';
-        
+
         if ($cached = Cache::get($cacheKey)) {
             return $cached;
         }
-        
+
         $result = $this->repository->findActiveProducts();
         Cache::set($cacheKey, $result, 300); // 5 min
-        
+
         return $result;
     }
 }

@@ -1,7 +1,7 @@
 # 🚀 SnackShop - Guía de Despliegue
 
-**🏠 Ubicación:** `DEPLOYMENT.md`  
-**📅 Última actualización:** 28 de octubre, 2025  
+**🏠 Ubicación:** `DEPLOYMENT.md`
+**📅 Última actualización:** 28 de octubre, 2025
 **🎯 Propósito:** Guía completa para desplegar SnackShop en desarrollo, staging y producción
 
 ---
@@ -42,6 +42,7 @@
 | **Cloud** | DigitalOcean/AWS | ⭐⭐⭐⭐ | $20-100/mes | Escalabilidad |
 
 ### Recomendaciones por Escala
+
 - **1-10 usuarios:** Shared hosting o VPS básico
 - **10-100 usuarios:** VPS con optimización
 - **100+ usuarios:** Cloud con load balancing
@@ -123,6 +124,7 @@ valet secure snackshop  # SSL opcional
 ### Docker Compose Completo
 
 #### `docker-compose.yml`
+
 ```yaml
 version: '3.8'
 
@@ -184,6 +186,7 @@ networks:
 ```
 
 #### `Dockerfile`
+
 ```dockerfile
 FROM php:8.1-apache
 
@@ -233,6 +236,7 @@ CMD ["apache2-foreground"]
 ```
 
 #### Configuración Nginx (`nginx/nginx.conf`)
+
 ```nginx
 events {
     worker_connections 1024;
@@ -241,42 +245,42 @@ events {
 http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
-    
+
     sendfile        on;
     keepalive_timeout  65;
-    
+
     upstream php-backend {
         server web:80;
     }
-    
+
     server {
         listen 80;
         server_name localhost;
-        
+
         # Redirect HTTP to HTTPS
         return 301 https://$server_name$request_uri;
     }
-    
+
     server {
         listen 443 ssl http2;
         server_name localhost;
-        
+
         # SSL Configuration
         ssl_certificate /etc/nginx/ssl/cert.pem;
         ssl_certificate_key /etc/nginx/ssl/key.pem;
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_ciphers HIGH:!aNULL:!MD5;
-        
+
         # Security headers
         add_header X-Frame-Options "SAMEORIGIN" always;
         add_header X-Content-Type-Options "nosniff" always;
         add_header X-XSS-Protection "1; mode=block" always;
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-        
+
         # Rate limiting
         limit_req_zone $binary_remote_addr zone=api:10m rate=100r/m;
         limit_req_zone $binary_remote_addr zone=web:10m rate=60r/m;
-        
+
         location / {
             limit_req zone=web burst=20 nodelay;
             proxy_pass http://php-backend;
@@ -285,7 +289,7 @@ http {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
-        
+
         location /api/ {
             limit_req zone=api burst=50 nodelay;
             proxy_pass http://php-backend;
@@ -294,7 +298,7 @@ http {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
         }
-        
+
         # Static files
         location ~* \\.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
             expires 1y;
@@ -360,6 +364,7 @@ public_html/
 ```
 
 #### `public_html/index.php` (Punto de entrada)
+
 ```php
 <?php
 // Redirigir al proyecto SnackShop
@@ -369,6 +374,7 @@ require_once __DIR__ . '/snackshop/public/index.php';
 ### Configuración .htaccess
 
 #### `public_html/.htaccess`
+
 ```apache
 # Forzar HTTPS
 RewriteEngine On
@@ -382,6 +388,7 @@ RewriteRule ^(.*)$ snackshop/public/$1 [L]
 ```
 
 #### `public_html/snackshop/public/.htaccess`
+
 ```apache
 RewriteEngine On
 
@@ -489,7 +496,7 @@ server {
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         include fastcgi_params;
-        
+
         # Security
         fastcgi_hide_header X-Powered-By;
     }
@@ -505,7 +512,7 @@ server {
     location ~ /\\. {
         deny all;
     }
-    
+
     location ~ \\.(env|log)$ {
         deny all;
     }
@@ -563,6 +570,7 @@ sudo crontab -e
 ### DigitalOcean Droplet
 
 #### 1. Crear Droplet
+
 - **Imagen:** Ubuntu 22.04 LTS
 - **Plan:** $12/mes (2GB RAM, 1 vCPU)
 - **Región:** Más cercana a usuarios
@@ -662,11 +670,13 @@ sudo ./deploy.sh
 ### AWS EC2
 
 #### 1. Lanzar Instancia
+
 - **AMI:** Ubuntu Server 22.04 LTS
 - **Tipo:** t3.micro (para desarrollo) o t3.small (producción)
 - **Security Group:** HTTP (80), HTTPS (443), SSH (22)
 
 #### 2. Configuración con User Data
+
 ```bash
 #!/bin/bash
 # Script de bootstrap para EC2
@@ -684,11 +694,13 @@ curl -sSL https://raw.githubusercontent.com/tu-usuario/snackshop-deploy/main/aws
 ### Azure App Service
 
 #### 1. Configuración Web App
+
 - **Runtime:** PHP 8.1
 - **OS:** Linux
 - **Plan:** B1 Basic ($13/mes)
 
 #### 2. Configuración de Despliegue
+
 ```yaml
 # .github/workflows/azure.yml
 name: Deploy to Azure
@@ -700,19 +712,19 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: 8.1
         extensions: pdo, pdo_mysql, mbstring, xml, curl, zip, gd
-        
+
     - name: Install dependencies
       run: composer install --no-dev --optimize-autoloader
-      
+
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
@@ -790,6 +802,7 @@ ENABLE_CACHE_HEADERS=true
 ### Variables por Entorno
 
 #### Desarrollo
+
 ```bash
 APP_ENV=development
 APP_DEBUG=true
@@ -799,6 +812,7 @@ LOG_LEVEL=debug
 ```
 
 #### Staging
+
 ```bash
 APP_ENV=staging
 APP_DEBUG=true
@@ -808,6 +822,7 @@ LOG_LEVEL=info
 ```
 
 #### Producción
+
 ```bash
 APP_ENV=production
 APP_DEBUG=false
@@ -819,6 +834,7 @@ LOG_LEVEL=warning
 ### Gestión de Variables
 
 #### Con Docker
+
 ```yaml
 # docker-compose.yml
 environment:
@@ -830,6 +846,7 @@ env_file:
 ```
 
 #### Con Systemd (VPS)
+
 ```ini
 # /etc/systemd/system/snackshop.service
 [Unit]
@@ -857,6 +874,7 @@ WantedBy=multi-user.target
 ### Certificados SSL
 
 #### Let's Encrypt (Gratuito)
+
 ```bash
 # Instalar Certbot
 sudo apt install certbot python3-certbot-nginx
@@ -872,6 +890,7 @@ echo "0 12 * * * /usr/bin/certbot renew --quiet" | sudo crontab -
 ```
 
 #### Certificado Comercial
+
 ```bash
 # Generar CSR
 openssl req -new -newkey rsa:2048 -nodes -keyout tu-dominio.key -out tu-dominio.csr
@@ -884,6 +903,7 @@ ssl_certificate_key /etc/ssl/private/tu-dominio.key;
 ### Configuración de Seguridad
 
 #### Nginx Security Headers
+
 ```nginx
 # Configuración de seguridad robusta
 server {
@@ -893,7 +913,7 @@ server {
     ssl_prefer_server_ciphers off;
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 10m;
-    
+
     # Security Headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
@@ -901,19 +921,19 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self';" always;
-    
+
     # Hide server information
     server_tokens off;
-    
+
     # Rate limiting
     limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;
     limit_req_zone $binary_remote_addr zone=api:10m rate=100r/m;
-    
+
     location /login {
         limit_req zone=login burst=3 nodelay;
         # ... resto de configuración
     }
-    
+
     location /api/ {
         limit_req zone=api burst=20 nodelay;
         # ... resto de configuración
@@ -922,6 +942,7 @@ server {
 ```
 
 #### Firewall (UFW)
+
 ```bash
 # Configurar firewall básico
 sudo ufw default deny incoming
@@ -935,6 +956,7 @@ sudo ufw status verbose
 ```
 
 #### Fail2Ban
+
 ```bash
 # Instalar
 sudo apt install fail2ban
@@ -968,6 +990,7 @@ bantime = 1800
 ### Configuración de Logs
 
 #### Nginx Logs
+
 ```nginx
 # /etc/nginx/nginx.conf
 http {
@@ -976,13 +999,14 @@ http {
                        '"$request" $status $body_bytes_sent '
                        '"$http_referer" "$http_user_agent" '
                        '$request_time $upstream_response_time';
-    
+
     access_log /var/log/nginx/access.log detailed;
     error_log /var/log/nginx/error.log warn;
 }
 ```
 
 #### PHP Logs
+
 ```ini
 ; /etc/php/8.1/fpm/php.ini
 log_errors = On
@@ -991,6 +1015,7 @@ error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
 ```
 
 #### Application Logs (Personalizado)
+
 ```php
 // src/Utils/Logger.php
 class Logger {
@@ -998,7 +1023,7 @@ class Logger {
         $logFile = getenv('LOG_FILE') ?: '/var/log/snackshop/app.log';
         $timestamp = date('Y-m-d H:i:s');
         $contextStr = $context ? json_encode($context) : '';
-        
+
         $logLine = "[$timestamp] $level: $message $contextStr" . PHP_EOL;
         file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX);
     }
@@ -1012,6 +1037,7 @@ Logger::log('ERROR', 'Database connection failed', ['error' => $e->getMessage()]
 ### Monitoreo con Scripts
 
 #### Script de Salud del Sistema
+
 ```bash
 #!/bin/bash
 # /usr/local/bin/health-check.sh
@@ -1063,6 +1089,7 @@ crontab -e
 ### Monitoreo Avanzado
 
 #### Prometheus + Grafana (Opcional)
+
 ```yaml
 # docker-compose.monitoring.yml
 version: '3.8'
@@ -1074,7 +1101,7 @@ services:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    
+
   grafana:
     image: grafana/grafana
     ports:
@@ -1094,6 +1121,7 @@ volumes:
 ```
 
 #### Uptime Monitoring
+
 ```bash
 # Script simple de uptime
 #!/bin/bash
@@ -1315,6 +1343,7 @@ sudo swapon /swapfile
 ### Scripts de Diagnóstico
 
 #### `diagnostic.sh`
+
 ```bash
 #!/bin/bash
 # Script de diagnóstico completo

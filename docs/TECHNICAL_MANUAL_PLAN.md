@@ -1,11 +1,12 @@
 # SnackShop - Planificación del Manual Técnico Completo
 
-**Fecha:** 28 de octubre, 2025  
+**Fecha:** 28 de octubre, 2025
 **Objetivo:** Crear documentación técnica exhaustiva integrada en el código
 
 ## Análisis Actual del Proyecto
 
 ### Arquitectura Identificada
+
 - **Patrón MVC con capas**: Controllers → Services → Repositories → Models
 - **Namespace:** `App\` (PSR-4)
 - **Base de datos:** PDO con soporte MySQL/SQLite
@@ -13,6 +14,7 @@
 - **Middlewares:** Auth, CSRF, Role-based access
 
 ### Funcionalidades Principales Detectadas
+
 - **Gestión de productos** y variantes
 - **Sistema de ventas** con items múltiples
 - **Control de usuarios** y roles
@@ -22,6 +24,7 @@
 - **Cálculo de impuestos** y costos
 
 ### Controllers Existentes
+
 - `AuthController` — login/logout
 - `ProductController` — CRUD productos
 - `VariantController` — variantes de productos
@@ -36,6 +39,7 @@
 ### Fase 1: Documentación Fundamental (Semana 1)
 
 #### 1.1 Índice Maestro del Manual (`docs/INDEX.md`)
+
 - **Propósito:** Navegación centralizada de toda la documentación
 - **Contenido:**
   - Estructura jerárquica del manual
@@ -44,6 +48,7 @@
   - Glosario de términos técnicos
 
 #### 1.2 Arquitectura y Patrones (`ARCHITECTURE.md`)
+
 - **Propósito:** Explicar decisiones de diseño y flujo de datos
 - **Contenido:**
   - Diagrama de capas (ASCII art + descripción)
@@ -53,6 +58,7 @@
   - Principios SOLID aplicados
 
 #### 1.3 API y Rutas (`API.md`)
+
 - **Propósito:** Documentar todos los endpoints disponibles
 - **Contenido:**
   - **Web Routes:** formularios y vistas
@@ -66,6 +72,7 @@
 ### Fase 2: Documentación Operacional (Semana 2)
 
 #### 2.1 Base de Datos (`DATABASE.md`)
+
 - **Propósito:** Esquema, migraciones y queries críticas
 - **Contenido:**
   - ERD (diagrama entidad-relación) en texto/ASCII
@@ -76,6 +83,7 @@
   - Scripts de migración y seeding
 
 #### 2.2 Configuración y Variables (`CONFIGURATION.md`)
+
 - **Propósito:** Todas las opciones de configuración disponibles
 - **Contenido:**
   - Variables de entorno soportadas (`SNACKSHOP_*`)
@@ -86,6 +94,7 @@
   - Logs y debugging
 
 #### 2.3 Despliegue (`DEPLOYMENT.md`)
+
 - **Propósito:** Guías completas para diferentes entornos
 - **Contenido:**
   - **Desarrollo local:** XAMPP, WAMP, servidor embebido PHP
@@ -99,6 +108,7 @@
 ### Fase 3: Documentación para Desarrolladores (Semana 3)
 
 #### 3.1 Guía de Desarrollo (`DEVELOPMENT.md`)
+
 - **Propósito:** Workflow completo para desarrolladores
 - **Contenido:**
   - Setup de entorno de desarrollo
@@ -109,6 +119,7 @@
   - Workflows de Git (branches, PRs)
 
 #### 3.2 Testing (`TESTING.md`)
+
 - **Propósito:** Estrategia de testing completa
 - **Contenido:**
   - Configuración de PHPUnit
@@ -120,6 +131,7 @@
   - CI/CD con GitHub Actions
 
 #### 3.3 Contribución (`CONTRIBUTING.md`)
+
 - **Propósito:** Guía para contribuidores externos
 - **Contenido:**
   - Code of conduct
@@ -131,6 +143,7 @@
 ### Fase 4: Documentación de Componentes Específicos (Semana 4)
 
 #### 4.1 Servicios y Lógica de Negocio (`docs/services/`)
+
 - **Archivos individuales:**
   - `CostoService.md` — cálculo de precios y costos
   - `ImpuestosService.md` — aplicación de impuestos
@@ -139,6 +152,7 @@
   - `UserService.md` — gestión de usuarios
 
 #### 4.2 Seguridad (`SECURITY.md`)
+
 - **Propósito:** Vulnerabilidades y medidas de protección
 - **Contenido:**
   - CSRF protection implementado
@@ -150,6 +164,7 @@
   - Session management
 
 #### 4.3 Performance y Escalabilidad (`PERFORMANCE.md`)
+
 - **Propósito:** Optimización y escalamiento
 - **Contenido:**
   - Database indexing
@@ -163,6 +178,7 @@
 ### Fase 5: Documentación Avanzada (Semana 5)
 
 #### 5.1 Extensibilidad (`EXTENDING.md`)
+
 - **Propósito:** Cómo extender el sistema
 - **Contenido:**
   - Crear nuevos controllers
@@ -172,6 +188,7 @@
   - Event system (si existe)
 
 #### 5.2 Troubleshooting (`TROUBLESHOOTING.md`)
+
 - **Propósito:** Solución de problemas comunes
 - **Contenido:**
   - Errores de instalación
@@ -182,6 +199,7 @@
   - FAQ técnicas
 
 #### 5.3 Ejemplos y Casos de Uso (`docs/examples/`)
+
 - **Archivos de ejemplo:**
   - `new-controller-example.php`
   - `custom-service-example.php`
@@ -227,25 +245,30 @@
 ## Cronograma de Implementación
 
 ### Semana 1 (28 Oct - 3 Nov)
+
 - **Lunes-Martes:** `ARCHITECTURE.md` y `docs/INDEX.md`
 - **Miércoles-Jueves:** `API.md` con todos los endpoints
 - **Viernes:** Revisión y ajustes
 
 ### Semana 2 (4-10 Nov)
+
 - **Lunes-Martes:** `DATABASE.md` con ERD y queries
 - **Miércoles:** `CONFIGURATION.md`
 - **Jueves-Viernes:** `DEPLOYMENT.md` con Docker
 
 ### Semana 3 (11-17 Nov)
+
 - **Lunes-Martes:** `DEVELOPMENT.md` y setup avanzado
 - **Miércoles-Jueves:** `TESTING.md` con ejemplos
 - **Viernes:** `CONTRIBUTING.md`
 
 ### Semana 4 (18-24 Nov)
+
 - **Lunes-Miércoles:** Documentación de servicios específicos
 - **Jueves-Viernes:** `SECURITY.md` y `PERFORMANCE.md`
 
 ### Semana 5 (25 Nov - 1 Dec)
+
 - **Lunes-Martes:** `EXTENDING.md` y `TROUBLESHOOTING.md`
 - **Miércoles-Jueves:** Ejemplos de código y diagramas
 - **Viernes:** Revisión final y índice maestro
@@ -253,12 +276,14 @@
 ## Métricas de Calidad
 
 ### Estándares de Documentación
+
 - **Legibilidad:** Nivel técnico pero accesible
 - **Completeness:** Cubrir 100% de funcionalidades principales
 - **Ejemplos:** Al menos 2 ejemplos prácticos por sección
 - **Mantenimiento:** Instrucciones para actualizar la documentación
 
 ### Criterios de Éxito
+
 - Desarrollador nuevo puede configurar el entorno en < 30 min
 - Todas las rutas/endpoints están documentadas con ejemplos
 - Guías de troubleshooting cubren 80% de problemas comunes

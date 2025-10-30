@@ -1,7 +1,7 @@
 # 🤝 SnackShop - Guía de Contribución
 
-**🏠 Ubicación:** `CONTRIBUTING.md`  
-**📅 Última actualización:** 29 de octubre, 2025  
+**🏠 Ubicación:** `CONTRIBUTING.md`
+**📅 Última actualización:** 29 de octubre, 2025
 **🎯 Propósito:** Guía para contribuidores: código de conducta, pull requests, code style y review process
 
 ---
@@ -209,10 +209,10 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Servicio para gestión de productos
- * 
+ *
  * Maneja la lógica de negocio relacionada con productos,
  * incluyendo validación, cálculos y transformaciones.
- * 
+ *
  * @package App\Services
  * @author  Equipo SnackShop
  * @since   1.0.0
@@ -236,24 +236,24 @@ final class ProductService
     {
         // Validar datos de entrada
         $validatedData = $this->validateProductData($data);
-        
+
         try {
             // Crear producto
             $product = $this->productRepository->create($validatedData);
-            
+
             // Log del evento
             $this->logger->info('Product created successfully', [
                 'product_id' => $product->getId(),
                 'name' => $product->getNombre()
             ]);
-            
+
             return $product;
         } catch (\Exception $e) {
             $this->logger->error('Failed to create product', [
                 'data' => $data,
                 'error' => $e->getMessage()
             ]);
-            
+
             throw $e;
         }
     }
@@ -310,18 +310,18 @@ $userName = '';         // ✅ Con significado
 
 /**
  * Calcula el precio total de una venta
- * 
+ *
  * Este método procesa una lista de items, aplica descuentos,
  * calcula impuestos y retorna el desglose completo del precio.
- * 
+ *
  * @param array<int, array{product_id: int, quantity: int}> $items Lista de items
  * @param float $discountPercent Descuento en porcentaje (0-100)
  * @param bool $includeTax Si incluir impuestos en el cálculo
  * @return array{subtotal: float, discount: float, tax: float, total: float}
- * 
+ *
  * @throws InvalidArgumentException Si algún item es inválido
  * @throws ProductNotFoundException Si un producto no existe
- * 
+ *
  * @example
  * $items = [
  *     ['product_id' => 1, 'quantity' => 2],
@@ -338,28 +338,28 @@ public function calculateTotal(array $items, float $discountPercent = 0.0, bool 
     }
 
     $subtotal = 0.0;
-    
+
     // Calcular subtotal de todos los items
     foreach ($items as $item) {
         // TODO: Implement caching for product prices
         $product = $this->productRepository->findById($item['product_id']);
-        
+
         if (!$product) {
             throw new ProductNotFoundException("Product {$item['product_id']} not found");
         }
-        
+
         $subtotal += $product->getPrecio() * $item['quantity'];
     }
-    
+
     // Aplicar descuento
     $discount = $subtotal * ($discountPercent / 100);
     $afterDiscount = $subtotal - $discount;
-    
+
     // Calcular impuestos si es necesario
     $tax = $includeTax ? $afterDiscount * 0.16 : 0.0; // IVA 16%
-    
+
     $total = $afterDiscount + $tax;
-    
+
     return [
         'subtotal' => round($subtotal, 2),
         'discount' => round($discount, 2),
@@ -403,11 +403,11 @@ public function createProduct(array $data): Product
     if (empty($data['nombre'])) {
         throw new ValidationException('Product name is required');
     }
-    
+
     if ($data['precio'] <= 0) {
         throw new ValidationException('Product price must be greater than zero');
     }
-    
+
     // Continuar con la lógica...
 }
 ```
@@ -554,7 +554,7 @@ graph TD
 **Sugerencia:** Considera usar un generator para procesar los datos en chunks.
 
 **Ejemplo:**
-```php
+```
 // En lugar de:
 public function processAllData() {
     $data = $this->getAllData(); // Carga todo en memoria
@@ -570,11 +570,11 @@ public function processAllData() {
 ```
 
 ## Pregunta para Clarificar
-**Question:** ¿Has considerado qué pasa si el producto ya está en el carrito? 
+**Question:** ¿Has considerado qué pasa si el producto ya está en el carrito?
 ¿Deberíamos incrementar la cantidad o mostrar un error?
 
 ## Reconocimiento Positivo
-**Nice work!** Me gusta cómo has separado la validación del procesamiento. 
+**Nice work!** Me gusta cómo has separado la validación del procesamiento.
 Hace el código mucho más testeable.
 ```
 
@@ -604,20 +604,20 @@ Hace el código mucho más testeable.
 # ✅ Buenas Respuestas
 
 ## Aceptar Sugerencia
-"Excelente punto! He implementado el generator como sugeriste. 
+"Excelente punto! He implementado el generator como sugeriste.
 Commit: abc123f"
 
 ## Explicar Decisión
-"Decidí usar este approach porque mantenemos compatibility con 
-la API existente. Si cambiamos esto, rompería 3 endpoints. 
+"Decidí usar este approach porque mantenemos compatibility con
+la API existente. Si cambiamos esto, rompería 3 endpoints.
 ¿Te parece aceptable o prefieres que creemos una nueva versión de la API?"
 
 ## Pedir Clarificación
-"No estoy seguro de entender tu sugerencia sobre el caching. 
+"No estoy seguro de entender tu sugerencia sobre el caching.
 ¿Podrías dar un ejemplo de cómo implementarías el TTL variable?"
 
 ## Agradecer Feedback
-"Gracias por revisar! He aplicado todas las sugerencias. 
+"Gracias por revisar! He aplicado todas las sugerencias.
 El punto sobre testing edge cases era muy válido."
 ```
 
@@ -751,17 +751,17 @@ public/assets/js/      # JSDoc en JavaScript
 ```php
 /**
  * Breve descripción de una línea
- * 
+ *
  * Descripción más detallada que puede extenderse
  * a múltiples líneas si es necesario.
- * 
+ *
  * @param Type $param Descripción del parámetro
  * @return Type Descripción de lo que retorna
  * @throws ExceptionType Cuándo se lanza esta excepción
- * 
+ *
  * @example
  * $result = $service->methodName($param);
- * 
+ *
  * @since 1.0.0
  * @author Nombre del Autor
  */
@@ -828,16 +828,19 @@ graph TD
 Reconocemos a nuestros contribuidores más activos:
 
 #### 🥇 Core Contributors
+
 - **@equinoxe-grammer** - Project founder & lead maintainer
 - **@contributor1** - Security & performance expert
 - **@contributor2** - Documentation & testing specialist
 
 #### 🥈 Regular Contributors
+
 - **@contributor3** - UI/UX improvements
 - **@contributor4** - Bug fixes & maintenance
 - **@contributor5** - API development
 
 #### 🥉 Community Champions
+
 - **@contributor6** - Community support & mentoring
 - **@contributor7** - Issue triage & reproduction
 - **@contributor8** - Translations & localization
@@ -912,7 +915,7 @@ Reconocemos contribuciones de varias formas:
 
 ## 🙏 Agradecimientos
 
-Gracias por considerar contribuir a SnackShop! Tu tiempo y esfuerzo ayudan a hacer este proyecto mejor para todos. 
+Gracias por considerar contribuir a SnackShop! Tu tiempo y esfuerzo ayudan a hacer este proyecto mejor para todos.
 
 Cada contribución, sin importar el tamaño, es valiosa y apreciada. Desde reportar un bug hasta implementar una feature major, todo ayuda a mejorar el proyecto.
 

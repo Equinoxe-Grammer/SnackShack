@@ -1,7 +1,7 @@
 # 🧪 SnackShop - Testing Guide
 
-**🏠 Ubicación:** `TESTING.md`  
-**📅 Última actualización:** 29 de octubre, 2025  
+**🏠 Ubicación:** `TESTING.md`
+**📅 Última actualización:** 29 de octubre, 2025
 **🎯 Propósito:** Guía completa de testing: unit tests, integration tests, workflows y coverage
 
 ---
@@ -96,7 +96,7 @@ tests/
     failOnRisky="true"
     failOnWarning="true"
     verbose="true">
-    
+
     <testsuites>
         <testsuite name="Unit">
             <directory suffix="Test.php">tests/Unit</directory>
@@ -154,13 +154,13 @@ initTestDatabase();
 
 function initTestDatabase() {
     $testDbPath = __DIR__ . '/database/test.db';
-    
+
     // Crear directorio si no existe
     $dir = dirname($testDbPath);
     if (!is_dir($dir)) {
         mkdir($dir, 0755, true);
     }
-    
+
     // Crear BD de testing si no existe
     if (!file_exists($testDbPath)) {
         copy(__DIR__ . '/../data/snackshop.db', $testDbPath);
@@ -173,16 +173,16 @@ abstract class TestCase extends PHPUnit\Framework\TestCase {
         parent::setUp();
         $this->resetDatabase();
     }
-    
+
     protected function tearDown(): void {
         parent::tearDown();
         $this->cleanupTestData();
     }
-    
+
     protected function resetDatabase() {
         // Implementar reset de BD para cada test
     }
-    
+
     protected function cleanupTestData() {
         // Limpieza post-test
     }
@@ -304,7 +304,7 @@ class ProductServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
         $this->productService = new ProductService($this->productRepository);
     }
@@ -338,7 +338,7 @@ class ProductServiceTest extends TestCase
     {
         // Arrange
         $productId = 999;
-        
+
         $this->productRepository
             ->expects($this->once())
             ->method('findById')
@@ -348,7 +348,7 @@ class ProductServiceTest extends TestCase
         // Act & Assert
         $this->expectException(ProductNotFoundException::class);
         $this->expectExceptionMessage("Product with ID $productId not found");
-        
+
         $this->productService->getProductById($productId);
     }
 
@@ -454,10 +454,10 @@ class ProductControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->productService = $this->createMock(ProductService::class);
         $this->controller = new ProductController($this->productService);
-        
+
         // Mock global variables
         $_GET = [];
         $_POST = [];
@@ -467,7 +467,7 @@ class ProductControllerTest extends TestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         // Reset global variables
         $_GET = [];
         $_POST = [];
@@ -586,7 +586,7 @@ class ProductRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Usar base de datos de testing
         $this->db = new PDO('sqlite::memory:');
         $this->createTestSchema();
@@ -644,7 +644,7 @@ class ProductRepositoryTest extends TestCase
         $stmt = $this->db->prepare("SELECT * FROM productos WHERE id = ?");
         $stmt->execute([$product->getId()]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         $this->assertEquals('Coca Cola', $row['nombre']);
         $this->assertEquals(15.50, $row['precio']);
     }
@@ -653,7 +653,7 @@ class ProductRepositoryTest extends TestCase
     {
         // Arrange
         $stmt = $this->db->prepare("
-            INSERT INTO productos (nombre, precio, categoria_id) 
+            INSERT INTO productos (nombre, precio, categoria_id)
             VALUES (?, ?, ?)
         ");
         $stmt->execute(['Test Product', 20.0, 1]);
@@ -682,7 +682,7 @@ class ProductRepositoryTest extends TestCase
     {
         // Arrange
         $this->db->exec("
-            INSERT INTO productos (nombre, precio, categoria_id) VALUES 
+            INSERT INTO productos (nombre, precio, categoria_id) VALUES
             ('Producto 1', 10.0, 1),
             ('Producto 2', 15.0, 1),
             ('Producto 3', 20.0, 2)
@@ -694,7 +694,7 @@ class ProductRepositoryTest extends TestCase
         // Assert
         $this->assertCount(2, $products);
         $this->assertContainsOnlyInstancesOf(Product::class, $products);
-        
+
         foreach ($products as $product) {
             $this->assertEquals(1, $product->getCategoriaId());
         }
@@ -704,7 +704,7 @@ class ProductRepositoryTest extends TestCase
     {
         // Arrange
         $stmt = $this->db->prepare("
-            INSERT INTO productos (nombre, precio, categoria_id) 
+            INSERT INTO productos (nombre, precio, categoria_id)
             VALUES (?, ?, ?)
         ");
         $stmt->execute(['Original Name', 10.0, 1]);
@@ -730,7 +730,7 @@ class ProductRepositoryTest extends TestCase
     {
         // Arrange
         $stmt = $this->db->prepare("
-            INSERT INTO productos (nombre, precio, categoria_id) 
+            INSERT INTO productos (nombre, precio, categoria_id)
             VALUES (?, ?, ?)
         ");
         $stmt->execute(['To Delete', 10.0, 1]);
@@ -910,7 +910,7 @@ class ProductAPITest extends TestCase
         // Assert
         $this->assertEquals(200, $response['status']);
         $products = $response['body']['products'];
-        
+
         foreach ($products as $product) {
             $this->assertEquals(1, $product['categoria_id']);
         }
@@ -1006,7 +1006,7 @@ describe('ProductManager', () => {
         test('should apply filters', async () => {
             // Arrange
             const filters = { categoria_id: 1, precio_min: 10 };
-            
+
             fetch.mockResolvedValueOnce({
                 ok: true,
                 json: async () => ({ products: [] })
@@ -1026,11 +1026,11 @@ describe('ProductManager', () => {
         beforeEach(() => {
             // Setup DOM
             document.body.innerHTML = '<div id="products-container"></div>';
-            
+
             productManager.products = [
-                { 
-                    id: 1, 
-                    nombre: 'Test Product', 
+                {
+                    id: 1,
+                    nombre: 'Test Product',
                     precio: 25.99,
                     imagen_url: '/images/test.jpg'
                 }
@@ -1128,28 +1128,28 @@ describe('Product Management', () => {
 
     it('should display products list', () => {
         cy.visit('/productos');
-        
+
         cy.get('[data-testid="products-table"]').should('be.visible');
         cy.get('[data-testid="product-row"]').should('have.length.greaterThan', 0);
     });
 
     it('should create new product', () => {
         cy.visit('/productos/nuevo');
-        
+
         // Fill form
         cy.get('#nombre').type('Nuevo Producto Cypress');
         cy.get('#descripcion').type('Descripción de prueba');
         cy.get('#precio').type('25.99');
         cy.get('#categoria_id').select('Bebidas');
-        
+
         // Submit form
         cy.get('[data-testid="submit-button"]').click();
-        
+
         // Verify success
         cy.get('[data-testid="success-message"]')
           .should('be.visible')
           .and('contain', 'Producto creado exitosamente');
-          
+
         // Verify in list
         cy.visit('/productos');
         cy.get('[data-testid="products-table"]')
@@ -1158,14 +1158,14 @@ describe('Product Management', () => {
 
     it('should edit existing product', () => {
         cy.visit('/productos');
-        
+
         // Click edit on first product
         cy.get('[data-testid="edit-button"]').first().click();
-        
+
         // Update name
         cy.get('#nombre').clear().type('Producto Editado');
         cy.get('[data-testid="submit-button"]').click();
-        
+
         // Verify update
         cy.get('[data-testid="success-message"]')
           .should('contain', 'Producto actualizado');
@@ -1173,15 +1173,15 @@ describe('Product Management', () => {
 
     it('should delete product', () => {
         cy.visit('/productos');
-        
+
         // Get initial count
         cy.get('[data-testid="product-row"]').then($rows => {
             const initialCount = $rows.length;
-            
+
             // Delete first product
             cy.get('[data-testid="delete-button"]').first().click();
             cy.get('[data-testid="confirm-delete"]').click();
-            
+
             // Verify deletion
             cy.get('[data-testid="product-row"]')
               .should('have.length', initialCount - 1);
@@ -1190,11 +1190,11 @@ describe('Product Management', () => {
 
     it('should search products', () => {
         cy.visit('/productos');
-        
+
         // Search for specific product
         cy.get('[data-testid="search-input"]').type('Coca');
         cy.get('[data-testid="search-button"]').click();
-        
+
         // Verify filtered results
         cy.get('[data-testid="product-row"]').each($row => {
             cy.wrap($row).should('contain.text', 'Coca');
@@ -1203,10 +1203,10 @@ describe('Product Management', () => {
 
     it('should filter by category', () => {
         cy.visit('/productos');
-        
+
         // Apply category filter
         cy.get('[data-testid="category-filter"]').select('Bebidas');
-        
+
         // Verify all results are from selected category
         cy.get('[data-testid="product-row"]').each($row => {
             cy.wrap($row).find('[data-testid="category"]')
@@ -1308,7 +1308,7 @@ class CoverageAnalyzer {
         foreach ($coverage as $type => $percentage) {
             $status = $percentage >= $this->thresholds[$type] ? '✅' : '❌';
             $threshold = $this->thresholds[$type];
-            
+
             echo "$status " . ucfirst($type) . " Coverage: $percentage% (threshold: $threshold%)\n";
         }
 
@@ -1400,7 +1400,7 @@ scenarios:
 class DatabasePerformanceTest extends TestCase
 {
     private $db;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -1411,20 +1411,20 @@ class DatabasePerformanceTest extends TestCase
     public function testQueryPerformance()
     {
         $startTime = microtime(true);
-        
+
         // Test query performance
         $stmt = $this->db->prepare("
-            SELECT p.*, c.nombre as categoria 
-            FROM productos p 
-            JOIN categorias c ON p.categoria_id = c.id 
-            WHERE p.activo = 1 
+            SELECT p.*, c.nombre as categoria
+            FROM productos p
+            JOIN categorias c ON p.categoria_id = c.id
+            WHERE p.activo = 1
             ORDER BY p.nombre
         ");
         $stmt->execute();
         $results = $stmt->fetchAll();
-        
+
         $executionTime = microtime(true) - $startTime;
-        
+
         // Assert performance benchmark
         $this->assertLessThan(0.1, $executionTime, 'Query should execute in less than 100ms');
         $this->assertGreaterThan(0, count($results), 'Query should return results');
@@ -1433,18 +1433,18 @@ class DatabasePerformanceTest extends TestCase
     public function testInsertPerformance()
     {
         $startTime = microtime(true);
-        
+
         // Test bulk insert performance
         $this->db->beginTransaction();
         $stmt = $this->db->prepare("INSERT INTO productos (nombre, precio, categoria_id) VALUES (?, ?, ?)");
-        
+
         for ($i = 0; $i < 1000; $i++) {
             $stmt->execute(["Product $i", rand(10, 100), rand(1, 5)]);
         }
-        
+
         $this->db->commit();
         $executionTime = microtime(true) - $startTime;
-        
+
         // Assert bulk insert performance
         $this->assertLessThan(1.0, $executionTime, 'Bulk insert should complete in less than 1 second');
     }
@@ -1462,8 +1462,8 @@ class DatabasePerformanceTest extends TestCase
                 activo BOOLEAN DEFAULT 1,
                 FOREIGN KEY (categoria_id) REFERENCES categorias(id)
             );
-            
-            INSERT INTO categorias (nombre) VALUES 
+
+            INSERT INTO categorias (nombre) VALUES
             ('Bebidas'), ('Snacks'), ('Dulces'), ('Comida'), ('Otros');
         ");
 
@@ -1499,7 +1499,7 @@ class SecurityTest extends TestCase
 
         foreach ($maliciousInputs as $input) {
             $response = $this->makeAPIRequest('GET', "/api/v1/products/$input");
-            
+
             // Should return 404 or 400, not 500 (which could indicate SQL error)
             $this->assertContains($response['status'], [400, 404]);
         }
@@ -1582,7 +1582,7 @@ class SecurityTest extends TestCase
 
         foreach ($maliciousFiles as $file) {
             $response = $this->uploadFile('/api/v1/upload', $file);
-            
+
             // Should reject malicious files
             $this->assertContains($response['status'], [400, 415]);
         }
@@ -1595,7 +1595,7 @@ class SecurityTest extends TestCase
         curl_setopt($ch, CURLOPT_URL, "http://localhost:8000$endpoint");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        
+
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -1679,7 +1679,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -1698,7 +1698,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:

@@ -1,7 +1,7 @@
 # 📖 SnackShop - Índice del Manual Técnico
 
-**🏠 Ubicación:** `docs/INDEX.md`  
-**📅 Última actualización:** 28 de octubre, 2025  
+**🏠 Ubicación:** `docs/INDEX.md`
+**📅 Última actualización:** 28 de octubre, 2025
 **🎯 Propósito:** Navegación centralizada de toda la documentación técnica
 
 ---
@@ -24,6 +24,7 @@
 ## 📚 Estructura Completa del Manual
 
 ### Nivel 1: Fundamentos
+
 ```
 📂 Conceptos básicos y arquitectura
 ├── README.md ..................... Guía rápida de inicio
@@ -32,6 +33,7 @@
 ```
 
 ### Nivel 2: Referencias Técnicas
+
 ```
 📂 APIs, base de datos y configuración
 ├── API.md ........................ Documentación completa de endpoints
@@ -40,6 +42,7 @@
 ```
 
 ### Nivel 3: Operaciones y Despliegue
+
 ```
 📂 Producción y mantenimiento
 ├── DEPLOYMENT.md ................. Guías de despliegue completas
@@ -48,6 +51,7 @@
 ```
 
 ### Nivel 4: Desarrollo
+
 ```
 📂 Herramientas para desarrolladores
 ├── DEVELOPMENT.md ................ Setup avanzado y workflows
@@ -57,6 +61,7 @@
 ```
 
 ### Nivel 5: Recursos Específicos
+
 ```
 📂 Documentación detallada por componente
 └── docs/
@@ -81,6 +86,7 @@
 ## 🎯 Guías por Perfil de Usuario
 
 ### 👨‍💻 Para Desarrolladores Nuevos
+
 **Ruta recomendada para empezar:**
 
 1. **[README.md](README.md)** — Instalación y primer arranque
@@ -90,6 +96,7 @@
 5. **[docs/examples/](examples/)** — Ejemplos prácticos
 
 ### 🔧 Para Administradores de Sistema
+
 **Ruta recomendada para despliegue:**
 
 1. **[README.md](README.md)** — Requisitos básicos
@@ -99,6 +106,7 @@
 5. **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** — Solución de problemas
 
 ### 🚀 Para Integración API
+
 **Ruta recomendada para integraciones:**
 
 1. **[API.md](API.md)** — Documentación completa de endpoints
@@ -107,6 +115,7 @@
 4. **[SECURITY.md](SECURITY.md)** — Tokens y autenticación
 
 ### 🧪 Para Testing y QA
+
 **Ruta recomendada para pruebas:**
 
 1. **[TESTING.md](TESTING.md)** — Estrategias de testing
@@ -119,6 +128,7 @@
 ## 📖 Convenciones del Manual
 
 ### Estructura de Cada Documento
+
 Todos los documentos del manual siguen esta estructura estándar:
 
 ```markdown
@@ -159,6 +169,7 @@ Contenido de ejemplo para la Sección 2 (plantilla). Sirve como ejemplo de índi
 ```
 
 ### Iconos y Convenciones
+
 - 📖 **Documentación general**
 - 🏗️ **Arquitectura y diseño**
 - 🔌 **APIs y endpoints**
@@ -171,6 +182,7 @@ Contenido de ejemplo para la Sección 2 (plantilla). Sirve como ejemplo de índi
 - 🎯 **Ejemplos y tutoriales**
 
 ### Estados de Documentación
+
 - ✅ **Completo** — Documentación finalizada y revisada
 - 🚧 **En progreso** — En desarrollo
 - 📝 **Planificado** — Por implementar
@@ -181,16 +193,19 @@ Contenido de ejemplo para la Sección 2 (plantilla). Sirve como ejemplo de índi
 ## 🔗 Enlaces Externos Útiles
 
 ### Recursos de PHP
+
 - [PHP Manual](https://www.php.net/manual/) — Documentación oficial de PHP
 - [PSR Standards](https://www.php-fig.org/psr/) — PHP Standards Recommendations
 - [Composer](https://getcomposer.org/doc/) — Gestión de dependencias
 
 ### Herramientas de Desarrollo
+
 - [PHPUnit](https://phpunit.de/documentation.html) — Framework de testing
 - [Xdebug](https://xdebug.org/docs/) — Debugging y profiling
 - [Docker](https://docs.docker.com/) — Contenedores
 
 ### Base de Datos
+
 - [MySQL Documentation](https://dev.mysql.com/doc/) — Documentación oficial de MySQL
 - [PDO Manual](https://www.php.net/manual/en/book.pdo.php) — PHP Data Objects
 
@@ -199,15 +214,18 @@ Contenido de ejemplo para la Sección 2 (plantilla). Sirve como ejemplo de índi
 ## 📞 Soporte y Contribuciones
 
 ### Reportar Problemas
+
 - **Issues del proyecto:** [GitHub Issues](https://github.com/Equinoxe-Grammer/SnackShack/issues)
 - **Documentación incorrecta:** Crear issue con etiqueta `documentation`
 
 ### Contribuir al Manual
+
 1. Lee **[CONTRIBUTING.md](CONTRIBUTING.md)** para las guías de contribución
 2. Sigue las convenciones de documentación de esta página
 3. Actualiza este índice si añades nuevos documentos
 
 ### Contacto
+
 - **Repositorio:** [SnackShack](https://github.com/Equinoxe-Grammer/SnackShack)
 - **Propietario:** Equinoxe-Grammer
 - **Rama principal:** `main`
