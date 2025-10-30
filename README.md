@@ -137,6 +137,47 @@ Ver detalles y convenciones en los README de cada subcarpeta:
 php -S localhost:8000 -t public
 ```
 
+### Ejecutar con phpdesktop (Windows)
+
+Si prefieres distribuir o ejecutar la app como una aplicación de escritorio ligera en Windows, puedes usar phpdesktop.
+
+- Descarga phpdesktop (por ejemplo, https://github.com/cztomczak/phpdesktop) y extrae el contenido en una carpeta junto al repositorio o dentro de una estructura de distribución.
+- Ajusta el campo "document_root" en `settings.json` de phpdesktop para apuntar a la carpeta `public/` de este proyecto.
+- Asegúrate de que la versión de PHP incluida en phpdesktop tenga la extensión PDO habilitada y, si vas a usar SQLite, que `pdo_sqlite` esté disponible (revisa `php.ini` dentro del paquete phpdesktop).
+
+Ejemplo mínimo de fragmento `settings.json` (sólo las claves relevantes):
+
+```json
+{
+  "application_title": "SnackShop",
+  "start_url": "/",
+  "document_root": "public",
+  "php": {
+    "enable": true,
+    "ini": "php.ini"
+  }
+}
+```
+
+Nota sobre permisos y base de datos SQLite:
+
+- Este repositorio incluye un ejemplo de base de datos SQLite en `data/snackshop.db` (útil para pruebas locales). Si la aplicación usa SQLite, asegúrate de que el archivo y la carpeta `data/` sean escribibles por el usuario que ejecuta phpdesktop.
+- Para usar SQLite como backend en lugar de MySQL, ajusta tu configuración en `src/Config/AppConfig.php` para usar PDO SQLite y apunta al path correcto, por ejemplo:
+
+```php
+// Ejemplo conceptual: configurar PDO para SQLite
+return [
+  'db' => [
+    'driver' => 'sqlite',
+    'database' => __DIR__ . '/../../data/snackshop.db',
+  ],
+  'app' => [/* ... */]
+];
+```
+
+Si necesitas que adapte el código para detectar automáticamente SQLite o añadir soporte `.env` para seleccionar el driver, lo puedo añadir como un cambio pequeño.
+
+
 <a id="buenas-practicas-y-optimizacion"></a>
 <a id="-buenas-practicas-y-optimizacion"></a>
 ## Buenas Prácticas y Optimización
