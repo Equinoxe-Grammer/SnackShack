@@ -2,6 +2,7 @@
 namespace App\Database;
 
 use App\Config\AppConfig;
+use App\Database\QueryProfiler;
 use PDO;
 use PDOException;
 
@@ -98,6 +99,16 @@ class Connection
                     $e
                 );
             }
+        }
+        // Activar el perfilador de consultas solo cuando esté habilitado (no forzar reset a PDOStatement)
+        try {
+            if (class_exists(QueryProfiler::class) && QueryProfiler::isEnabled()) {
+                self::$instance->setAttribute(PDO::ATTR_STATEMENT_CLASS, [\App\Database\ProfilerPDOStatement::class, []]);
+            }
+            // Si está deshabilitado, dejamos el atributo como esté; ProfilerPDOStatement es seguro
+            // porque QueryProfiler::addQuery no suma si está deshabilitado.
+        } catch (\Throwable $e) {
+            // No romper si el atributo no puede cambiarse en tiempo de ejecución
         }
 
         return self::$instance;

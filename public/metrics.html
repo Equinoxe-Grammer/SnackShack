@@ -11,31 +11,39 @@
     .wrap{max-width:980px;margin:0 auto;padding:24px;}
     h1{font-size:20px;margin:0 0 12px;}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
-    .card{background:var(--card);border:1px solid #1f2937;border-radius:10px;padding:14px;}
+  .card{background:var(--card);border:1px solid #1f2937;border-radius:10px;padding:14px;transition:border-color .2s, box-shadow .2s}
+  .card.warn{border-color:#b45309;box-shadow:0 0 0 1px rgba(245,158,11,.2) inset}
+  .card.bad{border-color:#b91c1c;box-shadow:0 0 0 1px rgba(239,68,68,.2) inset}
     .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
     .v{font-size:18px;font-weight:600}
     .bar{height:8px;background:#1f2937;border-radius:999px;overflow:hidden}
     .bar>span{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#6366f1);}
     .row{display:flex;gap:12px;align-items:center;justify-content:space-between}
     .pill{font-size:12px;padding:2px 8px;border-radius:999px;background:#1f2937;color:#e5e7eb;border:1px solid #374151}
+    .pill.status{font-weight:600}
     .muted{color:var(--muted);font-size:12px}
     .status-ok{color:var(--ok)}.status-warn{color:var(--warn)}.status-bad{color:var(--bad)}
+    .status-maint{color:#60a5fa}
     footer{margin-top:16px;color:var(--muted);font-size:12px}
     code{background:#0b1020;padding:2px 6px;border-radius:6px;border:1px solid #1f2540}
+    @media (max-width:560px){ .row{flex-wrap:wrap} }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Monitoreo del Sistema</h1>
     <div class="row" style="gap:8px;margin:8px 0 12px">
+      <span id="status-pill" class="pill status">Estado: --</span>
       <label class="pill"><input id="auto" type="checkbox" checked style="margin-right:6px"> Auto-actualizar</label>
       <label class="pill"><input id="deep" type="checkbox" style="margin-right:6px"> Info avanzada</label>
       <label class="pill">Log tail: <input id="loglines" type="number" min="0" max="1000" value="0" style="width:72px;margin-left:6px;background:#0b1020;color:#e5e7eb;border:1px solid #1f2540;border-radius:6px;padding:2px 6px"></label>
       <button id="refresh" class="pill" style="cursor:pointer">Actualizar</button>
+      <button id="export-json" class="pill" style="cursor:pointer">Exportar JSON</button>
+      <button id="export-csv" class="pill" style="cursor:pointer">Exportar CSV</button>
       <span class="muted">Intervalo: 2s</span>
     </div>
     <div class="grid">
-      <div class="card">
+      <div class="card" id="mem-card">
         <div class="k">Memoria PHP</div>
         <div class="v" id="mem-usage">--</div>
         <div class="bar" aria-label="Uso de memoria"><span id="mem-bar" style="width:0%"></span></div>
@@ -46,7 +54,7 @@
         <div class="v" id="proc-pid">PID --</div>
         <div class="muted" id="proc-mem">Working set: -- • Private: --</div>
       </div>
-      <div class="card">
+      <div class="card" id="disk-card">
         <div class="k">Disco</div>
         <div class="v" id="disk-free">-- libres</div>
         <div class="muted" id="disk-pct">--</div>
@@ -56,10 +64,20 @@
         <div class="v" id="php-version">PHP --</div>
         <div class="muted" id="opcache">OPcache: --</div>
       </div>
-      <div class="card">
+      <div class="card" id="db-card">
         <div class="k">Base de datos</div>
         <div class="v" id="db-status">--</div>
         <div class="muted" id="db-detail">--</div>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:12px">
+      <div class="card">
+        <div class="k">Memoria % (últimos minutos)</div>
+        <canvas id="memChart" height="120"></canvas>
+      </div>
+      <div class="card">
+        <div class="k">Latencia DB ms (últimos minutos)</div>
+        <canvas id="dbChart" height="120"></canvas>
       </div>
     </div>
     <div class="card" style="margin-top:12px">
@@ -70,10 +88,15 @@
       <div class="k">error_log (cola)</div>
       <pre id="log-tail" style="max-height:240px;overflow:auto;background:#0b1020;color:#e5e7eb;border:1px solid #1f2540;border-radius:8px;padding:10px;white-space:pre-wrap"></pre>
     </div>
+    <div class="card" id="app-log-card" style="margin-top:12px;display:none">
+      <div class="k">app.jsonl (cola)</div>
+      <div id="app-log-list" class="muted">--</div>
+    </div>
     <footer>
       Última actualización: <span id="last">--</span> • Fuente: <code>/api/metrics</code>
     </footer>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
     const $ = s => document.querySelector(s);
     const fmtBytes = (n) => {
@@ -84,6 +107,62 @@
       return v.toFixed(v>9?0:1)+' '+units[i];
     };
     const setBar = (el, pct) => { el.style.width = Math.min(100, Math.max(0, pct||0)) + '%'; };
+
+    // Historial en memoria (aprox 3-5 min)
+    const history = [];
+    const maxPoints = 150; // 2s * 150 = 5 minutos
+    let lastSnapshot = null;
+
+    // Charts
+    let memChart, dbChart;
+    function ensureCharts() {
+      if (!memChart) {
+        memChart = new Chart($('#memChart'), {
+          type: 'line',
+          data: { labels: [], datasets: [{ label: 'Mem %', data: [], borderColor: '#22d3ee', tension: .2, pointRadius: 0 }] },
+          options: { scales: { x: { display:false }, y: { beginAtZero:true, max:100 } }, plugins: { legend:{display:false} }, animation:false }
+        });
+      }
+      if (!dbChart) {
+        dbChart = new Chart($('#dbChart'), {
+          type: 'line',
+          data: { labels: [], datasets: [{ label: 'DB ms', data: [], borderColor: '#a78bfa', tension: .2, pointRadius: 0 }] },
+          options: { scales: { x: { display:false }, y: { beginAtZero:true } }, plugins: { legend:{display:false} }, animation:false }
+        });
+      }
+    }
+
+    function pushHistory(ts, memPct, dbMs) {
+      history.push({ ts, memPct, dbMs });
+      while (history.length > maxPoints) history.shift();
+      // Update charts
+      ensureCharts();
+      memChart.data.labels = history.map(h => '');
+      memChart.data.datasets[0].data = history.map(h => h.memPct ?? null);
+      memChart.update('none');
+      dbChart.data.labels = history.map(h => '');
+      dbChart.data.datasets[0].data = history.map(h => h.dbMs ?? null);
+      dbChart.update('none');
+    }
+
+    function setStatusPill(status) {
+      const el = $('#status-pill');
+      if (!status) { el.textContent = 'Estado: --'; el.className = 'pill status'; return; }
+      const { ok, degraded, maintenance } = status;
+      let text = 'OK'; let cls = 'pill status status-ok';
+      if (maintenance) { text = 'MANTENIMIENTO'; cls = 'pill status status-maint'; }
+      else if (degraded) { text = 'DEGRADED'; cls = 'pill status status-warn'; }
+      if (ok === false) { text = 'ERROR'; cls = 'pill status status-bad'; }
+      el.textContent = 'Estado: ' + text;
+      el.className = cls;
+    }
+
+    function applyThreshold(card, value, warnCond, badCond) {
+      card.classList.remove('warn','bad');
+      if (value == null) return;
+      if (badCond(value)) card.classList.add('bad');
+      else if (warnCond(value)) card.classList.add('warn');
+    }
 
     function qs() {
       const params = new URLSearchParams();
@@ -99,6 +178,7 @@
         const res = await fetch('/api/metrics'+qs(), {cache:'no-store'});
         if (!res.ok) throw new Error('HTTP '+res.status);
         const j = await res.json();
+        lastSnapshot = j;
 
         // Memoria PHP
         const usage = j?.php?.memory?.usage_bytes ?? null;
@@ -109,6 +189,7 @@
         $('#mem-usage').textContent = `${fmtBytes(usage)} (${pct ?? '--'}%)`;
         $('#mem-detail').textContent = `Límite: ${limit ?? '--'} • Pico: ${fmtBytes(peak)}`;
         setBar($('#mem-bar'), pct || 0);
+        applyThreshold($('#mem-card'), pct, v => v>80, v => v>90);
 
         // Proceso
         const pid = j?.system?.process?.pid ?? null;
@@ -123,6 +204,7 @@
         const fp = j?.system?.disk?.free_pct;
         $('#disk-free').textContent = `${fmtBytes(free)} libres de ${fmtBytes(total)}`;
         $('#disk-pct').textContent = `Libre: ${fp ?? '--'}%`;
+        applyThreshold($('#disk-card'), fp, v => v<10, v => v<5);
 
         // PHP/opcache
         $('#php-version').textContent = `PHP ${j?.php?.version ?? '--'} (${j?.php?.sapi ?? ''})`;
@@ -144,6 +226,7 @@
         }
         if (ok===false && j?.database?.details) det += ` • ${j.database.details}`;
         $('#db-detail').textContent = det;
+        applyThreshold($('#db-card'), lat, v => v>150, v => v>300);
 
         // php.ini
         const ini = j?.php?.ini || {};
@@ -162,6 +245,38 @@
           card.style.display = 'none';
         }
 
+        // App log tail (si existe)
+        const appCard = $('#app-log-card');
+        const appLog = deep?.app_log;
+        if (appLog?.path && appLog.exists && Array.isArray(appLog.tail)) {
+          appCard.style.display = '';
+          const container = $('#app-log-list');
+          container.innerHTML = '';
+          appLog.tail.forEach(entry => {
+            const ts = entry.time || '';
+            const lvl = entry.level || '';
+            const msg = entry.message || '';
+            const ctx = entry.context || {};
+            const details = document.createElement('details');
+            const sum = document.createElement('summary');
+            sum.textContent = `[${ts}] ${lvl} • ${msg}`;
+            details.appendChild(sum);
+            const pre = document.createElement('pre');
+            pre.textContent = JSON.stringify(ctx, null, 2);
+            pre.style.whiteSpace = 'pre-wrap';
+            details.appendChild(pre);
+            container.appendChild(details);
+          });
+        } else {
+          appCard.style.display = 'none';
+        }
+
+        // Estado
+        setStatusPill(j?.status);
+
+        // Historial y gráficas
+        pushHistory(Date.now(), pct ?? null, lat ?? null);
+
         $('#last').textContent = new Date().toLocaleString();
       } catch (e) {
         $('#last').textContent = 'Error: ' + (e.message || e);
@@ -177,6 +292,45 @@
     $('#deep').addEventListener('change', load);
     $('#loglines').addEventListener('change', load);
     $('#refresh').addEventListener('click', load);
+    $('#export-json').addEventListener('click', () => {
+      if (!lastSnapshot) return;
+      const blob = new Blob([JSON.stringify(lastSnapshot, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      const ts = new Date().toISOString().replace(/[:.]/g,'-');
+      a.download = `metrics_snapshot_${ts}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+    $('#export-csv').addEventListener('click', () => {
+      if (!lastSnapshot) return;
+      // Campos planos seleccionados
+      const j = lastSnapshot;
+      const row = {
+        timestamp: j.timestamp || '',
+        php_memory_usage_bytes: j?.php?.memory?.usage_bytes ?? '',
+        php_memory_peak_bytes: j?.php?.memory?.peak_bytes ?? '',
+        php_memory_limit_bytes: j?.php?.memory?.limit_bytes ?? '',
+        php_memory_pct: j?.php?.memory?.usage_pct_of_limit ?? '',
+        disk_free_bytes: j?.system?.disk?.free_bytes ?? '',
+        disk_total_bytes: j?.system?.disk?.total_bytes ?? '',
+        disk_free_pct: j?.system?.disk?.free_pct ?? '',
+        db_ok: j?.database?.ok ?? '',
+        db_driver: j?.database?.driver ?? '',
+        db_latency_ms: j?.database?.latency_ms ?? '',
+        status_ok: j?.status?.ok ?? '',
+        status_degraded: j?.status?.degraded ?? '',
+        status_maintenance: j?.status?.maintenance ?? '',
+      };
+      const headers = Object.keys(row);
+      const values = headers.map(h => String(row[h]).replaceAll('"','\"'));
+      const csv = headers.join(',') + "\n" + values.join(',') + "\n";
+      const blob = new Blob([csv], {type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      const ts = new Date().toISOString().replace(/[:.]/g,'-');
+      a.download = `metrics_snapshot_${ts}.csv`;
+      document.body.appendChild(a); a.click(); a.remove();
+    });
 
     load();
     schedule();
