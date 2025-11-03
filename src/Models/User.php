@@ -7,15 +7,15 @@ class User
     public string $username;
     public string $role;
     public string $createdAt;
-    private string $passwordPlain;
+    private ?string $passwordHash;
 
-    public function __construct(int $id, string $username, string $role, string $createdAt, string $passwordPlain = '')
+    public function __construct(int $id, string $username, string $role, string $createdAt, ?string $passwordHash = null)
     {
         $this->id = $id;
         $this->username = $username;
         $this->role = $role;
         $this->createdAt = $createdAt;
-        $this->passwordPlain = $passwordPlain;
+        $this->passwordHash = $passwordHash;
     }
     
     // Getters
@@ -39,9 +39,9 @@ class User
         return $this->createdAt;
     }
     
-    public function getPasswordPlain(): string
+    public function getPasswordHash(): ?string
     {
-        return $this->passwordPlain;
+        return $this->passwordHash;
     }
     
 }

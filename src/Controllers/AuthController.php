@@ -45,6 +45,10 @@ class AuthController {
             $user = $this->userService->authenticateUser($usuario, $contrasena);
             
             if ($user) {
+                // Regenerate session ID to prevent fixation
+                if (session_status() === PHP_SESSION_ACTIVE) {
+                    session_regenerate_id(true);
+                }
                 $_SESSION['usuario_id'] = $user->getId();
                 $_SESSION['usuario'] = $user->getUsername();
                 $_SESSION['rol'] = $user->getRole();

@@ -200,7 +200,8 @@ $router->post('/productos/{id}/variantes/eliminar/{vid}', [VariantController::cl
 // ========================================
 $router->post('/api/ventas', [SalesController::class, 'procesarVenta'], [
     AuthMiddleware::class,
-    new RoleMiddleware(['admin', 'cajero'])
+    new RoleMiddleware(['admin', 'cajero']),
+    CsrfMiddleware::class
 ]);
 
 // ========================================

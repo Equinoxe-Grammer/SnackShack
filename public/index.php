@@ -4,6 +4,24 @@
  * Todas las solicitudes pasan por este archivo
  */
 
+// Configurar cookies de sesión de forma segura antes de iniciar la sesión
+$isHttps = (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off')
+  || (isset($_SERVER['SERVER_PORT']) && (string)$_SERVER['SERVER_PORT'] === '443');
+
+if (PHP_VERSION_ID >= 70300) {
+  session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '',
+    'secure' => $isHttps, // true solo bajo HTTPS
+    'httponly' => true,
+    'samesite' => 'Lax',
+  ]);
+} else {
+  // Fallback para versiones antiguas
+  session_set_cookie_params(0, '/; samesite=Lax', '', $isHttps, true);
+}
+
 // Iniciar sesión
 session_start();
 

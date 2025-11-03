@@ -44,7 +44,7 @@ class UserRepository
     public function findByUsername(string $username): ?User
     {
         $sql = 'SELECT usuario_id, usuario, rol, fecha_creacion, 
-                       COALESCE(contrasena_hash, contrasena_plain) as password
+                       contrasena_hash
                 FROM usuarios 
                 WHERE usuario = :username 
                 LIMIT 1';
@@ -63,7 +63,7 @@ class UserRepository
             $row['usuario'] ?? '',
             $row['rol'] ?? 'cajero',
             $row['fecha_creacion'] ?? '',
-            $row['password'] ?? ''
+            $row['contrasena_hash'] ?? null
         );
     }
     
@@ -73,7 +73,7 @@ class UserRepository
     public function findById(int $userId): ?User
     {
         $sql = 'SELECT usuario_id, usuario, rol, fecha_creacion, 
-                       COALESCE(contrasena_hash, contrasena_plain) as password
+                       contrasena_hash
                 FROM usuarios 
                 WHERE usuario_id = :id 
                 LIMIT 1';
@@ -92,7 +92,7 @@ class UserRepository
             $row['usuario'] ?? '',
             $row['rol'] ?? 'cajero',
             $row['fecha_creacion'] ?? '',
-            $row['password'] ?? ''
+            $row['contrasena_hash'] ?? null
         );
     }
     
@@ -166,5 +166,24 @@ class UserRepository
             'id' => $userId,
             'password' => $passwordHash
         ]);
+    }
+
+    /**
+     * Migrates a legacy plaintext password to a hashed password if the provided
+     * input matches the stored plaintext. This performs the comparison at the
+     * database level without exposing plaintext to application objects.
+     * Returns true if the migration was performed.
+     */
+    public function migratePlaintextPasswordIfMatches(string $username, string $inputPassword, string $newHash): bool
+    {
+        $sql = 'UPDATE usuarios
+                SET contrasena_hash = :hash, contrasena_plain = NULL
+                WHERE usuario = :username AND contrasena_plain = :plain';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':hash', $newHash);
+        $stmt->bindValue(':username', $username);
+        $stmt->bindValue(':plain', $inputPassword);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
     }
 }

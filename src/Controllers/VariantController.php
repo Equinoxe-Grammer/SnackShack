@@ -2,7 +2,6 @@
 namespace App\Controllers;
 
 use App\Middleware\CsrfMiddleware;
-use App\Repositories\VariantRepository;
 use App\Services\VariantService;
 
 class VariantController
@@ -43,11 +42,8 @@ class VariantController
             $price = (float)($_POST['precio'] ?? 0);
             $volume = isset($_POST['volumen_onzas']) ? (float)$_POST['volumen_onzas'] : null;
             $active = isset($_POST['activo']) ? 1 : 0;
-            if ($name === '' || $price <= 0) {
-                throw new \InvalidArgumentException('Nombre y precio son obligatorios');
-            }
-            $repo = new VariantRepository();
-            $repo->create($productId, $name, $price, $volume, $active);
+            $service = new VariantService();
+            $service->create($productId, $name, $price, $volume, (bool)$active);
             header('Location: /productos/' . $productId . '/variantes');
         } catch (\Throwable $e) {
             http_response_code(400);
@@ -58,8 +54,9 @@ class VariantController
     public function edit($id, $vid)
     {
         if (!isset($_SESSION['usuario_id'])) { header('Location: /login'); exit; }
-        $repo = new VariantRepository();
+        $service = new VariantService();
         $productId = (int)$id;
+        $repo = new \App\Repositories\VariantRepository();
         $variant = $repo->findById((int)$vid);
         if (!$variant) { http_response_code(404); echo 'Variante no encontrada'; return; }
         $csrf = CsrfMiddleware::getToken();
@@ -74,11 +71,8 @@ class VariantController
             $price = (float)($_POST['precio'] ?? 0);
             $volume = isset($_POST['volumen_onzas']) ? (float)$_POST['volumen_onzas'] : null;
             $active = isset($_POST['activo']) ? 1 : 0;
-            if ($name === '' || $price <= 0) {
-                throw new \InvalidArgumentException('Nombre y precio son obligatorios');
-            }
-            $repo = new VariantRepository();
-            $repo->update((int)$vid, $name, $price, $volume, $active);
+            $service = new VariantService();
+            $service->update((int)$vid, $name, $price, $volume, (bool)$active);
             header('Location: /productos/' . $productId . '/variantes');
         } catch (\Throwable $e) {
             http_response_code(400);
@@ -91,8 +85,8 @@ class VariantController
         try {
             $productId = (int)$id;
             $newState = ($_POST['estado'] ?? '') === '1';
-            $repo = new VariantRepository();
-            if (!$repo->setActive((int)$vid, $newState)) {
+            $service = new VariantService();
+            if (!$service->setActive((int)$vid, (bool)$newState)) {
                 throw new \RuntimeException('No fue posible actualizar el estado de la variante');
             }
             header('Location: /productos/' . $productId . '/variantes?ok=1');
@@ -106,12 +100,12 @@ class VariantController
     public function delete($id, $vid)
     {
         try {
-            $repo = new VariantRepository();
+            $service = new VariantService();
             $productId = (int)$id;
             $variantId = (int)$vid;
-            $deleted = $repo->delete($variantId);
+            $deleted = $service->delete($variantId);
             if (!$deleted) {
-                $repo->softDelete($variantId);
+                $service->softDelete($variantId);
                 header('Location: /productos/' . $productId . '/variantes?info=La%20variante%20se%20desactiv%C3%B3%20porque%20tiene%20ventas%20registradas');
                 return;
             }
