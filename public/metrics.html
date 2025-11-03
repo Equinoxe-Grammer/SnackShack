@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monitoreo del Sistema - SnackShop</title>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --txt:#e5e7eb; --muted:#9ca3af; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; }
+    html,body{height:100%;}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial; background:var(--bg); color:var(--txt);} 
+    .wrap{max-width:980px;margin:0 auto;padding:24px;}
+    h1{font-size:20px;margin:0 0 12px;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
+    .card{background:var(--card);border:1px solid #1f2937;border-radius:10px;padding:14px;}
+    .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+    .v{font-size:18px;font-weight:600}
+    .bar{height:8px;background:#1f2937;border-radius:999px;overflow:hidden}
+    .bar>span{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#6366f1);}
+    .row{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .pill{font-size:12px;padding:2px 8px;border-radius:999px;background:#1f2937;color:#e5e7eb;border:1px solid #374151}
+    .muted{color:var(--muted);font-size:12px}
+    .status-ok{color:var(--ok)}.status-warn{color:var(--warn)}.status-bad{color:var(--bad)}
+    footer{margin-top:16px;color:var(--muted);font-size:12px}
+    code{background:#0b1020;padding:2px 6px;border-radius:6px;border:1px solid #1f2540}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Monitoreo del Sistema</h1>
+    <div class="row" style="gap:8px;margin:8px 0 12px">
+      <label class="pill"><input id="auto" type="checkbox" checked style="margin-right:6px"> Auto-actualizar</label>
+      <label class="pill"><input id="deep" type="checkbox" style="margin-right:6px"> Info avanzada</label>
+      <label class="pill">Log tail: <input id="loglines" type="number" min="0" max="1000" value="0" style="width:72px;margin-left:6px;background:#0b1020;color:#e5e7eb;border:1px solid #1f2540;border-radius:6px;padding:2px 6px"></label>
+      <button id="refresh" class="pill" style="cursor:pointer">Actualizar</button>
+      <span class="muted">Intervalo: 2s</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="k">Memoria PHP</div>
+        <div class="v" id="mem-usage">--</div>
+        <div class="bar" aria-label="Uso de memoria"><span id="mem-bar" style="width:0%"></span></div>
+        <div class="muted" id="mem-detail">Límite: -- • Pico: --</div>
+      </div>
+      <div class="card">
+        <div class="k">Proceso</div>
+        <div class="v" id="proc-pid">PID --</div>
+        <div class="muted" id="proc-mem">Working set: -- • Private: --</div>
+      </div>
+      <div class="card">
+        <div class="k">Disco</div>
+        <div class="v" id="disk-free">-- libres</div>
+        <div class="muted" id="disk-pct">--</div>
+      </div>
+      <div class="card">
+        <div class="k">PHP / OPcache</div>
+        <div class="v" id="php-version">PHP --</div>
+        <div class="muted" id="opcache">OPcache: --</div>
+      </div>
+      <div class="card">
+        <div class="k">Base de datos</div>
+        <div class="v" id="db-status">--</div>
+        <div class="muted" id="db-detail">--</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="k">php.ini</div>
+      <div id="ini-list" class="muted">--</div>
+    </div>
+    <div class="card" id="log-card" style="margin-top:12px;display:none">
+      <div class="k">error_log (cola)</div>
+      <pre id="log-tail" style="max-height:240px;overflow:auto;background:#0b1020;color:#e5e7eb;border:1px solid #1f2540;border-radius:8px;padding:10px;white-space:pre-wrap"></pre>
+    </div>
+    <footer>
+      Última actualización: <span id="last">--</span> • Fuente: <code>/api/metrics</code>
+    </footer>
+  </div>
+  <script>
+    const $ = s => document.querySelector(s);
+    const fmtBytes = (n) => {
+      if (n == null || isNaN(n)) return '--';
+      const units = ['B','KB','MB','GB','TB'];
+      let i = 0; let v = Number(n);
+      while (v >= 1024 && i < units.length-1) { v/=1024; i++; }
+      return v.toFixed(v>9?0:1)+' '+units[i];
+    };
+    const setBar = (el, pct) => { el.style.width = Math.min(100, Math.max(0, pct||0)) + '%'; };
+
+    function qs() {
+      const params = new URLSearchParams();
+      if ($('#deep').checked) params.set('deep','1');
+      const n = parseInt($('#loglines').value || '0', 10);
+      if (!isNaN(n) && n>0) params.set('log_lines', Math.min(1000, Math.max(1, n)));
+      const s = params.toString();
+      return s ? ('?'+s) : '';
+    }
+
+    async function load() {
+      try {
+        const res = await fetch('/api/metrics'+qs(), {cache:'no-store'});
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        const j = await res.json();
+
+        // Memoria PHP
+        const usage = j?.php?.memory?.usage_bytes ?? null;
+        const peak = j?.php?.memory?.peak_bytes ?? null;
+        const limit = j?.php?.memory?.limit ?? null;
+        const limitBytes = j?.php?.memory?.limit_bytes ?? null;
+        const pct = j?.php?.memory?.usage_pct_of_limit ?? null;
+        $('#mem-usage').textContent = `${fmtBytes(usage)} (${pct ?? '--'}%)`;
+        $('#mem-detail').textContent = `Límite: ${limit ?? '--'} • Pico: ${fmtBytes(peak)}`;
+        setBar($('#mem-bar'), pct || 0);
+
+        // Proceso
+        const pid = j?.system?.process?.pid ?? null;
+        $('#proc-pid').textContent = `PID ${pid ?? '--'}`;
+        const ws = j?.system?.process?.working_set;
+        const pb = j?.system?.process?.private_bytes;
+        $('#proc-mem').textContent = `Working set: ${fmtBytes(ws)} • Private: ${fmtBytes(pb)}`;
+
+        // Disco
+        const free = j?.system?.disk?.free_bytes;
+        const total = j?.system?.disk?.total_bytes;
+        const fp = j?.system?.disk?.free_pct;
+        $('#disk-free').textContent = `${fmtBytes(free)} libres de ${fmtBytes(total)}`;
+        $('#disk-pct').textContent = `Libre: ${fp ?? '--'}%`;
+
+        // PHP/opcache
+        $('#php-version').textContent = `PHP ${j?.php?.version ?? '--'} (${j?.php?.sapi ?? ''})`;
+        const opEnabled = j?.php?.opcache?.enabled;
+        const opFull = j?.php?.opcache?.cache_full;
+        $('#opcache').textContent = `OPcache: ${opEnabled===null?'--':(opEnabled?'ON':'OFF')} ${opFull?'• cache FULL':''}`;
+
+        // DB
+        const ok = j?.database?.ok;
+        const drv = j?.database?.driver || '--';
+        const lat = j?.database?.latency_ms;
+        $('#db-status').textContent = `${ok===true?'OK':'ERROR'} • ${drv}`;
+        $('#db-status').className = 'v ' + (ok===true?'status-ok':(ok===false?'status-bad':''));
+        let det = `latencia: ${lat ?? '--'} ms`;
+        if (drv==='sqlite' && j?.database?.sqlite) {
+          const s = j.database.sqlite;
+          det += ` • archivo: ${s.path || ''} • tamaño: ${fmtBytes(s.size_bytes)}`;
+          if (s.writable===false) det += ' • NO escribible';
+        }
+        if (ok===false && j?.database?.details) det += ` • ${j.database.details}`;
+        $('#db-detail').textContent = det;
+
+        // php.ini
+        const ini = j?.php?.ini || {};
+        const rows = [];
+        const keys = ['memory_limit','upload_max_filesize','post_max_size','max_execution_time','max_input_vars','error_log','display_errors','log_errors'];
+        keys.forEach(k=>{ if (ini[k] !== undefined) rows.push(`${k}: ${ini[k]}`); });
+        $('#ini-list').textContent = rows.join(' | ');
+
+        // Log tail (si existe)
+        const deep = j?.deep || null;
+        const card = $('#log-card');
+        if (deep?.error_log?.path && deep.error_log.exists && deep.error_log.tail) {
+          card.style.display = '';
+          $('#log-tail').textContent = deep.error_log.tail;
+        } else {
+          card.style.display = 'none';
+        }
+
+        $('#last').textContent = new Date().toLocaleString();
+      } catch (e) {
+        $('#last').textContent = 'Error: ' + (e.message || e);
+      }
+    }
+
+    let timer = null;
+    function schedule() {
+      if (timer) clearInterval(timer);
+      if ($('#auto').checked) timer = setInterval(load, 2000);
+    }
+    $('#auto').addEventListener('change', schedule);
+    $('#deep').addEventListener('change', load);
+    $('#loglines').addEventListener('change', load);
+    $('#refresh').addEventListener('click', load);
+
+    load();
+    schedule();
+  </script>
+</body>
+</html>

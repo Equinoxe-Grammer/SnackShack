@@ -10,6 +10,7 @@ use App\Controllers\SalesController;
 use App\Controllers\HistorialController;
 use App\Controllers\AgregarCajeroController;
 use App\Controllers\ApiController;
+use App\Controllers\SystemMetricsController;
 use App\Controllers\Api\CostoController;
 use App\Controllers\ProductController;
 use App\Controllers\VariantController;
@@ -111,6 +112,14 @@ $router->post('/api/productos/{id}/imagen', [ApiController::class, 'productoImag
     AuthMiddleware::class,
     new RoleMiddleware(['admin']),
     CsrfMiddleware::class
+]);
+
+// ========================================
+// Métricas del sistema (solo admin)
+// ========================================
+$router->get('/api/metrics', [SystemMetricsController::class, 'system'], [
+    AuthMiddleware::class,
+    new RoleMiddleware(['admin'])
 ]);
 
 // ========================================

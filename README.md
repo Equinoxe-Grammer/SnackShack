@@ -178,6 +178,26 @@ return [
 Si necesitas que adapte el código para detectar automáticamente SQLite o añadir soporte `.env` para seleccionar el driver, lo puedo añadir como un cambio pequeño.
 
 
+<a id="monitoreo-y-metricas"></a>
+<a id="-monitoreo-y-metricas"></a>
+## Monitoreo y métricas
+
+- Endpoint JSON (requiere sesión admin): `GET /api/metrics`
+  - Devuelve uso de memoria PHP, pico, límite, extensiones cargadas, estado de OPcache, información de disco y datos básicos del proceso (PID y memoria de proceso en Windows si está disponible).
+- Panel ligero: abre `public/metrics.html` tras iniciar sesión para ver métricas auto-actualizadas cada 2 segundos.
+- Script de Windows (externo) para medir el consumo del proceso phpdesktop (CPU% y memoria):
+
+```powershell
+# Desde la carpeta del proyecto
+powershell -ExecutionPolicy Bypass -File .\tools\monitor_phpdesktop.ps1 -Name 'phpdesktop*' -IntervalSec 2 -CsvPath .\data\monitor.csv
+```
+
+Notas:
+- El endpoint `/api/metrics` está protegido con rol admin.
+- El script detecta CPU% total multihilo y memoria (Working Set y Private) del proceso `phpdesktop*`.
+- El parámetro `-CsvPath` es opcional; si se indica, guarda un CSV con el histórico.
+
+
 <a id="buenas-practicas-y-optimizacion"></a>
 <a id="-buenas-practicas-y-optimizacion"></a>
 ## Buenas Prácticas y Optimización
