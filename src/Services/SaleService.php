@@ -28,7 +28,8 @@ class SaleService
     {
         $targetDate = $date ?: date('Y-m-d');
         $totals = $this->sales->getDailyTotals($targetDate);
-        $recentSales = $this->sales->getRecentSales();
+        // Limitar "Últimas ventas" a la fecha objetivo para evitar confusión
+        $recentSales = $this->sales->getRecentSales(5, $targetDate);
 
         return [
             'totals' => $totals,
@@ -217,9 +218,9 @@ class SaleService
      * Obtiene la distribución de métodos de pago del día actual
      * Retorna array con formato: [['metodo' => 'Efectivo', 'total' => 1234.56], ...]
      */
-    public function getPaymentMethodsDistribution(): array
+    public function getPaymentMethodsDistribution(?string $date = null): array
     {
-        return $this->sales->getPaymentMethodsDistribution();
+        return $this->sales->getPaymentMethodsDistribution($date);
     }
 
     private function normalizeFilters(array $filters): array

@@ -292,7 +292,7 @@ $csrfToken = CsrfMiddleware::getToken();
         </div>
 
         <!-- Modal para confirmar eliminación de producto -->
-        <div id="deleteProductModal" class="modal" style="display:none;">
+        <div id="deleteProductModal" class="modal">
             <div class="modal-content" style="max-width:420px;">
                 <div class="modal-header">
                     <h2><i class="fas fa-trash"></i> Eliminar producto</h2>
@@ -357,6 +357,20 @@ function showToast(message, type = 'info') {
         toast.className = 'toast';
     }, 3000);
 }
+
+// Feedback desde query string (mensajes después de acciones como eliminar)
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('ok')) {
+        showToast('Producto eliminado correctamente', 'success');
+    }
+    if (params.has('info')) {
+        showToast(params.get('info'), 'info');
+    }
+    if (params.has('err')) {
+        showToast(params.get('err') || 'Ocurrió un error', 'error');
+    }
+})();
 
 // Filtrar productos
 function filterProducts() {
@@ -433,14 +447,14 @@ productsContainer.addEventListener('click', async (e) => {
             
         case 'delete':
             formToDeleteProduct = btn.closest('form.delete-form');
-            if (deleteProductModal) deleteProductModal.style.display = 'flex';
+            if (deleteProductModal) deleteProductModal.classList.add('show');
             break;
     }
 });
 
 // Handlers del modal de eliminar producto
 function closeDeleteProductModal() {
-    if (deleteProductModal) deleteProductModal.style.display = 'none';
+    if (deleteProductModal) deleteProductModal.classList.remove('show');
 }
 if (cancelDeleteProductBtn) cancelDeleteProductBtn.addEventListener('click', closeDeleteProductModal);
 if (cancelDeleteProductBtn2) cancelDeleteProductBtn2.addEventListener('click', closeDeleteProductModal);
@@ -508,20 +522,6 @@ imageForm.addEventListener('submit', async (e) => {
     if (!currentProductIdForImage) return;
     
     const fileInput = imageForm.querySelector('input[type="file"]');
-
-// Feedback desde query string
-(function() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('ok')) {
-        showToast('Producto eliminado correctamente', 'success');
-    }
-    if (params.has('info')) {
-        showToast(params.get('info'), 'info');
-    }
-    if (params.has('err')) {
-        showToast(params.get('err') || 'Ocurrió un error', 'error');
-    }
-})();
     const file = fileInput.files[0];
     
     if (!file) {

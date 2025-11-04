@@ -25,8 +25,13 @@ class ApiController {
             $fechaActual = date('Y-m-d');
             error_log("Dashboard - Fecha actual: " . $fechaActual);
             
-            // Obtener datos del servicio
-            $data = $this->saleService->getDashboardData();
+            // Permitir forzar fecha vía query (?date=YYYY-MM-DD) para depuración
+            $dateParam = isset($_GET['date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['date'])
+                ? $_GET['date']
+                : null;
+
+            // Obtener datos del servicio (filtrado por fecha si se indicó)
+            $data = $this->saleService->getDashboardData($dateParam);
             $totals = is_array($data['totals'] ?? null) ? $data['totals'] : [];
             $recent = is_array($data['recent'] ?? null) ? $data['recent'] : [];
             
@@ -42,8 +47,8 @@ class ApiController {
             // Obtener ventas de los últimos 7 días para el gráfico
             $ventasUltimos7Dias = $this->saleService->getLast7DaysSales();
             
-            // Obtener distribución de métodos de pago del día
-            $metodosPago = $this->saleService->getPaymentMethodsDistribution();
+            // Obtener distribución de métodos de pago del día (o de la fecha indicada)
+            $metodosPago = $this->saleService->getPaymentMethodsDistribution($dateParam);
 
             $response = [
                 'ventas_dia' => $this->sanitizeFloat($totals['total_sales'] ?? 0),

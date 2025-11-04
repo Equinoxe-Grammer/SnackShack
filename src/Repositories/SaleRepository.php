@@ -76,7 +76,7 @@ class SaleRepository
     /**
      * @return Sale[]
      */
-    public function getRecentSales(int $limit = 5): array
+    public function getRecentSales(int $limit = 5, ?string $date = null): array
     {
         $sql = "SELECT
                     v.venta_id,
@@ -89,11 +89,23 @@ class SaleRepository
                 FROM ventas v
                 INNER JOIN usuarios u ON u.usuario_id = v.usuario_id
                 INNER JOIN metodos_de_pago m ON m.metodo_id = v.metodo_id
-                WHERE v.estado = 'pagada'
+                WHERE v.estado = 'pagada'";
+
+        // Filtrar por fecha específica si se indica (YYYY-MM-DD)
+        $params = [];
+        if ($date) {
+            $sql .= " AND date(v.fecha_hora) = :date";
+            $params[':date'] = $date;
+        }
+
+        $sql .= "
                 ORDER BY v.fecha_hora DESC
                 LIMIT :limit";
 
         $stmt = $this->db->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
 
