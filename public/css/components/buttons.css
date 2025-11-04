@@ -38,44 +38,56 @@
 }
 
 /* --- VARIANTE PRIMARY --- */
-.btn-primary {
-    background: linear-gradient(135deg, #5668f4, #3897fe);
-    color: #fff;
-    box-shadow: 0 6px 20px rgba(86, 104, 244, 0.13);
+.btn-primary,
+.btn.primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    color: var(--text-on-primary);
+    box-shadow: 0 6px 20px rgba(56, 151, 254, 0.13);
 }
 
 /* --- VARIANTE SECONDARY --- */
-.btn-secondary {
-    background: linear-gradient(135deg, #ff9a44, #ffb751);
-    color: #fff;
+.btn-secondary,
+.btn.secondary {
+    background: linear-gradient(135deg, var(--secondary), var(--secondary-hover));
+    color: var(--text-on-secondary);
     box-shadow: 0 6px 20px rgba(255, 154, 68, 0.13);
 }
 
 /* --- VARIANTE WARNING --- */
-.btn-warning {
-    background: linear-gradient(135deg, #F29E38, #fd7e14);
-    color: #fff;
+.btn-warning,
+.btn.warning {
+    background: linear-gradient(135deg, var(--warning), var(--accent));
+    color: var(--text-on-warning);
     box-shadow: 0 6px 20px rgba(242, 158, 56, 0.13);
 }
 
 /* --- VARIANTE SUCCESS --- */
-.btn-success {
-    background: linear-gradient(135deg, #20c997, #8ED1B2);
-    color: #fff;
+.btn-success,
+.btn.success {
+    background: linear-gradient(135deg, var(--success), var(--success-2));
+    color: var(--text-on-success);
     box-shadow: 0 6px 20px rgba(32, 201, 151, 0.13);
+}
+
+/* --- VARIANTE DANGER --- */
+.btn-danger,
+.btn.danger {
+    background: linear-gradient(135deg, var(--danger), var(--danger-hover));
+    color: var(--text-on-danger);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.15);
 }
 
 /* --- VARIANTE OUTLINE --- */
 .btn-outline {
     background: transparent;
-    color: #3897fe;
-    border: 2px solid #3897fe;
+    color: var(--primary);
+    border: 2px solid var(--primary);
     box-shadow: none;
 }
 
 .btn-outline:hover {
-    background: #3897fe;
-    color: #fff;
+    background: var(--primary);
+    color: var(--text-on-primary);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(56, 151, 254, 0.18);
 }
@@ -87,7 +99,7 @@
 /* --- VARIANTE GHOST --- */
 .btn-ghost {
     background: transparent;
-    color: #343a40;
+    color: var(--text);
     box-shadow: none;
 }
 

@@ -32,6 +32,10 @@
                 <p class="subtitle">Centro de control del negocio</p>
             </div>
             <div class="action-buttons-header">
+                <a href="/metrics.html" target="_blank" rel="noopener" title="Métricas"
+                   style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;border:1px solid var(--border-color,#ddd);background:var(--surface-2,#f7f7f7);color:inherit;margin-right:8px;">
+                    <i class="fas fa-square" aria-hidden="true"></i>
+                </a>
                 <button class="btn btn-primary" onclick="window.location.href='/agregarCajero'">
                     <i class="fas fa-plus"></i> Agregar Cajero
                 </button>

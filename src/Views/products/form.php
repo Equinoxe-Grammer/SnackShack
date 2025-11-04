@@ -77,7 +77,7 @@ t-flex">
                 <i class="fas fa-save"></i> 
                 <?php echo $product ? 'Actualizar' : 'Crear'; ?> Producto
               </button>
-              <a class="btn" href="/productos">
+              <a class="btn btn-secondary" href="/productos">
                 <i class="fas fa-times"></i> Cancelar
               </a>
             </div>

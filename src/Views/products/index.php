@@ -66,11 +66,11 @@ $csrfToken = CsrfMiddleware::getToken();
                     </select>
                 </div>
                 <div class="filter-actions">
-                    <button id="clearFilters" class="btn-secondary">
+                    <button id="clearFilters" class="btn btn-secondary">
                         <i class="fas fa-eraser"></i>
                         Limpiar Filtros
                     </button>
-                    <a href="/productos/nuevo" class="btn-primary">
+                    <a href="/productos/nuevo" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
                         Nuevo Producto
                     </a>
@@ -117,7 +117,7 @@ $csrfToken = CsrfMiddleware::getToken();
                         <i class="fas fa-box-open"></i>
                         <h3>No hay productos registrados</h3>
                         <p>Comienza agregando tu primer producto al catálogo</p>
-                        <a href="/productos/nuevo" class="btn-primary">
+                        <a href="/productos/nuevo" class="btn btn-primary">
                             <i class="fas fa-plus"></i>
                             Crear Producto
                         </a>
@@ -278,11 +278,11 @@ $csrfToken = CsrfMiddleware::getToken();
                     </div>
                     
                     <div class="modal-footer">
-                        <button type="button" class="btn-secondary" id="cancelImageBtn2">
+                        <button type="button" class="btn btn-secondary" id="cancelImageBtn2">
                             <i class="fas fa-times"></i>
                             Cancelar
                         </button>
-                        <button type="submit" class="btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fas fa-upload"></i>
                             Subir Imagen
                         </button>
@@ -305,7 +305,7 @@ $csrfToken = CsrfMiddleware::getToken();
                     <b>Se desactivará del catálogo y no estará disponible para ventas.</b></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary" id="cancelDeleteProductBtn2">
+                    <button type="button" class="btn btn-secondary" id="cancelDeleteProductBtn2">
                         <i class="fas fa-times"></i>
                         Cancelar
                     </button>

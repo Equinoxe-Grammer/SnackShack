@@ -27,7 +27,7 @@ flex">
 
         <div class="toolbar">
             <div>
-                <a href="/productos" class="btn"><i class="fas fa-arrow-left"></i> Volver al catálogo</a>
+                <a href="/productos" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al catálogo</a>
             </div>
             <div>
                 <a href="/productos/<?php echo (int)$productId; ?>/variantes/nueva" class="btn primary"><i class="fas fa-plus"></i> Nueva Variante</a>
@@ -73,7 +73,7 @@ flex">
                                 <?php echo $v->active ? 'Desactivar' : 'Activar'; ?>
                             </button>
                         </form>
-                        <a class="btn" href="/productos/<?php echo (int)$productId; ?>/variantes/editar/<?php echo (int)$v->id; ?>"><i class="fas fa-pen"></i>Editar</a>
+                        <a class="btn btn-outline" href="/productos/<?php echo (int)$productId; ?>/variantes/editar/<?php echo (int)$v->id; ?>"><i class="fas fa-pen"></i>Editar</a>
                         <form method="post" action="/productos/<?php echo (int)$productId; ?>/variantes/eliminar/<?php echo (int)$v->id; ?>" style="display:inline;">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf); ?>">
                             <button type="submit" class="btn danger"><i class="fas fa-trash"></i>Eliminar</button>
@@ -99,7 +99,7 @@ flex">
             <p>¿Estás seguro de que deseas eliminar esta variante?<br><b>Esta acción no se puede deshacer.</b></p>
         </div>
         <div class="modal-footer" style="display:flex; gap:1rem; justify-content:flex-end;">
-            <button type="button" id="cancelDeleteBtn" class="btn">Cancelar</button>
+            <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">Cancelar</button>
             <button type="button" id="confirmDeleteBtn" class="btn danger"><i class="fas fa-trash"></i> Eliminar</button>
         </div>
     </div>

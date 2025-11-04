@@ -21,11 +21,6 @@
                     <li class="<?php echo ($active === 'historial') ? 'active' : ''; ?>"><a href="/historial"><i class="fas fa-history"></i> Historial</a></li>
                     <li class="<?php echo ($active === 'productos') ? 'active' : ''; ?>"><a href="/productos"><i class="fas fa-box"></i> Catálogo</a></li>
                     <li class="<?php echo ($active === 'cajeros') ? 'active' : ''; ?>"><a href="/agregarCajero"><i class="fas fa-user-plus"></i> Cajeros</a></li>
-                    <li>
-                        <a href="/metrics.html" target="_blank" rel="noopener">
-                            <i class="fas fa-chart-line"></i> Métricas
-                        </a>
-                    </li>
                 <?php endif; ?>
             </ul>
         </nav>

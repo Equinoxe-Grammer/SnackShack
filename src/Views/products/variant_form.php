@@ -64,7 +64,7 @@
                                 <i class="fas fa-save"></i> 
                                 <?php echo $variant ? 'Actualizar' : 'Crear'; ?> Variante
                             </button>
-                            <a class="btn" href="/productos/<?php echo (int)$productId; ?>/variantes">
+                            <a class="btn btn-secondary" href="/productos/<?php echo (int)$productId; ?>/variantes">
                                 <i class="fas fa-times"></i> Cancelar
                             </a>
                         </div>
