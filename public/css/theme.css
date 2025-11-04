@@ -118,6 +118,40 @@
   --sidebar-active: #fbbf24;
 }
 
+/* ========================================
+   ESTILOS GLOBALES DE ENCABEZADOS
+   ======================================== */
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dashboard-header h1 i {
+  font-size: 1.75rem;
+  color: var(--primary);
+}
+
+.dashboard-header .subtitle {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
 /* Estilos específicos para modo oscuro */
 :root[data-theme="dark"] body {
   background: var(--bg);

@@ -625,6 +625,20 @@ body {
     color: #4ade80;
 }
 
+/* Dark mode overrides for cart summary */
+:root[data-theme="dark"] .summary-row {
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .summary-total {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .summary-total .fw-bold {
+    color: var(--text);
+}
+
 .payment-section h3 {
     font-weight: 600;
     color: var(--text);
