@@ -71,39 +71,53 @@ $csrfToken = CsrfMiddleware::getToken();
         </main>
 
         <aside class="cart-sidebar">
-            <div class="cart-header">
-                <h2><i class="fas fa-shopping-cart"></i> Carrito</h2>
-                <span id="itemsCount">Items: 0</span>
-            </div>
-
-            <div class="cart-items" id="cartItems">
-                <div class="empty-cart">
-                    <i class="fas fa-shopping-bag"></i>
-                    <p>Carrito vacío</p>
-                    <small>Agrega productos para empezar</small>
+            <div class="cart-card card shadow-sm rounded-4 p-3 p-md-4 d-flex flex-column h-100">
+                <div class="cart-header d-flex align-items-center justify-content-between gap-2 mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fs-5" aria-hidden="true">🛒</span>
+                        <h2 class="h5 m-0">Carrito</h2>
+                    </div>
+                    <span id="itemsCount" class="badge items-badge">0 artículos</span>
                 </div>
-            </div>
 
-            <div class="cart-footer">
-                <div class="payment-section">
-                    <h3>Método de Pago</h3>
-                    <div class="payment-options" id="paymentOptions">
+                <div class="cart-items flex-grow-1" id="cartItems">
+                    <div class="empty-cart text-center py-5">
+                        <div class="empty-emoji" aria-hidden="true">🥤</div>
+                        <p class="mb-1">Tu carrito está vacío</p>
+                        <small class="text-muted">Agrega un frappe para empezar la fiesta de sabores</small>
+                    </div>
+                </div>
+
+                <div class="cart-summary mt-3">
+                    <h3 class="h6 text-muted mb-2">Resumen</h3>
+                    <div class="summary-row d-flex justify-content-between mb-1">
+                        <span>Subtotal</span>
+                        <strong id="subtotalAmount">$0.00</strong>
+                    </div>
+                    <div class="summary-row d-flex justify-content-between text-muted small mb-2">
+                        <span>IVA (15%)</span>
+                        <span id="taxAmount">$0.00</span>
+                    </div>
+                    <div class="summary-total d-flex justify-content-between align-items-center rounded-3 p-2 px-3">
+                        <span class="fw-bold">Total</span>
+                        <strong class="fs-5" id="totalAmount">$0.00</strong>
+                    </div>
+                </div>
+
+                <div class="payment-section mt-4">
+                    <h3 class="h6 mb-2">Método de pago <span aria-hidden="true">💳</span></h3>
+                    <div class="payment-options segmented d-flex gap-2" id="paymentOptions">
                         <div class="loading-small">
                             <i class="fas fa-spinner fa-spin"></i> Cargando...
                         </div>
                     </div>
                 </div>
 
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <strong id="totalAmount">$0.00</strong>
-                </div>
-
-                <div class="cart-actions">
-                    <button type="button" class="btn-process" id="processBtn" disabled>
+                <div class="cart-actions mt-3">
+                    <button type="button" class="btn-process process-btn w-100" id="processBtn" disabled>
                         <i class="fas fa-check"></i> Procesar Venta
                     </button>
-                    <button type="button" class="btn-clear" id="clearBtn" disabled>
+                    <button type="button" class="btn-clear clear-btn w-100" id="clearBtn" disabled>
                         <i class="fas fa-trash"></i> Limpiar
                     </button>
                 </div>
@@ -126,6 +140,38 @@ $csrfToken = CsrfMiddleware::getToken();
         </div>
     </div>
 </div>
+
+    <!-- Modal de pago en efectivo (separado del modal de limpiar) -->
+    <div id="cashModal" class="modal">
+        <div class="modal-content" style="max-width:460px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-money-bill-wave"></i> Pago en efectivo</h3>
+            </div>
+            <div class="modal-body">
+                <div class="cash-summary">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total a pagar</span>
+                        <strong id="cashTotal">$0.00</strong>
+                    </div>
+                    <div class="form-group" style="margin: .75rem 0 1rem;">
+                        <label for="cashReceived" style="display:block; font-weight:600; margin-bottom:.35rem;">Efectivo recibido</label>
+                        <input type="number" id="cashReceived" min="0" step="0.01" inputmode="decimal" style="width:100%; padding:.6rem .8rem; border:1px solid #e0e0e0; border-radius:8px;">
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Cambio</span>
+                        <strong id="cashChange">$0.00</strong>
+                    </div>
+                    <small id="cashHint" class="text-muted" style="display:block; margin-top:.35rem;"></small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelCashBtn" class="btn">Cancelar</button>
+                <button type="button" id="confirmCashBtn" class="btn danger" disabled>
+                    <i class="fas fa-receipt"></i> Confirmar y procesar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ===== CONSTANTES Y ESTADO GLOBAL =====
@@ -168,6 +214,12 @@ $csrfToken = CsrfMiddleware::getToken();
     cartItemsEl.addEventListener('click', manejarClickCarrito);
     processBtn.addEventListener('click', (event) => {
         event.preventDefault();
+        // Si el método activo es efectivo, abrir modal para capturar pago y calcular cambio
+        const isCash = esMetodoEfectivoSeleccionado();
+        if (isCash && cashModal) {
+            abrirModalEfectivo();
+            return;
+        }
         procesarVenta();
     });
     clearBtn.addEventListener('click', (event) => {
@@ -283,10 +335,14 @@ function eliminarDelCarrito(varianteId) {
     cartItemsEl.innerHTML = '';
 
     if (!cart.length) {
-        const vacio = document.createElement('div');
-        vacio.className = 'cart-item empty';
-        vacio.textContent = 'El carrito está vacío.';
-        cartItemsEl.appendChild(vacio);
+                const vacio = document.createElement('div');
+                vacio.className = 'empty-cart text-center py-5';
+                vacio.innerHTML = `
+                    <div class="empty-emoji" aria-hidden="true">🥤</div>
+                    <p class="mb-1">Tu carrito está vacío</p>
+                    <small class="text-muted">Agrega un frappe para empezar la fiesta de sabores</small>
+                `;
+                cartItemsEl.appendChild(vacio);
     } else {
         cart.forEach((item) => {
             const cartItem = document.createElement('div');
@@ -371,8 +427,14 @@ function eliminarDelCarrito(varianteId) {
     const neto = +(total / 1.15).toFixed(2);
     const iva = +(total - neto).toFixed(2);
 
-    itemsCountEl.textContent = `Items: ${totalItems}`;
+    itemsCountEl.textContent = `${totalItems} artículos`;
     totalAmountEl.textContent = formatoMoneda.format(total);
+
+    // Actualizar resumen visual (si existe)
+    const subtotalEl = document.getElementById('subtotalAmount');
+    if (subtotalEl) subtotalEl.textContent = formatoMoneda.format(neto);
+    const taxEl = document.getElementById('taxAmount');
+    if (taxEl) taxEl.textContent = formatoMoneda.format(iva);
 
     // Show production cost somewhere in footer (append or update existing element)
     let prodEl = document.getElementById('productionCost');
@@ -864,6 +926,74 @@ window.addEventListener('DOMContentLoaded', function() {
         if(e.target === this){ this.classList.remove('show'); }
     });
 });
+
+// ===== Modal de pago en efectivo =====
+function esMetodoEfectivoSeleccionado() {
+    try {
+        const active = paymentOptionsEl && paymentOptionsEl.querySelector('.payment-btn.active');
+        if (!active) return false;
+        const method = (active.dataset && active.dataset.method) ? active.dataset.method : '';
+        if (method === 'cash') return true;
+        const txt = (active.textContent || '').toLowerCase();
+        return txt.includes('efect');
+    } catch {
+        return false;
+    }
+}
+
+const cashModal = document.getElementById('cashModal');
+const cashTotalEl = document.getElementById('cashTotal');
+const cashReceivedEl = document.getElementById('cashReceived');
+const cashChangeEl = document.getElementById('cashChange');
+const cashHintEl = document.getElementById('cashHint');
+const cancelCashBtn = document.getElementById('cancelCashBtn');
+const confirmCashBtn = document.getElementById('confirmCashBtn');
+
+function abrirModalEfectivo() {
+    // Calcular total actual del carrito
+    const total = cart.reduce((acc, item) => acc + item.cantidad * item.precio_unitario, 0);
+    cashTotalEl.textContent = formatoMoneda.format(total);
+    // Prefill con el total para atajo
+    cashReceivedEl.value = total.toFixed(2);
+    actualizarCambio();
+    cashModal.classList.add('show');
+    setTimeout(() => cashReceivedEl.focus(), 50);
+}
+
+function actualizarCambio() {
+    const total = cart.reduce((acc, item) => acc + item.cantidad * item.precio_unitario, 0);
+    const recibido = parseFloat(String(cashReceivedEl.value).replace(',', '.')) || 0;
+    const cambio = +(recibido - total).toFixed(2);
+    cashChangeEl.textContent = formatoMoneda.format(Math.max(cambio, 0));
+    if (cambio < 0) {
+        confirmCashBtn.disabled = true;
+        cashHintEl.textContent = `Faltan ${formatoMoneda.format(-cambio)} para completar el pago.`;
+        cashHintEl.style.color = '#dc3545';
+    } else {
+        confirmCashBtn.disabled = false;
+        cashHintEl.textContent = cambio > 0 ? 'Entrega este cambio al cliente.' : '';
+        cashHintEl.style.color = '#6c757d';
+    }
+}
+
+if (cashReceivedEl) cashReceivedEl.addEventListener('input', actualizarCambio);
+if (cancelCashBtn) cancelCashBtn.addEventListener('click', () => cashModal.classList.remove('show'));
+if (cashModal) cashModal.addEventListener('click', (e) => { if (e.target === cashModal) cashModal.classList.remove('show'); });
+if (confirmCashBtn) confirmCashBtn.addEventListener('click', () => {
+    cashModal.classList.remove('show');
+    // Proceder con la venta usando el flujo existente
+    procesarVenta();
+});
+
+// Confirmar con Enter cuando el input está activo
+if (cashReceivedEl) {
+    cashReceivedEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !confirmCashBtn.disabled) {
+            e.preventDefault();
+            confirmCashBtn.click();
+        }
+    });
+}
 // Toast visual para errores
 function showToast(msg, type = 'error') {
     let el = document.getElementById('toast');
