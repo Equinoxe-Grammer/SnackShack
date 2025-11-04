@@ -62,6 +62,51 @@ class ProductRepository
     }
 
     /**
+     * Obtiene todos los productos (activos e inactivos) para el catálogo de administración
+     * @return Product[]
+     */
+    public function findAllProducts(): array
+    {
+        $sql = 'SELECT
+                    p.producto_id,
+                    p.nombre_producto,
+                    p.descripcion,
+                    p.categoria_id,
+                    c.nombre_categoria,
+                    p.url_imagen,
+                    CASE WHEN p.imagen IS NOT NULL AND length(p.imagen) > 0 THEN 1 ELSE 0 END AS has_image,
+                    p.imagen_mime,
+                    p.imagen_size,
+                    p.imagen_nombre,
+                    p.activo
+                FROM productos p
+                INNER JOIN categorias c ON c.categoria_id = p.categoria_id
+                ORDER BY p.activo DESC, p.nombre_producto';
+
+        $stmt = $this->db->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $products = [];
+        foreach ($rows as $row) {
+            $products[] = new Product(
+                (int) $row['producto_id'],
+                $row['nombre_producto'] ?? '',
+                $row['descripcion'] ?? '',
+                isset($row['categoria_id']) ? (int) $row['categoria_id'] : null,
+                $row['nombre_categoria'] ?? null,
+                $row['url_imagen'] ?? null,
+                (int) $row['activo'] === 1,
+                isset($row['has_image']) ? ((int)$row['has_image'] === 1) : null,
+                $row['imagen_mime'] ?? null,
+                isset($row['imagen_size']) ? (int)$row['imagen_size'] : null,
+                $row['imagen_nombre'] ?? null
+            );
+        }
+
+        return $products;
+    }
+
+    /**
      * @return Variant[]
      */
     public function findVariantsForProductIds(array $productIds): array
@@ -184,6 +229,16 @@ class ProductRepository
         $sql = 'UPDATE productos SET activo = 0 WHERE producto_id = :id';
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
+    }
+
+    public function changeState(int $id, int $active): bool
+    {
+        $sql = 'UPDATE productos SET activo = :active WHERE producto_id = :id';
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id,
+            ':active' => $active
+        ]);
     }
 
     public function delete(int $id): bool

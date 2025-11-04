@@ -51,6 +51,10 @@
   --shadow-sm: 0 4px 12px rgba(0,0,0,.05);
   --focus: #3897fe;
 
+  /* Gradientes */
+  --primary-gradient: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+  --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+
   /* Otros */
   --z-index-navbar: 100;
   --sidebar-width: 260px;
@@ -77,7 +81,7 @@
   --warning: #f59e42;
   --warning-hover: #d97706;
 
-  --info-soft: #1e293b;
+  --info-soft: #1e3a5f;
   --success-soft: #064e3b;
   --danger-soft: #7f1d1d;
 
@@ -91,26 +95,628 @@
   --text-on-info: #ffffff;
   --muted: #9ca3af;
 
-  --bg: #18181b;
-  --surface: #23232a;
-  --surface-2: #18181b;
-  --surface-hover: #2a2a32;
-  --card: #23232a;
+  --bg: #0f0f14;
+  --surface: #1a1a24;
+  --surface-2: #0f0f14;
+  --surface-hover: #24243a;
+  --card: #1a1a24;
 
-  --border: #27272a;
+  --border: #2d2d42;
   --border-radius: 12px;
   --radius: 12px;
-  --shadow: 0 8px 25px rgba(0,0,0,0.35);
-  --shadow-sm: 0 4px 12px rgba(0,0,0,0.25);
+  --shadow: 0 8px 25px rgba(0,0,0,0.5);
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.35);
   --focus: #60a5fa;
+
+  /* Gradientes en modo oscuro - mantener los mismos para consistencia */
+  --primary-gradient: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+  --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
 
   --z-index-navbar: 100;
   --sidebar-width: 260px;
-  --sidebar-bg: #23232a;
+  --sidebar-bg: #1a1a24;
   --sidebar-active: #fbbf24;
 }
 
-body{background:var(--bg);color:var(--text);}
+/* Estilos específicos para modo oscuro */
+:root[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .sidebar {
+  background: var(--sidebar-bg);
+  box-shadow: 5px 0px 25px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .logo {
+  background-color: #24243a;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+:root[data-theme="dark"] .menu a {
+  color: #d1d5db;
+}
+
+:root[data-theme="dark"] .menu a i {
+  color: #fbbf24;
+}
+
+:root[data-theme="dark"] .user-status {
+  background-color: #24243a;
+}
+
+:root[data-theme="dark"] .user-info strong {
+  color: #f3f4f6;
+}
+
+:root[data-theme="dark"] .user-info small {
+  color: #9ca3af;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] select::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .table {
+  background: var(--card);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .table th {
+  background: var(--surface-2);
+  color: var(--text-dark);
+}
+
+:root[data-theme="dark"] .table td {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .modal-content .detalle-venta-table th {
+  background: var(--surface-2);
+  color: var(--text-dark);
+}
+
+:root[data-theme="dark"] .modal-content .detalle-venta-table td {
+  background: var(--card);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .empty-state {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .no-image {
+  background: var(--surface-2);
+}
+
+:root[data-theme="dark"] .product-card[data-activo="0"]::before {
+  background: rgba(239, 68, 68, 0.95);
+}
+
+/* Estilos globales para el botón de cambio de tema */
+.theme-toggle {
+	width: 100%;
+	padding: 0.85rem 1rem;
+	background: var(--surface-2);
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	margin-bottom: 0.8rem;
+}
+
+.theme-toggle:hover {
+	background: var(--surface-hover);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle i {
+	font-size: 1.1rem;
+	color: var(--accent);
+}
+
+/* Cards y superficies */
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .product-card,
+:root[data-theme="dark"] .stat-card,
+:root[data-theme="dark"] .kpi-card {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .card-header {
+  background: var(--surface-2);
+  color: var(--text-dark);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .card-body {
+  background: var(--card);
+  color: var(--text);
+}
+
+/* Headers y títulos */
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4,
+:root[data-theme="dark"] h5,
+:root[data-theme="dark"] h6 {
+  color: var(--text-dark);
+}
+
+:root[data-theme="dark"] .catalog-header,
+:root[data-theme="dark"] .dashboard-header,
+:root[data-theme="dark"] header {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Formularios */
+:root[data-theme="dark"] .form-control,
+:root[data-theme="dark"] input[type="text"],
+:root[data-theme="dark"] input[type="number"],
+:root[data-theme="dark"] input[type="email"],
+:root[data-theme="dark"] input[type="password"],
+:root[data-theme="dark"] input[type="date"],
+:root[data-theme="dark"] input[type="datetime-local"] {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .form-control:focus,
+:root[data-theme="dark"] input:focus,
+:root[data-theme="dark"] select:focus,
+:root[data-theme="dark"] textarea:focus {
+  border-color: var(--focus);
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Listas y opciones */
+:root[data-theme="dark"] .product-list,
+:root[data-theme="dark"] .variant-list {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .product-item,
+:root[data-theme="dark"] .variant-item {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .product-item:hover,
+:root[data-theme="dark"] .variant-item:hover {
+  background: var(--surface-hover);
+}
+
+/* Badges y etiquetas */
+:root[data-theme="dark"] .badge {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .badge-success {
+  background: var(--success);
+  color: var(--text-on-success);
+}
+
+:root[data-theme="dark"] .badge-danger {
+  background: var(--danger);
+  color: var(--text-on-danger);
+}
+
+:root[data-theme="dark"] .badge-warning {
+  background: var(--warning);
+  color: var(--text-on-warning);
+}
+
+:root[data-theme="dark"] .badge-info {
+  background: var(--info);
+  color: var(--text-on-info);
+}
+
+/* Filtros y controles */
+:root[data-theme="dark"] .filters,
+:root[data-theme="dark"] .filter-controls {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+/* Secciones de contenido */
+:root[data-theme="dark"] .main-content,
+:root[data-theme="dark"] .content-area {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Sidebar items específicos */
+:root[data-theme="dark"] .sidebar .menu a,
+:root[data-theme="dark"] .sidebar .navigation a {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .sidebar .menu a:hover,
+:root[data-theme="dark"] .sidebar .navigation a:hover {
+  background: var(--surface-hover);
+}
+
+/* Canvas de Chart.js */
+:root[data-theme="dark"] canvas {
+  filter: brightness(0.9);
+}
+
+/* Dividers */
+:root[data-theme="dark"] hr {
+  border-color: var(--border);
+  opacity: 0.5;
+}
+
+/* === SOBRESCRITURAS GLOBALES PARA MODO OSCURO === */
+
+/* Fondos blancos genéricos */
+:root[data-theme="dark"] [style*="background-color: white"],
+:root[data-theme="dark"] [style*="background-color: #fff"],
+:root[data-theme="dark"] [style*="background-color: #ffffff"],
+:root[data-theme="dark"] [style*="background: white"],
+:root[data-theme="dark"] [style*="background: #fff"] {
+  background: var(--card) !important;
+}
+
+/* Tablas */
+:root[data-theme="dark"] .sales-table,
+:root[data-theme="dark"] table {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] table thead th {
+  background: var(--surface-2);
+  color: var(--text-dark);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] table tbody tr {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+:root[data-theme="dark"] table tbody td {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Botones */
+:root[data-theme="dark"] .btn-filter,
+:root[data-theme="dark"] .reset-btn,
+:root[data-theme="dark"] button[type="button"] {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .btn-filter:hover,
+:root[data-theme="dark"] .reset-btn:hover {
+  background: var(--surface-hover);
+}
+
+/* KPIs y stats cards */
+:root[data-theme="dark"] .kpi-cards,
+:root[data-theme="dark"] .stat-cards,
+:root[data-theme="dark"] .stats-container {
+  background: transparent;
+}
+
+:root[data-theme="dark"] .kpi-item,
+:root[data-theme="dark"] .stat-item,
+:root[data-theme="dark"] .stat-card {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .kpi-item h3,
+:root[data-theme="dark"] .stat-item h3,
+:root[data-theme="dark"] .stat-card h3 {
+  color: var(--text-dark);
+}
+
+:root[data-theme="dark"] .kpi-item .value,
+:root[data-theme="dark"] .stat-item .value {
+  color: var(--text-dark);
+}
+
+/* Modales */
+:root[data-theme="dark"] .modal {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme="dark"] .modal-content {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .modal-header {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .modal-footer {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Enlaces */
+:root[data-theme="dark"] a {
+  color: var(--primary);
+}
+
+:root[data-theme="dark"] a:hover {
+  color: var(--primary-hover);
+}
+
+/* Secciones y containers */
+:root[data-theme="dark"] .filters-section,
+:root[data-theme="dark"] .sales-section,
+:root[data-theme="dark"] .filters-header,
+:root[data-theme="dark"] .products-section {
+  background: var(--card);
+  color: var(--text);
+}
+
+/* Charts containers */
+:root[data-theme="dark"] .chart-container,
+:root[data-theme="dark"] .chart-card {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+/* Empty states */
+:root[data-theme="dark"] .empty-cart,
+:root[data-theme="dark"] .no-data {
+  color: var(--muted);
+}
+
+/* Action buttons containers */
+:root[data-theme="dark"] .cart-actions,
+:root[data-theme="dark"] .actions-container {
+  background: transparent;
+}
+
+/* Totals y resúmenes */
+:root[data-theme="dark"] .total,
+:root[data-theme="dark"] .summary,
+:root[data-theme="dark"] .cart-summary {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .total-amount,
+:root[data-theme="dark"] .total strong {
+  color: var(--success);
+}
+
+/* Payment options */
+:root[data-theme="dark"] .payment-btn {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .payment-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--primary);
+}
+
+/* Headers de secciones */
+:root[data-theme="dark"] .section-header,
+:root[data-theme="dark"] .page-header {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Bordes de cards */
+:root[data-theme="dark"] .card-border,
+:root[data-theme="dark"] [class*="-card"] {
+  border-color: var(--border);
+}
+
+/* Texto en general */
+:root[data-theme="dark"] p,
+:root[data-theme="dark"] span,
+:root[data-theme="dark"] label {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] small,
+:root[data-theme="dark"] .text-sm,
+:root[data-theme="dark"] .text-muted {
+  color: var(--muted);
+}
+
+/* === REGLAS ESPECÍFICAS ADICIONALES === */
+
+/* Botones de acción */
+:root[data-theme="dark"] .action-btn,
+:root[data-theme="dark"] .btn-action {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Stats cards específicos */
+:root[data-theme="dark"] .stat-item,
+:root[data-theme="dark"] .kpi-item {
+  background: var(--card) !important;
+}
+
+/* Categorías y badges en venta */
+:root[data-theme="dark"] .category {
+  background: var(--surface-2) !important;
+  color: var(--accent) !important;
+}
+
+/* Paneles laterales */
+:root[data-theme="dark"] .sidebar-panel,
+:root[data-theme="dark"] .side-panel {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+/* Formularios en paneles */
+:root[data-theme="dark"] .form-panel,
+:root[data-theme="dark"] .panel-form {
+  background: var(--card);
+}
+
+/* Secciones recientes */
+:root[data-theme="dark"] .recent-sales,
+:root[data-theme="dark"] .recent-section {
+  background: var(--card) !important;
+}
+
+/* Charts y gráficas */
+:root[data-theme="dark"] .chart-section,
+:root[data-theme="dark"] .sales-chart {
+  background: var(--card) !important;
+}
+
+/* Botones específicos del dashboard */
+:root[data-theme="dark"] .dashboard-btn,
+:root[data-theme="dark"] button.btn-outline {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Input groups */
+:root[data-theme="dark"] .input-group,
+:root[data-theme="dark"] .form-row {
+  background: transparent;
+}
+
+/* Week goal section */
+:root[data-theme="dark"] .week-goal,
+:root[data-theme="dark"] .goal-section {
+  background: var(--card);
+}
+
+/* Placeholders más visibles */
+:root[data-theme="dark"] ::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* Selects con opciones */
+:root[data-theme="dark"] select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Dividers y separadores */
+:root[data-theme="dark"] .divider,
+:root[data-theme="dark"] .separator {
+  background: var(--border);
+  border-color: var(--border);
+}
+
+/* Lista de items */
+:root[data-theme="dark"] .list-item,
+:root[data-theme="dark"] .item {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Hover states más claros */
+:root[data-theme="dark"] .list-item:hover,
+:root[data-theme="dark"] .item:hover,
+:root[data-theme="dark"] tr:hover {
+  background: var(--surface-hover) !important;
+}
+
+/* Botones de filtro */
+:root[data-theme="dark"] .filter-btn,
+:root[data-theme="dark"] .tab {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .filter-btn:hover,
+:root[data-theme="dark"] .tab:hover {
+  background: var(--surface-hover);
+  border-color: var(--primary);
+}
+
+/* Categorías pills */
+:root[data-theme="dark"] .category-pill,
+:root[data-theme="dark"] .pill {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Empty cart y estados vacíos */
+:root[data-theme="dark"] .empty-cart,
+:root[data-theme="dark"] .empty-state,
+:root[data-theme="dark"] .no-data {
+  color: var(--muted) !important;
+  background: transparent;
+}
+
+/* Textos en headers */
+:root[data-theme="dark"] .dashboard-header h1,
+:root[data-theme="dark"] .dashboard-header p {
+  color: var(--text-dark);
+}
+
+/* Sobrescribir estilos inline */
+:root[data-theme="dark"] [style*="background: white"],
+:root[data-theme="dark"] [style*="background: #fff"],
+:root[data-theme="dark"] [style*="background-color: white"],
+:root[data-theme="dark"] [style*="background-color: #fff"],
+:root[data-theme="dark"] [style*="background-color:#fff"] {
+  background: var(--card) !important;
+}
+
+:root[data-theme="dark"] [style*="color: #343a40"],
+:root[data-theme="dark"] [style*="color: black"],
+:root[data-theme="dark"] [style*="color: #000"] {
+  color: var(--text) !important;
+}
 
 /* Modal base compartido */
 .modal{ 
@@ -222,6 +828,69 @@ body{background:var(--bg);color:var(--text);}
   transition: opacity .18s ease, transform .18s ease;
 }
 .toast.show{ opacity:1; transform: translateY(0); }
+
+/* ========================================
+   ESTILOS GLOBALES DE BOTONES (Modo Claro)
+   ======================================== */
+
+/* Botones base con gradientes vibrantes */
+button, .btn {
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+/* Botón primario - Azul brillante */
+.btn-primary {
+  background: linear-gradient(135deg, #5b8def 0%, #4c7ce5 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px rgba(91, 141, 239, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(91, 141, 239, 0.5);
+}
+
+/* Botón success - Verde menta/turquesa */
+.btn-success, .btn-Agergar {
+  background: linear-gradient(135deg, #6dd5b0, #34c996) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px rgba(52, 201, 150, 0.3);
+}
+
+.btn-success:hover, .btn-Agergar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 201, 150, 0.4);
+}
+
+/* Botón warning - Amarillo/Naranja */
+.btn-warning {
+  background: linear-gradient(135deg, #ffbe5c, #ff8b94) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px rgba(255, 190, 92, 0.3);
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 190, 92, 0.4);
+}
+
+/* Modo oscuro - mantener gradientes vibrantes */
+:root[data-theme="dark"] .btn-primary,
+:root[data-theme="dark"] .btn-success,
+:root[data-theme="dark"] .btn-Agergar,
+:root[data-theme="dark"] .btn-warning {
+  opacity: 0.95;
+}
+
+:root[data-theme="dark"] .btn-primary:hover,
+:root[data-theme="dark"] .btn-success:hover,
+:root[data-theme="dark"] .btn-Agergar:hover,
+:root[data-theme="dark"] .btn-warning:hover {
+  opacity: 1;
+}
 .toast.info{ background: var(--info); }
 .toast.success{ background: var(--success); }
 .toast.error{ background: var(--danger); }

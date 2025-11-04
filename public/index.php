@@ -4,26 +4,25 @@
  * Todas las solicitudes pasan por este archivo
  */
 
-// Configurar cookies de sesión de forma segura antes de iniciar la sesión
-$isHttps = (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off')
-  || (isset($_SERVER['SERVER_PORT']) && (string)$_SERVER['SERVER_PORT'] === '443');
+require_once __DIR__ . '/../bootstrap.php';
 
-if (PHP_VERSION_ID >= 70300) {
-  session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'domain' => '',
-    'secure' => $isHttps, // true solo bajo HTTPS
-    'httponly' => true,
-    'samesite' => 'Lax',
-  ]);
-} else {
-  // Fallback para versiones antiguas
-  session_set_cookie_params(0, '/; samesite=Lax', '', $isHttps, true);
+use App\Services\SessionService;
+
+// Configurar e iniciar sesión segura de 24 horas
+SessionService::configure();
+
+// Validar sesión en cada request (excepto login/logout)
+$currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$publicPaths = ['/login', '/logout'];
+
+if (!in_array($currentPath, $publicPaths) && SessionService::isActive()) {
+    // Validar y actualizar sesión
+    if (!SessionService::validate()) {
+        // Sesión inválida o expirada, redirigir a login
+        header("Location: /login");
+        exit;
+    }
 }
-
-// Iniciar sesión
-session_start();
 
 if (!headers_sent()) {
 	header("X-Frame-Options: SAMEORIGIN");
@@ -54,6 +53,19 @@ header(
 
 // Cargar autoload de Composer y bootstrap
 require_once __DIR__ . '/../bootstrap.php';
+
+// Validar sesión en cada request (excepto login/logout)
+$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$publicPaths = ['/login', '/logout'];
+
+if (!in_array($currentPath, $publicPaths) && SessionService::isActive()) {
+    // Validar y actualizar sesión
+    if (!SessionService::validate()) {
+        // Sesión inválida o expirada, redirigir a login
+        header("Location: /login");
+        exit;
+    }
+}
 
 // Cargar el enrutador con todas las rutas definidas
 $router = require_once __DIR__ . '/../src/Routes/routes.php';

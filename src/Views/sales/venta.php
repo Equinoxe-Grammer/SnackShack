@@ -23,15 +23,18 @@ $csrfToken = CsrfMiddleware::getToken();
         <link rel="stylesheet" href="/css/theme.css">
     <link rel="stylesheet" href="/css/venta.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous">
+    <script src="/js/theme-toggle.js"></script>
 </head>
 <body>
     <div class="pos-container">
         <?php $active='ventas'; include __DIR__ . '/../partials/sidebar.php'; ?>
 
                 <main class="main-content">
-            <header>
-                <h1>Punto de Venta</h1>
-                <p>Selecciona productos para agregar al carrito</p>
+            <header class="dashboard-header">
+                <div>
+                    <h1><i class="fas fa-cash-register"></i> Punto de Venta</h1>
+                    <p class="subtitle">Selecciona productos para agregar al carrito</p>
+                </div>
             </header>
 
             <!-- Filtros y categorías -->
@@ -71,13 +74,11 @@ $csrfToken = CsrfMiddleware::getToken();
         </main>
 
         <aside class="cart-sidebar">
-            <div class="cart-card card shadow-sm rounded-4 p-3 p-md-4 d-flex flex-column h-100">
-                <div class="cart-header d-flex align-items-center justify-content-between gap-2 mb-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="fs-5" aria-hidden="true">🛒</span>
-                        <h2 class="h5 m-0">Carrito</h2>
-                    </div>
-                    <span id="itemsCount" class="badge items-badge">0 artículos</span>
+            <div class="cart-card shadow-sm rounded-4 p-4 d-flex flex-column h-100">
+                <div class="cart-header d-flex align-items-center gap-2 mb-3">
+                    <span class="fs-5" aria-hidden="true">🛒</span>
+                    <h2 class="h5 m-0">Carrito</h2>
+                    <span id="itemsCount" class="badge items-badge ms-auto">0 artículos</span>
                 </div>
 
                 <div class="cart-items flex-grow-1" id="cartItems">
@@ -89,24 +90,29 @@ $csrfToken = CsrfMiddleware::getToken();
                 </div>
 
                 <div class="cart-summary mt-3">
-                    <h3 class="h6 text-muted mb-2">Resumen</h3>
-                    <div class="summary-row d-flex justify-content-between mb-1">
-                        <span>Subtotal</span>
-                        <strong id="subtotalAmount">$0.00</strong>
-                    </div>
-                    <div class="summary-row d-flex justify-content-between text-muted small mb-2">
-                        <span>IVA (15%)</span>
-                        <span id="taxAmount">$0.00</span>
-                    </div>
-                    <div class="summary-total d-flex justify-content-between align-items-center rounded-3 p-2 px-3">
-                        <span class="fw-bold">Total</span>
-                        <strong class="fs-5" id="totalAmount">$0.00</strong>
+                    <h3 class="h6 mb-3 fw-semibold">Resumen</h3>
+                    <div class="summary-grid">
+                        <div class="summary-row d-flex justify-content-between mb-2">
+                            <span class="text-muted small">Subtotal</span>
+                            <strong id="subtotalAmount" class="text-end">$0.00</strong>
+                        </div>
+                        <div class="summary-row d-flex justify-content-between mb-3">
+                            <span class="text-muted small">IVA (15%)</span>
+                            <span id="taxAmount" class="text-muted small text-end">$0.00</span>
+                        </div>
+                        <div class="summary-total d-flex justify-content-between align-items-center rounded-3 p-2 px-3">
+                            <span class="fw-bold">Total</span>
+                            <strong class="fs-5" id="totalAmount">$0.00</strong>
+                        </div>
                     </div>
                 </div>
 
                 <div class="payment-section mt-4">
-                    <h3 class="h6 mb-2">Método de pago <span aria-hidden="true">💳</span></h3>
-                    <div class="payment-options segmented d-flex gap-2" id="paymentOptions">
+                    <h3 class="h6 mb-3 d-flex align-items-center gap-2">
+                        <span>Método de pago</span>
+                        <span aria-hidden="true">💳</span>
+                    </h3>
+                    <div class="payment-options d-flex gap-2" id="paymentOptions">
                         <div class="loading-small">
                             <i class="fas fa-spinner fa-spin"></i> Cargando...
                         </div>
@@ -114,10 +120,10 @@ $csrfToken = CsrfMiddleware::getToken();
                 </div>
 
                 <div class="cart-actions mt-3">
-                    <button type="button" class="btn-process process-btn w-100" id="processBtn" disabled>
+                    <button type="button" class="btn-process w-100 fw-bold" id="processBtn" disabled>
                         <i class="fas fa-check"></i> Procesar Venta
                     </button>
-                    <button type="button" class="btn-clear clear-btn w-100" id="clearBtn" disabled>
+                    <button type="button" class="btn-clear w-100" id="clearBtn" disabled>
                         <i class="fas fa-trash"></i> Limpiar
                     </button>
                 </div>
@@ -364,9 +370,17 @@ function eliminarDelCarrito(varianteId) {
             precioUnitario.className = 'item-price-single';
             precioUnitario.textContent = formatoMoneda.format(item.precio_unitario);
 
+            // Calcular y mostrar IVA incluido por item
+            const itemSubtotal = item.precio_unitario / 1.15;
+            const itemIva = itemSubtotal * 0.15;
+            const ivaInfo = document.createElement('p');
+            ivaInfo.className = 'item-tax-info';
+            ivaInfo.innerHTML = `<small class="text-muted">IVA incl.: ${formatoMoneda.format(itemIva * item.cantidad)}</small>`;
+
             info.appendChild(nombre);
             info.appendChild(size);
             info.appendChild(precioUnitario);
+            info.appendChild(ivaInfo);
 
             const controles = document.createElement('div');
             controles.className = 'item-controls';
@@ -423,16 +437,20 @@ function eliminarDelCarrito(varianteId) {
         return acc;
     }, 0);
 
-    // IVA 15% breakdown assuming total is final price (incluye IVA)
-    const neto = +(total / 1.15).toFixed(2);
-    const iva = +(total - neto).toFixed(2);
+    // Cálculo de IVA 15% (los precios incluyen IVA)
+    // Si el total es $100.00:
+    // - Base imponible = $100 / 1.15 = $86.96
+    // - IVA (15% de $86.96) = $13.04
+    // - Total con IVA = $100.00
+    const subtotal = +(total / 1.15).toFixed(2);
+    const iva = +(subtotal * 0.15).toFixed(2);
 
     itemsCountEl.textContent = `${totalItems} artículos`;
     totalAmountEl.textContent = formatoMoneda.format(total);
 
     // Actualizar resumen visual (si existe)
     const subtotalEl = document.getElementById('subtotalAmount');
-    if (subtotalEl) subtotalEl.textContent = formatoMoneda.format(neto);
+    if (subtotalEl) subtotalEl.textContent = formatoMoneda.format(subtotal);
     const taxEl = document.getElementById('taxAmount');
     if (taxEl) taxEl.textContent = formatoMoneda.format(iva);
 
@@ -445,7 +463,7 @@ function eliminarDelCarrito(varianteId) {
         totalAmountEl.parentElement.insertAdjacentElement('afterend', prodEl);
     }
     prodEl.innerHTML = `<span>Costo producción:</span> <strong>${formatoMoneda.format(totalCostoProduccion)}</strong><br>
-                         <small>Net: ${formatoMoneda.format(neto)} | IVA(15%): ${formatoMoneda.format(iva)}</small>`;
+                         <small>Base: ${formatoMoneda.format(subtotal)} + IVA(15%): ${formatoMoneda.format(iva)} = ${formatoMoneda.format(total)}</small>`;
     processBtn.disabled = !cart.length || !metodoSeleccionado;
     clearBtn.disabled = !cart.length;
 }

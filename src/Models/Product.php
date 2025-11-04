@@ -22,8 +22,13 @@ class Product
     // These are populated by controllers/services when needed (nullable floats)
     public ?float $costo_produccion = null;
     public ?float $precio_final = null;
+    public ?float $precio_min = null;
+    public ?float $precio_max = null;
+    public ?float $precio_promedio = null;
     public ?float $neto = null;
     public ?float $iva = null;
+    public ?float $neto_promedio = null;
+    public ?float $iva_promedio = null;
     public ?float $margen = null;
     public ?float $margenPct = null;
 

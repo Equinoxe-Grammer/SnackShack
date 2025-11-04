@@ -9,6 +9,10 @@ class Variant
     public float $price;
     public ?float $volumeOunces;
     public bool $active;
+    
+    // Propiedades calculadas (opcionales)
+    public ?float $neto = null;
+    public ?float $iva = null;
 
     public function __construct(int $id, int $productId, string $name, float $price, ?float $volumeOunces, bool $active)
     {

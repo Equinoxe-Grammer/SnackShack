@@ -8,15 +8,18 @@
     <link rel="stylesheet" href="/css/theme.css?v=20251013">
     <link rel="stylesheet" href="/css/historial.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="/js/theme-toggle.js"></script>
 </head>
 <body>
     <?php $active='historial'; include __DIR__ . '/../partials/sidebar.php'; ?>
 
     <!-- Main Content -->
     <main class="main-content">
-        <header>
-            <h1>Historial de Ventas</h1>
-            <p>Consulta todas tus ventas anteriores</p>
+        <header class="dashboard-header">
+            <div>
+                <h1><i class="fas fa-history"></i> Historial de Ventas</h1>
+                <p class="subtitle">Consulta todas tus ventas anteriores</p>
+            </div>
         </header>
 
         <!-- Filtros -->

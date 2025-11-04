@@ -12,6 +12,7 @@ use App\Controllers\AgregarCajeroController;
 use App\Controllers\ApiController;
 use App\Controllers\SystemMetricsController;
 use App\Controllers\Api\CostoController;
+use App\Controllers\Api\SessionApiController;
 use App\Controllers\ProductController;
 use App\Controllers\VariantController;
 use App\Middleware\AuthMiddleware;
@@ -115,6 +116,20 @@ $router->post('/api/productos/{id}/imagen', [ApiController::class, 'productoImag
 ]);
 
 // ========================================
+// API de Sesión
+// ========================================
+$router->get('/api/session/info', [SessionApiController::class, 'info'], [
+    AuthMiddleware::class
+]);
+
+$router->get('/api/session/check', [SessionApiController::class, 'check']);
+
+$router->post('/api/session/extend', [SessionApiController::class, 'extend'], [
+    AuthMiddleware::class,
+    CsrfMiddleware::class
+]);
+
+// ========================================
 // Métricas del sistema (solo admin)
 // ========================================
 $router->get('/api/metrics', [SystemMetricsController::class, 'system'], [
@@ -144,6 +159,11 @@ $router->get('/productos/editar/{id}', [ProductController::class, 'edit'], [
     new RoleMiddleware(['admin'])
 ]);
 $router->post('/productos/actualizar/{id}', [ProductController::class, 'update'], [
+    AuthMiddleware::class,
+    new RoleMiddleware(['admin']),
+    CsrfMiddleware::class
+]);
+$router->post('/productos/estado/{id}', [ProductController::class, 'changeState'], [
     AuthMiddleware::class,
     new RoleMiddleware(['admin']),
     CsrfMiddleware::class

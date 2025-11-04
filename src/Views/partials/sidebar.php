@@ -33,6 +33,13 @@
                 <small><?php echo htmlspecialchars(ucfirst($user['rol'] ?? '')); ?> • En línea</small>
             </div>
         </div>
+        
+        <!-- Toggle de tema -->
+        <button id="themeToggle" class="theme-toggle" title="Cambiar tema">
+            <i class="fas fa-moon"></i>
+            <span>Modo oscuro</span>
+        </button>
+        
         <button class="logout logout-btn" onclick="window.location.href='/logout'">
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
         </button>

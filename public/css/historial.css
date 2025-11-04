@@ -1,15 +1,7 @@
 /* --- ESTILOS GENERALES Y LAYOUT --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-:root {
-    --border-radius: 12px;
-    --shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-    --primary-color: #3897fe;
-    --secondary-color: #F29E38;
-    --success-color: #8ED1B2;
-    --text-dark: #4a4a68;
-    --text-muted: #6c757d;
-}
+/* Las variables de tema vienen de theme.css */
 
 * {
     margin: 0;
@@ -21,15 +13,15 @@
 body {
     display: flex;
     height: 100vh;
-    background-color: #f8f9fe;
-    color: #343a40;
+    background: var(--bg);
+    color: var(--text);
     overflow: hidden;
 }
 
 /* --- BARRA LATERAL (NUEVO DISEÑO) --- */
 .sidebar {
     flex: 0 0 260px;
-    background-color: #f7f8fe;
+    background: var(--sidebar-bg);
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -46,7 +38,7 @@ body {
 .logo {
     text-align: center;
     margin-bottom: 3rem;
-    background-color: #f5f2eb;
+    background: var(--surface-2);
     padding: 1.5rem;
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.07);
@@ -71,7 +63,7 @@ body {
     align-items: center;
     padding: 1rem;
     text-decoration: none;
-    color: #8b7a71;
+    color: var(--text);
     border-radius: 10px;
     transition: all 0.3s ease;
     font-weight: 500;
@@ -82,12 +74,12 @@ body {
     margin-right: 15px;
     width: 25px;
     text-align: center;
-    color: #f9b94a;
+    color: var(--accent);
 }
 
 .menu li.active a,
 .menu a:hover {
-    background-image: linear-gradient(135deg, #3897fe, #00d2fe);
+    background-image: linear-gradient(135deg, var(--primary), var(--primary-2));
     color: white;
     box-shadow: 0 6px 15px rgba(56, 151, 254, 0.3);
 }
@@ -100,7 +92,7 @@ body {
 .logout {
     width: 100%;
     padding: 1rem;
-    background-image: linear-gradient(135deg, #ff5b79, #ff8a80);
+    background-image: linear-gradient(135deg, var(--danger), var(--danger-hover));
     color: white;
     border: none;
     border-radius: 10px;
@@ -130,7 +122,7 @@ body {
 .user-status {
     display: flex;
     align-items: center;
-    background-color: #e9ecef;
+    background: var(--surface-2);
     padding: 0.75rem;
     margin-bottom: 1.5rem;
     border-radius: 8px;
@@ -139,7 +131,7 @@ body {
 .status-dot {
     width: 10px;
     height: 10px;
-    background-color: #28a745; /* Verde para "en línea" */
+    background: var(--success);
     border-radius: 50%;
     margin-right: 10px;
     /* Animación sutil para indicar que está activo */
@@ -150,12 +142,14 @@ body {
     display: block;
     font-weight: 600;
     font-size: 0.9rem;
-    color: #343a40;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dark);
 }
 
 .user-info small {
     font-size: 0.75rem;
-    color: #6c757d;
+    color: var(--muted);
 }
 
 /* Keyframes para la animación del punto */
@@ -190,14 +184,14 @@ body {
 }
 
 .main-content header p {
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 0.95rem;
     margin: 0;
 }
 
 /* --- Filtros de búsqueda --- */
 .filters-section {
-    background-color: white;
+    background: var(--surface);
     padding: 1.8rem 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -237,20 +231,20 @@ body {
 }
 
 .filter-group label i {
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 0.85rem;
 }
 
 .filter-group input,
 .filter-group select {
     padding: 0.75rem 1rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border);
     border-radius: 8px;
     font-family: "Poppins", sans-serif;
     font-size: 0.9rem;
-    color: var(--text-dark);
+    color: var(--text);
     transition: border-color 0.2s, box-shadow 0.2s;
-    background: white;
+    background: var(--surface);
 }
 
 .filter-group input:focus,
@@ -271,9 +265,9 @@ body {
 
 .btn-secondary {
     padding: 0.75rem 1.5rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border);
     border-radius: 8px;
-    background-color: white;
+    background: var(--surface);
     color: var(--text-dark);
     font-weight: 500;
     font-size: 0.9rem;
@@ -287,7 +281,7 @@ body {
 
 .btn-secondary:hover {
     background-color: #f8f9fe;
-    border-color: var(--text-muted);
+    border-color: var(--muted);
     transform: translateY(-1px);
 }
 
@@ -300,7 +294,7 @@ body {
 }
 
 .summary-card {
-    background-color: white;
+    background: var(--card);
     padding: 1.5rem 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -328,15 +322,15 @@ body {
 }
 
 .summary-card:nth-child(1) .card-icon {
-    background: linear-gradient(135deg, #3897fe, #00d2fe);
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
 }
 
 .summary-card:nth-child(2) .card-icon {
-    background: linear-gradient(135deg, #20c997, #8ED1B2);
+    background: linear-gradient(135deg, var(--success), var(--success-2));
 }
 
 .summary-card:nth-child(3) .card-icon {
-    background: linear-gradient(135deg, #fd7e14, #F29E38);
+    background: linear-gradient(135deg, var(--warning), var(--brand));
 }
 
 .summary-card .card-content {
@@ -352,14 +346,14 @@ body {
 
 .summary-card .card-content p {
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--muted);
     margin: 0;
     font-weight: 500;
 }
 
 /* --- Historial (Tabla) --- */
 .history-section {
-    background-color: white;
+    background: var(--card);
     padding: 1.8rem 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -419,7 +413,7 @@ tbody tr:last-child td {
 .empty-row td {
     text-align: center;
     padding: 3rem 1rem;
-    color: var(--text-muted);
+    color: var(--muted);
     font-style: italic;
 }
 
@@ -447,6 +441,19 @@ tbody tr:last-child td {
     border-radius: 20px;
     font-size: 0.85rem;
     display: inline-block;
+}
+
+/* Dark mode overrides for payment method badges */
+:root[data-theme="dark"] .method-efectivo {
+    background: linear-gradient(135deg, #047857, #059669);
+    color: #d1fae5;
+    border: 1px solid #10b981;
+}
+
+:root[data-theme="dark"] .method-tarjeta {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    color: #dbeafe;
+    border: 1px solid #3b82f6;
 }
 
 .btn-view {
@@ -530,7 +537,7 @@ tbody tr:last-child td {
     background: none;
     border: none;
     font-size: 1.5rem;
-    color: var(--text-muted);
+    color: var(--muted);
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
@@ -579,7 +586,7 @@ tbody tr:last-child td {
 }
 
 .info-row .label i {
-    color: var(--text-muted);
+    color: var(--muted);
     width: 20px;
 }
 
@@ -611,15 +618,15 @@ tbody tr:last-child td {
 }
 
 .items-table tbody tr {
-    background-color: white;
+    background: var(--card);
 }
 
 .items-table tbody tr:nth-child(even) {
-    background-color: #f8f9fe;
+    background: var(--surface-2);
 }
 
 .sale-total {
-    background-color: #f8f9fe;
+    background: var(--surface-2);
     padding: 1.2rem 1.5rem;
     border-radius: 8px;
     display: flex;
@@ -653,6 +660,104 @@ tbody tr:last-child td {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+}
+
+/* Dark mode overrides for modal */
+:root[data-theme="dark"] .modal-content {
+    background: var(--surface);
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .modal-header {
+    border-bottom-color: var(--border);
+}
+
+:root[data-theme="dark"] .modal-header h2 {
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .modal-body {
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .sale-info {
+    background-color: var(--surface-2);
+}
+
+:root[data-theme="dark"] .info-row {
+    border-bottom-color: var(--border);
+}
+
+:root[data-theme="dark"] .info-row .label {
+    color: #d0d0e0;
+}
+
+:root[data-theme="dark"] .info-row .label i {
+    color: var(--muted);
+}
+
+:root[data-theme="dark"] .info-row span:last-child {
+    color: #e8e8f0;
+    font-weight: 500;
+}
+
+:root[data-theme="dark"] .items-table h3 {
+    color: #e8e8f0;
+}
+
+:root[data-theme="dark"] .items-table h3 i {
+    color: var(--primary);
+}
+
+:root[data-theme="dark"] .items-table tbody tr {
+    background: var(--card);
+}
+
+:root[data-theme="dark"] .items-table tbody tr:nth-child(even) {
+    background: var(--surface-2);
+}
+
+:root[data-theme="dark"] .sale-total {
+    background: var(--surface-2);
+    border-color: #4ade80;
+}
+
+:root[data-theme="dark"] .sale-total .label {
+    color: #e8e8f0;
+}
+
+:root[data-theme="dark"] .sale-total .label i {
+    color: #4ade80;
+}
+
+:root[data-theme="dark"] .total-amount {
+    color: #4ade80;
+}
+
+:root[data-theme="dark"] .info-item strong {
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .modal-footer {
+    border-top-color: var(--border);
+}
+
+:root[data-theme="dark"] .products-table {
+    background: var(--card);
+}
+
+:root[data-theme="dark"] .products-table th {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+:root[data-theme="dark"] .products-table td {
+    color: var(--text);
+    border-bottom-color: var(--border);
+}
+
+:root[data-theme="dark"] .total-row {
+    background: var(--surface-2);
 }
 
 /* --- Responsive --- */

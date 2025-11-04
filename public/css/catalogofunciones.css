@@ -93,7 +93,7 @@ body {
 .layout-flex {
   display: flex;
   height: 100vh;
-  background: #f8f9fe;
+  background: var(--bg);
 }
 
 /* --- ESTILOS FORMULARIOS Y TABLA DE VARIANTES --- */

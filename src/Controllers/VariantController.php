@@ -20,6 +20,19 @@ class VariantController
         $productId = (int)$id;
         $service = new VariantService();
         $variants = $service->listByProduct($productId, false);
+        
+        // Calcular IVA para cada variante
+        try {
+            $impuestosService = new \App\Services\ImpuestosService();
+            foreach ($variants as $variant) {
+                $desglose = $impuestosService->desgloseIVA15((float)$variant->price);
+                $variant->neto = $desglose['neto'] ?? null;
+                $variant->iva = $desglose['iva'] ?? null;
+            }
+        } catch (\Throwable $e) {
+            // Si hay error, las variantes no tendrán IVA calculado
+        }
+        
         $csrf = CsrfMiddleware::getToken();
         $productId = (int)$id;
         require __DIR__ . '/../Views/products/variants.php';

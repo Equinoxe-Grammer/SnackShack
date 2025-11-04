@@ -227,7 +227,7 @@ body {
 .cart-sidebar {
 	width: 380px;
 	padding: 0;
-	background: #fff;
+	background: var(--card);
 	border-left: 1px solid var(--border);
 	display: flex;
 	flex-direction: column;
@@ -297,7 +297,7 @@ body {
 	padding: .85rem 1rem;
 	border: 2px solid var(--border);
 	border-radius: 10px;
-	background: #fff;
+	background: var(--surface);
 	color: var(--text);
 	font-size: .95rem;
 	transition: all .2s;
@@ -308,7 +308,7 @@ body {
 	box-shadow: 0 0 0 4px rgba(56, 151, 254, 0.12);
 }
 .form-group input::placeholder {
-	color: #bdbdbd;
+	color: var(--muted);
 }
 .form-hint {
 	display: flex;
@@ -326,6 +326,19 @@ body {
 	display: flex;
 	gap: .8rem;
 	margin-top: 2rem;
+}
+
+/* --- DARK MODE OVERRIDES --- */
+:root[data-theme="dark"] .role-admin {
+	background: linear-gradient(135deg, #78350f, #92400e);
+	color: #fef3c7;
+	border: 1px solid #b45309;
+}
+
+:root[data-theme="dark"] .role-cajero {
+	background: linear-gradient(135deg, #1e3a8a, #1e40af);
+	color: #dbeafe;
+	border: 1px solid #3b82f6;
 }
 
 /* --- RESPONSIVE --- */

@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Services\UserService;
+use App\Services\SessionService;
 
 class AuthController {
     private $userService;
@@ -15,8 +16,8 @@ class AuthController {
      */
     public function showLoginForm() {
         // Si ya está autenticado, redirigir al dashboard
-        if (isset($_SESSION['usuario_id'])) {
-            $this->redirectByRole($_SESSION['rol']);
+        if (SessionService::isActive() && SessionService::validate()) {
+            $this->redirectByRole(SessionService::getRole());
             return;
         }
         
@@ -45,13 +46,12 @@ class AuthController {
             $user = $this->userService->authenticateUser($usuario, $contrasena);
             
             if ($user) {
-                // Regenerate session ID to prevent fixation
-                if (session_status() === PHP_SESSION_ACTIVE) {
-                    session_regenerate_id(true);
-                }
-                $_SESSION['usuario_id'] = $user->getId();
-                $_SESSION['usuario'] = $user->getUsername();
-                $_SESSION['rol'] = $user->getRole();
+                // Iniciar sesión segura de 24 horas
+                SessionService::login(
+                    $user->getId(),
+                    $user->getUsername(),
+                    $user->getRole()
+                );
                 
                 $this->redirectByRole($user->getRole());
             } else {
@@ -70,7 +70,7 @@ class AuthController {
      * Cierra la sesión del usuario
      */
     public function logout() {
-        session_destroy();
+        SessionService::destroy();
         header("Location: /login");
         exit;
     }

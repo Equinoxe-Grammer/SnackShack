@@ -15,8 +15,9 @@
     <!-- Estilos específicos de página -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/css/catalogofunciones.css">
+    <script src="/js/theme-toggle.js"></script>
 </head>
-<body style="background: #f8f9fe;">
+<body style="background: var(--bg);">
 flex">
     <?php $active = 'productos'; include __DIR__ . '/../partials/sidebar.php'; ?>
     <main class="main-content">
@@ -41,6 +42,8 @@ flex">
                 <th>Nombre</th>
                 <th>Volumen (oz)</th>
                 <th>Precio</th>
+                <th>Neto</th>
+                <th>IVA (15%)</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -48,7 +51,7 @@ flex">
         <tbody>
         <?php if (empty($variants)): ?>
             <tr>
-                <td colspan="5" style="text-align: center; padding: 2rem; color: #6b7280;">
+                <td colspan="7" style="text-align: center; padding: 2rem; color: #6b7280;">
                     <i class="fas fa-box-open" style="font-size: 2rem; margin-bottom: 1rem; display: block; color: #d1d5db;"></i>
                     <p>No hay variantes creadas para este producto</p>
                     <a href="/productos/<?php echo (int)$productId; ?>/variantes/nueva" class="btn primary" style="margin-top: 1rem;">
@@ -62,6 +65,12 @@ flex">
                 <td data-label="Nombre"><?php echo htmlspecialchars($v->name); ?></td>
                 <td data-label="Volumen (oz)"><?php echo $v->volumeOunces !== null ? htmlspecialchars($v->volumeOunces) : '-'; ?></td>
                 <td data-label="Precio">$<?php echo number_format($v->price, 2); ?></td>
+                <td data-label="Neto">
+                    <?php echo isset($v->neto) ? '$' . number_format($v->neto, 2) : '-'; ?>
+                </td>
+                <td data-label="IVA (15%)">
+                    <?php echo isset($v->iva) ? '$' . number_format($v->iva, 2) : '-'; ?>
+                </td>
                 <td data-label="Estado"><?php echo $v->active ? '<span class="badge">Activo</span>' : '<span class="badge muted">Inactivo</span>'; ?></td>
                 <td data-label="Acciones">
                     <div class="actions">

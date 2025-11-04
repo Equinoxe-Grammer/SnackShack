@@ -23,13 +23,17 @@ $csrfToken = CsrfMiddleware::getToken();
      <link rel="stylesheet" href="/css/theme.css">
     <link rel="stylesheet" href="/css/catalogo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous">
+    <script src="/js/theme-toggle.js"></script>
 </head>
 <body>
     <?php $active = 'productos'; include __DIR__ . '/../partials/sidebar.php'; ?>
 
     <main class="main-content">
-        <header>
-            <h1><i class="fas fa-box-open"></i> Catálogo de Productos</h1>
+        <header class="dashboard-header">
+            <div>
+                <h1><i class="fas fa-box-open"></i> Catálogo de Productos</h1>
+                <p class="subtitle">Gestiona tu inventario de productos</p>
+            </div>
         </header>
 
         <!-- Filtros -->
@@ -66,14 +70,14 @@ $csrfToken = CsrfMiddleware::getToken();
                     </select>
                 </div>
                 <div class="filter-actions">
-                    <button id="clearFilters" class="btn btn-secondary">
-                        <i class="fas fa-eraser"></i>
-                        Limpiar Filtros
-                    </button>
                     <a href="/productos/nuevo" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
                         Nuevo Producto
                     </a>
+                    <button id="clearFilters" class="btn btn-outline">
+                        <i class="fas fa-eraser"></i>
+                        Limpiar Filtros
+                    </button>
                 </div>
             </div>
         </section>
@@ -86,7 +90,7 @@ $csrfToken = CsrfMiddleware::getToken();
                 </div>
                 <div class="card-content">
                     <h3 id="statCount">0</h3>
-                    <p>Productos Filtrados</p>
+                    <p class="text-muted">Productos Filtrados</p>
                 </div>
             </div>
             <div class="summary-card">
@@ -95,7 +99,7 @@ $csrfToken = CsrfMiddleware::getToken();
                 </div>
                 <div class="card-content">
                     <h3 id="statVariants">0</h3>
-                    <p>Variantes Totales</p>
+                    <p class="text-muted">Variantes Totales</p>
                 </div>
             </div>
             <div class="summary-card">
@@ -104,7 +108,7 @@ $csrfToken = CsrfMiddleware::getToken();
                 </div>
                 <div class="card-content">
                     <h3 id="statActive">0</h3>
-                    <p>Productos Activos</p>
+                    <p class="text-muted">Productos Activos</p>
                 </div>
             </div>
         </section>
@@ -147,52 +151,90 @@ $csrfToken = CsrfMiddleware::getToken();
                         <div class="product-info">
                             <div class="product-header">
                                 <h3 class="product-name"><?php echo htmlspecialchars($p->name); ?></h3>
-                                <span class="badge <?php echo $p->active ? 'success' : 'muted'; ?>">
-                                    <i class="fas fa-<?php echo $p->active ? 'check-circle' : 'times-circle'; ?>"></i>
-                                    <?php echo $p->active ? 'Activo' : 'Inactivo'; ?>
-                                </span>
+                                <?php if ($p->active): ?>
+                                    <span class="badge badge-active">
+                                        <i class="fas fa-check-circle"></i>
+                                        Activo
+                                    </span>
+                                <?php endif; ?>
                             </div>
                             
                             <div class="product-details">
-                                <span class="detail-item">
+                                <span class="detail-item text-muted">
                                     <i class="fas fa-tag"></i>
                                     <?php echo htmlspecialchars($p->categoryName ?? 'Sin categoría'); ?>
                                 </span>
-                                <span class="detail-item">
+                                <span class="detail-separator">•</span>
+                                <span class="detail-item text-muted">
                                     <i class="fas fa-layer-group"></i>
                                     <?php echo count($p->variants); ?> variante(s)
                                 </span>
-                                <?php if (isset($p->costo_produccion) && $p->costo_produccion !== null): ?>
-                                <span class="detail-item">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    Costo producción: <?php echo '$' . number_format($p->costo_produccion, 2); ?>
-                                </span>
+                            </div>
+
+                            <!-- Información de precios y márgenes -->
+                            <div class="product-pricing-info">
+                                <?php if (isset($p->precio_min) && isset($p->precio_max)): ?>
+                                <div class="pricing-row">
+                                    <span class="price-label text-muted">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        Rango de precios:
+                                    </span>
+                                    <span class="price-value">
+                                        <?php if ($p->precio_min == $p->precio_max): ?>
+                                            $<?php echo number_format($p->precio_min, 2); ?>
+                                        <?php else: ?>
+                                            $<?php echo number_format($p->precio_min, 2); ?> - $<?php echo number_format($p->precio_max, 2); ?>
+                                        <?php endif; ?>
+                                    </span>
+                                </div>
                                 <?php endif; ?>
 
-                                <?php if (isset($p->precio_final) && $p->precio_final !== null): ?>
-                                <span class="detail-item">
-                                    <i class="fas fa-receipt"></i>
-                                    Precio final: <?php echo '$' . number_format($p->precio_final, 2); ?>
-                                </span>
+                                <?php if (isset($p->precio_promedio)): ?>
+                                <div class="pricing-row">
+                                    <span class="price-label text-muted">
+                                        <i class="fas fa-chart-bar"></i>
+                                        Precio promedio:
+                                    </span>
+                                    <span class="price-value">$<?php echo number_format($p->precio_promedio, 2); ?></span>
+                                </div>
                                 <?php endif; ?>
 
-                                <?php if (isset($p->neto) && $p->neto !== null): ?>
-                                <span class="detail-item">
-                                    <i class="fas fa-percentage"></i>
-                                    Neto: <?php echo '$' . number_format($p->neto, 2); ?> | IVA: <?php echo '$' . number_format($p->iva ?? 0, 2); ?>
-                                </span>
+                                <?php if (isset($p->neto_promedio)): ?>
+                                <div class="pricing-row">
+                                    <span class="price-label text-muted">
+                                        <i class="fas fa-coins"></i>
+                                        Neto promedio:
+                                    </span>
+                                    <span class="price-value">$<?php echo number_format($p->neto_promedio, 2); ?></span>
+                                </div>
+                                <?php endif; ?>
+
+                                <?php if (isset($p->iva_promedio)): ?>
+                                <div class="pricing-row">
+                                    <span class="price-label text-muted">
+                                        <i class="fas fa-receipt"></i>
+                                        IVA promedio:
+                                    </span>
+                                    <span class="price-value">$<?php echo number_format($p->iva_promedio, 2); ?></span>
+                                </div>
                                 <?php endif; ?>
 
                                 <?php if (isset($p->margen) && $p->margen !== null): ?>
-                                <span class="detail-item">
-                                    <i class="fas fa-chart-line"></i>
-                                    Margen: <?php echo '$' . number_format($p->margen, 2); ?> (<?php echo number_format($p->margenPct ?? 0, 2); ?>%)
-                                </span>
+                                <div class="pricing-row margin-row">
+                                    <span class="price-label text-muted">
+                                        <i class="fas fa-chart-line"></i>
+                                        Margen:
+                                    </span>
+                                    <span class="price-value <?php echo $p->margen > 0 ? 'text-success' : 'text-danger'; ?>">
+                                        <?php echo number_format($p->margenPct ?? 0, 1); ?>% 
+                                        ($<?php echo number_format($p->margen, 2); ?>)
+                                    </span>
+                                </div>
                                 <?php endif; ?>
                             </div>
 
                             <?php if (!empty($p->description)): ?>
-                            <p class="product-description"><?php echo htmlspecialchars($p->description); ?></p>
+                            <p class="product-description text-muted"><?php echo htmlspecialchars($p->description); ?></p>
                             <?php endif; ?>
                         </div>
 
@@ -217,6 +259,19 @@ $csrfToken = CsrfMiddleware::getToken();
                                title="Gestionar variantes">
                                 <i class="fas fa-cubes"></i>
                             </a>
+                            
+                            <form method="post" 
+                                  action="/productos/estado/<?php echo (int)$p->id; ?>" 
+                                  class="toggle-form"
+                                  style="display: inline;">
+                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
+                                <input type="hidden" name="estado" value="<?php echo $p->active ? '0' : '1'; ?>">
+                                <button type="submit" 
+                                        class="action-btn toggle <?php echo $p->active ? 'active' : 'inactive'; ?>" 
+                                        title="<?php echo $p->active ? 'Desactivar' : 'Activar'; ?> producto">
+                                    <i class="fas fa-toggle-<?php echo $p->active ? 'on' : 'off'; ?>"></i>
+                                </button>
+                            </form>
                             
                             <form method="post" 
                                   action="/productos/eliminar/<?php echo (int)$p->id; ?>" 

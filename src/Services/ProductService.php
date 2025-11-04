@@ -34,12 +34,19 @@ class ProductService
     /**
      * Returns products enriched for the index view with pricing/tax/margin info.
      * This centralizes the logic previously done in the controller.
+     * Returns ALL products (active and inactive) for admin catalog management.
      *
      * @return array<int, \App\Models\Product>
      */
     public function getProductsForIndexView(): array
     {
-        $products = $this->getActiveCatalog();
+        // Obtener TODOS los productos (activos e inactivos) para el catálogo de admin
+        $productList = $this->products->findAllProducts();
+        $productIds = array_map(static fn($product) => $product->id, $productList);
+        $variants = $this->products->findVariantsForProductIds($productIds);
+        $this->products->attachVariants($productList, $variants);
+        
+        $products = $productList;
 
         // Best-effort cost/tax computation; failures should not break the page
         try {
@@ -51,11 +58,60 @@ class ProductService
         }
 
         foreach ($products as $prod) {
-            // precio_final: mínimo entre variantes activas si existen
-            $precioFinal = null;
+            // Calcular estadísticas agregadas de variantes
             if (!empty($prod->variants)) {
                 $prices = array_map(static fn($v) => $v->price, $prod->variants);
-                $precioFinal = count($prices) ? min($prices) : null;
+                
+                // Precio mínimo y máximo
+                $prod->precio_min = count($prices) ? round(min($prices), 2) : null;
+                $prod->precio_max = count($prices) ? round(max($prices), 2) : null;
+                
+                // Precio promedio
+                $prod->precio_promedio = count($prices) ? round(array_sum($prices) / count($prices), 2) : null;
+                
+                // Para compatibilidad, precio_final será el mínimo
+                $prod->precio_final = $prod->precio_min;
+                
+                // Calcular promedios de neto e IVA si tenemos impuestosService
+                if ($impuestosService && $prod->precio_promedio !== null) {
+                    $netosSum = 0;
+                    $ivasSum = 0;
+                    foreach ($prices as $price) {
+                        try {
+                            $desglose = $impuestosService->desgloseIVA15((float)$price);
+                            $netosSum += $desglose['neto'] ?? 0;
+                            $ivasSum += $desglose['iva'] ?? 0;
+                        } catch (\Throwable $e) {
+                            // Ignorar errores individuales
+                        }
+                    }
+                    $prod->neto_promedio = count($prices) > 0 ? round($netosSum / count($prices), 2) : null;
+                    $prod->iva_promedio = count($prices) > 0 ? round($ivasSum / count($prices), 2) : null;
+                    
+                    // Para compatibilidad, usar valores del precio promedio
+                    try {
+                        $desglose = $impuestosService->desgloseIVA15((float)$prod->precio_promedio);
+                        $prod->neto = $desglose['neto'] ?? null;
+                        $prod->iva = $desglose['iva'] ?? null;
+                    } catch (\Throwable $e) {
+                        $prod->neto = null;
+                        $prod->iva = null;
+                    }
+                } else {
+                    $prod->neto_promedio = null;
+                    $prod->iva_promedio = null;
+                    $prod->neto = null;
+                    $prod->iva = null;
+                }
+            } else {
+                $prod->precio_min = null;
+                $prod->precio_max = null;
+                $prod->precio_promedio = null;
+                $prod->precio_final = null;
+                $prod->neto_promedio = null;
+                $prod->iva_promedio = null;
+                $prod->neto = null;
+                $prod->iva = null;
             }
 
             // costo de producción
@@ -70,28 +126,10 @@ class ProductService
             }
             $prod->costo_produccion = $costo;
 
-            // Asignar precio_final
-            $prod->precio_final = is_numeric($precioFinal) ? round((float)$precioFinal, 2) : null;
-
-            // Desglose IVA
-            if ($prod->precio_final !== null && $impuestosService) {
-                try {
-                    $desglose = $impuestosService->desgloseIVA15((float)$prod->precio_final);
-                    $prod->neto = $desglose['neto'] ?? null;
-                    $prod->iva = $desglose['iva'] ?? null;
-                } catch (\Throwable $e) {
-                    $prod->neto = null;
-                    $prod->iva = null;
-                }
-            } else {
-                $prod->neto = null;
-                $prod->iva = null;
-            }
-
-            // Margen y margen %
-            if ($prod->precio_final !== null && $prod->costo_produccion !== null) {
-                $prod->margen = round($prod->precio_final - $prod->costo_produccion, 2);
-                $prod->margenPct = $prod->precio_final != 0 ? round(($prod->margen / $prod->precio_final) * 100, 2) : null;
+            // Margen y margen % basado en precio promedio
+            if ($prod->precio_promedio !== null && $prod->costo_produccion !== null) {
+                $prod->margen = round($prod->precio_promedio - $prod->costo_produccion, 2);
+                $prod->margenPct = $prod->precio_promedio != 0 ? round(($prod->margen / $prod->precio_promedio) * 100, 2) : null;
             } else {
                 $prod->margen = null;
                 $prod->margenPct = null;

@@ -8,8 +8,9 @@
   <link rel="stylesheet" href="/css/theme.css?v=20251013">
   <link rel="stylesheet" href="/css/catalogofunciones.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script src="/js/theme-toggle.js"></script>
 </head>
-<body style="background: #f8f9fe;">
+<body style="background: var(--bg);">
   <div class="layout-flex">
     <?php $active = 'compras'; include __DIR__ . '/../partials/sidebar.php'; ?>
     <main class="main-content">

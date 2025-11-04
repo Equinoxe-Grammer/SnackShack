@@ -283,7 +283,7 @@ body {
     transition: background-color 0.2s ease;
 }
 .sale-item:hover {
-    background-color: #f8f9fe;
+    background: var(--surface-hover);
     border-radius: 8px;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -340,12 +340,12 @@ body {
 }
 
 .method-efectivo {
-    background-color: #d1fae5;
+    background: var(--success-soft);
     color: #065f46;
 }
 
 .method-tarjeta {
-    background-color: #dbeafe;
+    background: var(--info-soft);
     color: #1e40af;
 }
 
@@ -415,14 +415,63 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
 }
-.btn-Agergar {
-    background-image: linear-gradient(135deg, #8ED1B2, #20c997);
+
+/* Botones principales */
+.btn-primary {
+    background: linear-gradient(135deg, #5b8def 0%, #4c7ce5 100%);
     color: #fff;
-    box-shadow: 0 6px 20px rgba(32,201,151,0.13);
+    box-shadow: 0 4px 15px rgba(91, 141, 239, 0.4);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(91, 141, 239, 0.5);
+}
+
+/* Botones secundarios (amarillo/naranja) */
+.btn-secondary {
+    background: linear-gradient(135deg, #ffbe5c 0%, #ff8b94 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 190, 92, 0.3);
+}
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 190, 92, 0.4);
+}
+
+/* Botón warning (igual que secondary) */
+.btn-warning {
+    background: linear-gradient(135deg, #ffbe5c 0%, #ff8b94 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 190, 92, 0.3);
+}
+.btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 190, 92, 0.4);
+}
+
+/* Botón agregar (verde menta/turquesa) */
+.btn-Agergar {
+    background-image: linear-gradient(135deg, #6dd5b0, #34c996);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(52, 201, 150, 0.3);
 }
 .btn-Agergar:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(32,201,151,0.18);
+    box-shadow: 0 8px 25px rgba(52, 201, 150, 0.4);
+}
+
+/* Dark mode - Keep button colors vibrant */
+:root[data-theme="dark"] .btn-primary,
+:root[data-theme="dark"] .btn-secondary,
+:root[data-theme="dark"] .btn-Agergar {
+    /* Mantener los mismos colores en modo oscuro para mejor visibilidad */
+    opacity: 0.95;
+}
+
+:root[data-theme="dark"] .btn-primary:hover,
+:root[data-theme="dark"] .btn-secondary:hover,
+:root[data-theme="dark"] .btn-Agergar:hover {
+    opacity: 1;
 }
 
 /* --- SECCIÓN ÚLTIMAS VENTAS --- */
@@ -470,8 +519,8 @@ body {
     gap: 0.7rem;
 }
 .method-otros {
-    background-color: #fff7e6;
-    color: #fd7e14;
+    background: var(--surface-2);
+    color: var(--warning);
 }
 
 /* --- PROGRESS BAR --- */
@@ -479,7 +528,7 @@ body {
     margin: 2.5rem 0 2rem 0;
 }
 .progress-card {
-    background: #fff;
+    background: var(--card);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     padding: 1.5rem 2rem;
@@ -571,7 +620,7 @@ body {
     margin-bottom: 2.5rem;
 }
 .chart-card {
-    background: #fff;
+    background: var(--card);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     padding: 1.8rem 2rem 2rem 2rem;

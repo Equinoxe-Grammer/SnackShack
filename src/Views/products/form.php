@@ -11,8 +11,9 @@
   <!-- Estilos específicos de página -->
   <link rel="stylesheet" href="/css/catalogofunciones.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script src="/js/theme-toggle.js"></script>
 </head>
-<body style="background: #f8f9fe;">
+<body style="background: var(--bg);">
 t-flex">
   <?php $active = 'productos'; include __DIR__ . '/../partials/sidebar.php'; ?>
   <main class="main-content">

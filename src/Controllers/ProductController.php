@@ -134,4 +134,25 @@ class ProductController
             echo 'Error al eliminar: ' . htmlspecialchars($e->getMessage());
         }
     }
+
+    public function changeState($id)
+    {
+        try {
+            $productId = (int)$id;
+            $newState = (int)($_POST['estado'] ?? 0);
+            
+            if ($productId <= 0) {
+                throw new \InvalidArgumentException('ID inválido');
+            }
+
+            $repo = new ProductRepository();
+            $repo->changeState($productId, $newState);
+            
+            $message = $newState === 1 ? 'Producto activado correctamente' : 'Producto desactivado correctamente';
+            header('Location: /productos?info=' . urlencode($message));
+        } catch (\Throwable $e) {
+            http_response_code(400);
+            echo 'Error al cambiar estado: ' . htmlspecialchars($e->getMessage());
+        }
+    }
 }

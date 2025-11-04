@@ -148,16 +148,17 @@ if ($editId > 0) {
     <link rel="stylesheet" href="/css/catalogofunciones.css">
     <link rel="stylesheet" href="/css/agregarcajero.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous">
+    <script src="/js/theme-toggle.js"></script>
 </head>
 <body>
     <div class="pos-container">
         <?php $active='cajeros'; include __DIR__ . '/../partials/sidebar.php'; ?>
 
         <main class="main-content">
-            <header>
+            <header class="dashboard-header">
                 <div>
                     <h1><i class="fas fa-users"></i> Gestión de Cajeros</h1>
-                    <p>Administra los usuarios con rol de cajero del sistema</p>
+                    <p class="subtitle">Administra los usuarios con rol de cajero del sistema</p>
                 </div>
             </header>
 

@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="/css/theme.css">
     <link rel="stylesheet" href="/css/menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous">
+    <script src="/js/theme-toggle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous" defer></script>
 </head>
 <body>
@@ -36,17 +37,14 @@
                    style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;border:1px solid var(--border-color,#ddd);background:var(--surface-2,#f7f7f7);color:inherit;margin-right:8px;">
                     <i class="fas fa-square" aria-hidden="true"></i>
                 </a>
-                <button class="btn btn-primary" onclick="window.location.href='/agregarCajero'">
+                <button class="btn btn-Agergar" onclick="window.location.href='/agregarCajero'">
                     <i class="fas fa-plus"></i> Agregar Cajero
                 </button>
                 <button class="btn btn-primary" onclick="window.location.href='/venta'">
                     <i class="fas fa-plus"></i> Nueva Venta
                 </button>
-                <button class="btn btn-secondary" onclick="window.location.href='/historial'">
+                <button class="btn btn-warning" onclick="window.location.href='/historial'">
                     <i class="fas fa-receipt"></i> Ver Historial
-                </button>
-                <button id="themeToggle" class="btn btn-secondary" title="Cambiar tema">
-                    <i class="fas fa-moon"></i>
                 </button>
             </div>
         </header>
@@ -550,36 +548,6 @@
         }
     }
 
-    // Theme Switcher Functionality
-    function initThemeSwitcher() {
-        const themeToggle = document.getElementById('themeToggle');
-        if (!themeToggle) return;
-        
-        const html = document.documentElement;
-        const icon = themeToggle.querySelector('i');
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        html.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-
-        // Toggle theme on button click
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-
-            showToast(`Tema ${newTheme === 'dark' ? 'oscuro' : 'claro'} activado`, 'info');
-        });
-
-        function updateThemeIcon(theme) {
-            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
-
     // Auto-actualización del dashboard cada 30 segundos
     let dashboardInterval = null;
     
@@ -615,7 +583,6 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         cargarDashboard();
-        initThemeSwitcher();
         startDashboardAutoRefresh();
     });
     </script>

@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="/css/theme.css?v=20251013">
     <link rel="stylesheet" href="/css/Login.css">
     <link rel="stylesheet" href="/css/login-validation.css">
+    <script src="/js/theme-toggle.js"></script>
 </head>
-<body>
+<body style="background: var(--bg);">
     <div class="login-container">
         <div class="login-card">
             <div class="logo-container">
